@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
@@ -21,32 +20,6 @@ export default function Main(props: any) {
   const dispatch = useDispatch();
   const history = useHistory();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
-
-  const action = () => (
-    <>
-      <Button onClick={() => { alert(`I belong to snackbar with key`); }}>
-        'Alert'
-      </Button>
-      <Button onClick={() => { closeSnackbar() }}>
-        'Dismiss'
-      </Button>
-    </>
-  );
-
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-  const handleClick = () => {
-    enqueueSnackbar('신규주문 안내', {
-      anchorOrigin: {
-        vertical: 'bottom',
-        horizontal: 'right'
-      },
-      variant: 'success',
-      autoHideDuration: 3000,
-      action,
-    });
-    audio.play();
-  };
 
   const [audio] = React.useState(new Audio('https://dmonster1452.cafe24.com/api/sound.mp3'));
   const [playing, setPlaying] = React.useState(false);

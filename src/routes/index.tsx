@@ -9,6 +9,10 @@ import OrderCheck from '../screens/OrderCheck';
 import OrderDelivery from '../screens/OrderDelivery';
 import OrderDone from '../screens/OrderDone';
 import SetStoreTime from '../screens/SetStoreTime';
+import Caculate from '../screens/Caculate';
+import MenuList from '../screens/MenuList';
+import MenuEdit from '../screens/MenuEdit';
+import MenuAdd from '../screens/MenuAdd';
 
 
 export default function Routes() {
@@ -23,6 +27,10 @@ export default function Routes() {
         <Route path='/order_delivery' component={OrderDelivery} />
         <Route path='/order_done' component={OrderDone} />
         <Route path='/set_storetime' component={SetStoreTime} />
+        <Route path='/caculate' component={Caculate} />
+        <Route path='/menu' component={MenuList} />
+        <Route path='/menu_edit/:id' component={MenuEdit} />
+        <Route path='/menu_add' component={MenuAdd} />
         <Route render={({ location }) => (
           <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
             <h2 style={{ color: 'red' }}>존재하지 않는 페이지입니다.</h2>

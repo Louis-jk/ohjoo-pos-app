@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { styled, makeStyles } from '@material-ui/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import { Box } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 
 export const theme = createTheme({
   breakpoints: {
@@ -31,58 +30,17 @@ export const theme = createTheme({
   
 });
 
-export const MyButton = styled(Button)({
-  background: 'linear-gradient(45deg, #fdd835 30%, #fbc02d 90%)',
-  border: 0,
-  borderRadius: 3,
-  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: '#222',
-  height: 48,
-  padding: '0 30px',
-});
-
-export const ModalConfirmButton = styled(Button)({
-  background: theme.palette.primary.main,
-  borderRadius: 3,
-  color: theme.palette.primary.contrastText,
-  width: 150,
-  boxShadow: 'none',
-  '&:hover': {
-    boxShadow: 'none',
-  },
-  '&:active': {
-    boxShadow: 'none',
-  }
-});
-
-export const ModalCancelButton = styled(Button)({
-  background: '#ececec',
-  borderRadius: 3,
-  color: '#222',
-  width: 150,
-  boxShadow: 'none',
-
-  '&:hover': {
-    backgroundColor: '#d6d6d6',
-    borderColor: '#d6d6d6',
-    boxShadow: 'none',
-  },
-  '&:active': {
-    backgroundColor: '#c5c5c5',
-    borderColor: '#c5c5c5',
-    boxShadow: 'none',
-  }
-});
-
 export const baseStyles = makeStyles({
   root: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
+    '& a': {
+      textDecoration: 'none'
+    },
+    '& ul': {
+      listStyle: 'none',
+    },
+    '& li': {
+      padding: 0
+    }
   },
   loginInput: {
     width: '100%',
@@ -161,6 +119,16 @@ export const baseStyles = makeStyles({
   },
   modalDescription: {
     marginBottom: 20,
+  },
+  formControl: {
+    minWidth: 120,
+  },
+  multiTxtField: {
+    fontSize: 30,
+    lineHeight: 30
+  },
+  fieldMargin: {
+    marginBottom: 20
   },
   w100: {
     width: '100%' 
@@ -251,3 +219,46 @@ export const LoginContainer = styled(Box)({
     width: '30%',
   }
 })
+
+export const MyButton = styled(Button)({
+  background: 'linear-gradient(45deg, #fdd835 30%, #fbc02d 90%)',
+  border: 0,
+  borderRadius: 3,
+  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  color: '#222',
+  height: 48,
+  padding: '0 30px',
+});
+
+export const ModalConfirmButton = styled(Button)({
+  background: theme.palette.primary.main,
+  borderRadius: 3,
+  color: theme.palette.primary.contrastText,
+  width: 150,
+  boxShadow: 'none',
+  '&:hover': {
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+  }
+});
+
+export const ModalCancelButton = styled(Button)({
+  background: '#ececec',
+  borderRadius: 3,
+  color: '#222',
+  width: 150,
+  boxShadow: 'none',
+
+  '&:hover': {
+    backgroundColor: '#d6d6d6',
+    borderColor: '#d6d6d6',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    backgroundColor: '#c5c5c5',
+    borderColor: '#c5c5c5',
+    boxShadow: 'none',
+  }
+});

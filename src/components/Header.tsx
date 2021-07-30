@@ -6,13 +6,13 @@ import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -21,10 +21,12 @@ import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import AppsIcon from '@material-ui/icons/Apps';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
-import { theme } from '../styles/base';
+import { theme, baseStyles } from '../styles/base';
+import { ButtonGroup } from '@material-ui/core';
 
 const drawerWidth = 200;
 
@@ -44,11 +46,11 @@ interface OptionalProps {
   window?: () => Window;
 }
 
-
-
 export default function ResponsiveDrawer(props: OptionalProps) {
   const { window } = props;
   const dispatch = useDispatch();
+  const history = useHistory();
+  const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
   const { mt_store } = useSelector((state: any) => state.login);
   const { allStore, selectedStore } = useSelector((state: any) => state.store);
@@ -130,7 +132,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="영업일 및 휴무일" />
         </ListItem>
-        <ListItem button component={Link} to='/order_check' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/caculate' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
@@ -142,7 +144,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="카테고리" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/menu' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
@@ -231,17 +233,45 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {mt_store}
-          </Typography>
-          <IconButton
-            color="secondary"
-            aria-label="list"
-            component="span"
-            onClick={handleStoreDrawerToggle}
-          >
-            <AppsIcon />
-          </IconButton>
+          <Box className={base.flexRowStartCenter}>
+            {props.type === 'menuAdd' || props.type === 'menuEdit' ?
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={() => history.goBack()}
+              // sx={{ mr: 2, display: { sm: 'none' } }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              : null}
+            <Typography variant="h6" noWrap component="div">
+              {mt_store}
+            </Typography>
+          </Box>
+          <Box className={base.flexRowStartCenter}>
+            {props.type === 'menu' ?
+              <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                메뉴 추가하기
+              </Button>
+              : props.type === 'menuAdd' ?
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                  등록하기
+                </Button>
+                : props.type === 'menuEdit' ?
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                    수정하기
+                  </Button>
+                  : null}
+            <IconButton
+              color="secondary"
+              aria-label="list"
+              component="span"
+              onClick={handleStoreDrawerToggle}
+            >
+              <AppsIcon />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
