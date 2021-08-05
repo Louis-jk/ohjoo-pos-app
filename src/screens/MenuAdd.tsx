@@ -152,9 +152,12 @@ export default function MenuAdd(props: any) {
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <div>
-              이미지 업로드
-            </div>
+            <form method="post">
+              <input type="file" hidden />
+              <div style={{ width: '100%', height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#ececec' }}>
+                <p style={{ color: '#666' }}>이미지 업로드</p>
+              </div>
+            </form>
             <div className={base.mb20}></div>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="0">
@@ -221,7 +224,7 @@ export default function MenuAdd(props: any) {
               </div>
               :
               <div className={base.mb20}>
-                <Typography variant="body1" component="p" color="secondary">
+                <Typography variant="body1" component="p" color="textSecondary">
                   ※ 판매 불가 상태로 지정하였습니다.
                 </Typography>
               </div>

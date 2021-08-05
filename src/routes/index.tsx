@@ -1,18 +1,21 @@
 import React from 'react';
 import { Route, Switch, HashRouter } from 'react-router-dom';
 
-import Check from '../screens/Check';
-import Login from '../screens/Login';
-import Main from '../screens/Main';
-import OrderNew from '../screens/OrderNew';
-import OrderCheck from '../screens/OrderCheck';
-import OrderDelivery from '../screens/OrderDelivery';
-import OrderDone from '../screens/OrderDone';
-import SetStoreTime from '../screens/SetStoreTime';
-import Caculate from '../screens/Caculate';
-import MenuList from '../screens/MenuList';
-import MenuEdit from '../screens/MenuEdit';
-import MenuAdd from '../screens/MenuAdd';
+import Check from '../screens/Check'; // 로그인전 체크
+import Login from '../screens/Login'; // 로그인
+import Main from '../screens/Main'; // 메인
+import OrderNew from '../screens/OrderNew'; // 신규주문
+import OrderCheck from '../screens/OrderCheck'; // 주문 접수완료
+import OrderDelivery from '../screens/OrderDelivery'; // 주문 배달중
+import OrderDone from '../screens/OrderDone'; // 주문 배달완료
+import SetStoreTime from '../screens/SetStoreTime'; // 영업일 및 휴무일
+import Caculate from '../screens/Caculate'; // 정산내역
+import MenuList from '../screens/MenuList'; // 메뉴 리스트
+import MenuEdit from '../screens/MenuEdit'; // 메뉴 수정
+import MenuAdd from '../screens/MenuAdd'; // 메뉴 추가
+import Category from '../screens/Category'; // 카테고리
+import Reviews from '../screens/Reviews'; // 리뷰
+import StoreInfo from '../screens/StoreInfo'; // 리뷰
 
 
 export default function Routes() {
@@ -31,6 +34,9 @@ export default function Routes() {
         <Route path='/menu' component={MenuList} />
         <Route path='/menu_edit/:id' component={MenuEdit} />
         <Route path='/menu_add' component={MenuAdd} />
+        <Route path='/category' component={Category} />
+        <Route path='/store_info' component={StoreInfo} />
+        <Route path='/reviews' component={Reviews} />
         <Route render={({ location }) => (
           <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
             <h2 style={{ color: 'red' }}>존재하지 않는 페이지입니다.</h2>

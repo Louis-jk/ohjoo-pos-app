@@ -25,6 +25,7 @@ export const StoreTimeStyles = makeStyles({
       marginTop: 50,
       padding: theme.spacing(2),
       width: '100%',
+      height: 50,
       fontSize: 16,
       fontWeight: 'bold'
   },
@@ -60,8 +61,11 @@ export const MenuStyles = makeStyles({
   menuListTitle: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     fontWeight: 'bold',
-    color: '#222'
+    color: '#222',
+    margin: 0
   },
   menuListCategory: {
     marginRight: 5,
@@ -71,51 +75,42 @@ export const MenuStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 5,
-
-    '& p': {
-      background: theme.palette.primary.main,
-      borderRadius: 2,
-      fontSize: 12,
-      color: theme.palette.primary.contrastText,
-      padding: 2,
-      paddingRight: 5,
-      paddingLeft: 5
-    }
+    background: theme.palette.primary.main,
+    borderRadius: 2,
+    fontSize: 12,
+    color: theme.palette.primary.contrastText,
+    padding: 2,
+    paddingRight: 5,
+    paddingLeft: 5
   },
   menuListLabel02: {
     justifyContent: 'center',
     alignItems: 'center',
     margin: 0,
-
-    '& p': {
-      background: theme.palette.secondary.main,
-      borderRadius: 2,
-      fontSize: 12,
-      color: theme.palette.secondary.contrastText,
-      padding: 2,
-      paddingRight: 5,
-      paddingLeft: 5,
-      margin: 0,
-    }
+    background: theme.palette.secondary.main,
+    borderRadius: 2,
+    fontSize: 12,
+    color: theme.palette.secondary.contrastText,
+    padding: 2,
+    paddingRight: 5,
+    paddingLeft: 5
   },
   menuListLabel03: {
     justifyContent: 'center',
     alignItems: 'center',
-
-    '& p': {
-      background: '#ececec',
-      borderRadius: 2,
-      fontSize: 12,
-      color: '#999',
-      padding: 2,
-      paddingRight: 5,
-      paddingLeft: 5
-    }
+    background: '#ececec',
+    borderRadius: 2,
+    fontSize: 12,
+    color: '#999',
+    padding: 2,
+    paddingRight: 5,
+    paddingLeft: 5
   },
   menuListName: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#222',
+    margin: 0,
   },
   menuListImg: {
     width: 120,

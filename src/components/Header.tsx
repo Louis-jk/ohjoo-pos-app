@@ -138,7 +138,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="정산내역" />
         </ListItem>
-        <ListItem button component={Link} to='/order_delivery' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/category' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
@@ -168,7 +168,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="매장소개" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/reviews' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>

@@ -75,17 +75,17 @@ export default function MenuList(props: any) {
                     <Box className={menu.menuListWrap}>
                       {list.it_img1 &&
                         <Box>
-                          <Typography component="img" src={list.it_img1} className={menu.menuListImg} alt={list.it_name} />
+                          <img src={list.it_img1} className={menu.menuListImg} alt={list.it_name} />
                         </Box>
                       }
                       <Box className={menu.menuListTextWrap}>
                         <Box className={menu.menuListTitle}>
-                          <Typography className={menu.menuListCategory}>{list.ca_name}</Typography>
-                          {list.it_type1 === '1' ? <Typography component="span" className={menu.menuListLabel01}><Typography>대표메뉴</Typography></Typography> : null}
-                          {list.it_use === '1' ? <Typography component="span" className={menu.menuListLabel02}><Typography>판매중</Typography></Typography> : <Typography component="span" className={menu.menuListLabel03}><Typography>판매중지</Typography></Typography>}
+                          <p className={menu.menuListCategory}>{list.ca_name}</p>
+                          {list.it_type1 === '1' ? <span className={menu.menuListLabel01}>대표메뉴</span> : null}
+                          {list.it_use === '1' ? <span className={menu.menuListLabel02}>판매중</span> : <span className={menu.menuListLabel03}>판매중지</span>}
                         </Box>
-                        <Typography className={menu.menuListName}>{list.it_name}</Typography>
-                        <Typography className={menu.menuListPrice}>{Api.comma(list.it_price)}원</Typography>
+                        <p className={menu.menuListName}>{list.it_name}</p>
+                        <p className={menu.menuListPrice}>{Api.comma(list.it_price)}원</p>
                       </Box>
                     </Box>
                   </Paper>

@@ -30,6 +30,74 @@ export const theme = createTheme({
   
 });
 
+export const MainBox = styled(Box)({
+  padding: theme.spacing(3),
+  marginTop: 35,
+  [theme.breakpoints.up('sm')]: {
+    marginTop: 65,
+    marginLeft: 200,
+    // backgroundColor: theme.palette.primary.main,
+  },
+});
+
+export const LoginContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flex: 1,
+  height: '100vh',
+  backgroundColor: '#fff',
+  
+  '& .wrap': {
+    minWidth: 250,
+    width: '30%',
+  }
+})
+
+export const MyButton = styled(Button)({
+  background: 'linear-gradient(45deg, #fdd835 30%, #fbc02d 90%)',
+  border: 0,
+  borderRadius: 3,
+  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  color: '#222',
+  height: 48,
+  padding: '0 30px',
+});
+
+export const ModalConfirmButton = styled(Button)({
+  background: theme.palette.primary.main,
+  borderRadius: 3,
+  color: theme.palette.primary.contrastText,
+  width: 150,
+  boxShadow: 'none',
+  '&:hover': {
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+  }
+});
+
+export const ModalCancelButton = styled(Button)({
+  background: '#ececec',
+  borderRadius: 3,
+  color: '#222',
+  width: 150,
+  boxShadow: 'none',
+
+  '&:hover': {
+    backgroundColor: '#d6d6d6',
+    borderColor: '#d6d6d6',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    backgroundColor: '#c5c5c5',
+    borderColor: '#c5c5c5',
+    boxShadow: 'none',
+  }
+});
+
 export const baseStyles = makeStyles({
   root: {
     '& a': {
@@ -148,6 +216,9 @@ export const baseStyles = makeStyles({
   mt50: {
     marginTop: 50
   },
+  mb05: {
+    marginBottom: 5
+  },
   mb10: {
     marginBottom: 10
   },
@@ -192,73 +263,67 @@ export const baseStyles = makeStyles({
   },
   ml50: {
     marginLeft: 50
-  }
-});
-
-export const MainBox = styled(Box)({
-  padding: theme.spacing(3),
-  marginTop: 35,
-  [theme.breakpoints.up('sm')]: {
-    marginTop: 65,
-    marginLeft: 200,
-    // backgroundColor: theme.palette.primary.main,
   },
-});
-
-export const LoginContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flex: 1,
-  height: '100vh',
-  backgroundColor: '#fff',
-  
-  '& .wrap': {
-    minWidth: 250,
-    width: '30%',
-  }
-})
-
-export const MyButton = styled(Button)({
-  background: 'linear-gradient(45deg, #fdd835 30%, #fbc02d 90%)',
-  border: 0,
-  borderRadius: 3,
-  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: '#222',
-  height: 48,
-  padding: '0 30px',
-});
-
-export const ModalConfirmButton = styled(Button)({
-  background: theme.palette.primary.main,
-  borderRadius: 3,
-  color: theme.palette.primary.contrastText,
-  width: 150,
-  boxShadow: 'none',
-  '&:hover': {
-    boxShadow: 'none',
+  commantWrap: {
+    borderRadius: 5,
+    backgroundColor: '#ececec',
+    padding: 30,
+    color: '#222'
   },
-  '&:active': {
-    boxShadow: 'none',
-  }
-});
-
-export const ModalCancelButton = styled(Button)({
-  background: '#ececec',
-  borderRadius: 3,
-  color: '#222',
-  width: 150,
-  boxShadow: 'none',
-
-  '&:hover': {
-    backgroundColor: '#d6d6d6',
-    borderColor: '#d6d6d6',
-    boxShadow: 'none',
+  reviewPaper: {
+    padding: theme.spacing(3),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    marginBottom: 30,
+    backgroundColor: '#fff',
+    boxShadow: '0px 0px 10px 2px #e3e3e3'
   },
-  '&:active': {
-    backgroundColor: '#c5c5c5',
-    borderColor: '#c5c5c5',
-    boxShadow: 'none',
-  }
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+  title: {
+    flexDirection: 'row',
+    color: '#222'
+  },
+  reviewContent: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    minWidth: 500,
+    minHeight: 100,
+    fontSize: 14,
+    lineHeight: 2,
+    padding: 20,
+    borderRadius: 5,
+    backgroundColor: '#ececec',
+  },
+  reviewMultiTxtField: {
+    fontSize: 30,
+    lineHeight: 100
+  },
+  confirmBtn: {
+    minWidth: 150,
+    height: 50,
+    boxShadow: 'none'
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    marginTop: 60,
+    '& a': {
+      textDecoration: 'none'
+    }
+  },
+  alertStyle: {
+    position: 'absolute',
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 });

@@ -291,8 +291,8 @@ export default function StoreTimeTab01() {
                   <Box key={index} className={clsx(base.flexRowBetweenCenter)} style={{ margin: '10px 0' }}>
                     <Box className={base.flexRowStartCenter}>
                       <Box className={clsx(base.flexRow, base.mr10)} style={{ minWidth: 200 }}>
-                        <Typography component="span" className={base.mr10} style={{ fontSize: 14, padding: '2px 10px', backgroundColor: theme.palette.primary.main, color: '#fff', borderRadius: 5 }}>매주</Typography>
-                        <Typography className={base.mr20}>{list.st_yoil_txt.replaceAll(',', ', ')}</Typography>
+                        <p className={base.mr20} style={{ fontSize: 14, padding: '2px 10px', backgroundColor: theme.palette.primary.main, color: '#fff', borderRadius: 5 }}>매주</p>
+                        <p className={base.mr20}>{list.st_yoil_txt.replaceAll(',', ', ')}</p>
                       </Box>
 
                       <Typography className={base.mr20} style={{ minWidth: 100 }}>{`시작: ${list.st_stime}`}</Typography>
@@ -341,8 +341,8 @@ export default function StoreTimeTab01() {
 
         <Grid container spacing={3} className={base.mb20}>
           <Grid item xs={6}>
+            <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>시작시간을 설정해주세요.</Typography>
             <Paper className={classes.paper}>
-              <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>시작시간을 설정해주세요.</Typography>
               <form className={classes.container} noValidate>
                 <TextField
                   id="time"
@@ -363,8 +363,8 @@ export default function StoreTimeTab01() {
             </Paper>
           </Grid>
           <Grid item xs={6}>
+            <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>마감시간을 설정해주세요.</Typography>
             <Paper className={classes.paper}>
-              <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>마감시간을 설정해주세요.</Typography>
               <form className={classes.container} noValidate>
                 <TextField
                   id="time"
@@ -389,11 +389,11 @@ export default function StoreTimeTab01() {
         {console.log("getDays", getDays)}
 
         {strValue === checkArr ?
-          <Button disabled className={classes.button} variant="contained" disableElevation>
+          <Button disabled className={classes.button} style={{ height: 50 }} variant="contained" disableElevation>
             저장하기
           </Button>
           :
-          <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff' }} disableElevation onClick={addStoreTime}>
+          <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={addStoreTime}>
             저장하기
           </Button>
         }
