@@ -162,7 +162,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="배달팁" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/store_info' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>

@@ -11,13 +11,13 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/core/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Local Component
-import Header from './Header';
+import Header from '../components/Header';
 import Api from '../Api';
-import { useStyles, primaryColor } from '../assets/styles/baseStyle';
+import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 
 interface IProps {
   props: object;
@@ -45,7 +45,7 @@ interface IStoreInfo {
 export default function StoreInfo(props: IProps) {
 
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
-  const classes = useStyles();
+  const base = baseStyles();
   const [isLoading, setLoading] = React.useState(false);
 
   // Toast(Alert) 관리
@@ -184,9 +184,9 @@ export default function StoreInfo(props: IProps) {
   }
 
   return (
-    <Box className={classes.root}>
+    <Box component="div">
       <Header type="storeInfo" action={updateStoreInfo} />
-      <Box className={classes.alert}>
+      <Box className={base.alert}>
         <Snackbar
           anchorOrigin={{
             vertical: 'top',
@@ -202,17 +202,17 @@ export default function StoreInfo(props: IProps) {
         </Snackbar>
       </Box>
       {isLoading ?
-        <Box className={classes.loadingWrap}>
+        <Box className={base.loadingWrap}>
           <CircularProgress disableShrink style={{ width: 50, height: 50, color: '#54447B' }} />
         </Box>
         :
-        <Box component="main" className={classes.content}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <TextField
                 value={info.do_jumju_introduction === null || info.do_jumju_introduction === undefined ? '' : info.do_jumju_introduction}
                 fullWidth
-                className={classes.multiTxtField}
+                className={base.multiTxtField}
                 id="outlined-multiline-static"
                 label="매장소개"
                 multiline
@@ -229,7 +229,7 @@ export default function StoreInfo(props: IProps) {
               <TextField
                 value={info.do_delivery_guide === null || info.do_delivery_guide === undefined ? '' : info.do_delivery_guide}
                 fullWidth
-                className={classes.multiTxtField}
+                className={base.multiTxtField}
                 id="outlined-multiline-static"
                 label="배달팁 안내"
                 multiline
@@ -246,7 +246,7 @@ export default function StoreInfo(props: IProps) {
               <TextField
                 value={info.do_jumju_menu_info === null || info.do_jumju_menu_info === undefined ? '' : info.do_jumju_menu_info}
                 fullWidth
-                className={classes.multiTxtField}
+                className={base.multiTxtField}
                 id="outlined-multiline-static"
                 label="메뉴소개"
                 multiline
@@ -263,7 +263,7 @@ export default function StoreInfo(props: IProps) {
               <TextField
                 value={info.do_major_menu === null || info.do_major_menu === undefined ? '' : info.do_major_menu}
                 fullWidth
-                className={classes.multiTxtField}
+                className={base.multiTxtField}
                 id="outlined-multiline-static"
                 label="대표메뉴"
                 multiline
@@ -279,7 +279,7 @@ export default function StoreInfo(props: IProps) {
               <TextField
                 value={info.do_jumju_origin === null || info.do_jumju_origin === undefined ? '' : info.do_jumju_origin}
                 fullWidth
-                className={classes.multiTxtField}
+                className={base.multiTxtField}
                 id="outlined-multiline-static"
                 label="원산지 안내"
                 multiline
@@ -307,14 +307,14 @@ export default function StoreInfo(props: IProps) {
             </Grid>
             {/* <Button variant="contained" color="primary" fullWidth>등록하기</Button> */}
           </Grid>
-          <Box className={classes.mb10}></Box>
+          <Box className={base.mb10}></Box>
           <Grid item xs={12} md={6}>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
                   value={'Y'}
                   checked={info.do_take_out === 'Y' ? true : false}
-                  control={<Radio style={{ color: primaryColor, paddingLeft: 0 }} />}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="포장가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
@@ -326,7 +326,7 @@ export default function StoreInfo(props: IProps) {
                 <FormControlLabel
                   value={'N'}
                   checked={info.do_take_out === 'N' ? true : false}
-                  control={<Radio style={{ color: primaryColor, paddingLeft: 0 }} />}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="포장불가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
@@ -344,7 +344,7 @@ export default function StoreInfo(props: IProps) {
                 <FormControlLabel
                   value={'Y'}
                   checked={info.do_coupon_use === 'Y' ? true : false}
-                  control={<Radio style={{ color: primaryColor, paddingLeft: 0 }} />}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="쿠폰 사용 가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
@@ -356,7 +356,7 @@ export default function StoreInfo(props: IProps) {
                 <FormControlLabel
                   value={'N'}
                   checked={info.do_coupon_use === 'N' ? true : false}
-                  control={<Radio style={{ color: primaryColor, paddingLeft: 0 }} />}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="쿠폰 사용 불가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
@@ -368,7 +368,7 @@ export default function StoreInfo(props: IProps) {
               </RadioGroup>
             </FormControl>
           </Grid>
-        </Box>
+        </MainBox>
       }
     </Box>
   );
