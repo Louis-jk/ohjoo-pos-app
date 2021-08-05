@@ -34,6 +34,52 @@ export const StoreTimeStyles = makeStyles({
   }
 });
 
+export const CouponStyles = makeStyles({
+  couponModal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  couponModalInner: {
+    textAlign: 'center',
+    backgroundColor: theme.palette.background.paper,
+    border: 'none',
+    borderRadius: 5,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  couponConfirmBtn: {
+    width: 120,
+    boxShadow: 'none'
+  },
+  couponPaper: {
+    padding: theme.spacing(3),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+    backgroundColor: '#fff',
+    boxShadow: '0px 5px 5px 1px #e5e5e5'
+  },
+  couponBox: {
+    position: 'relative',
+    padding: 10,
+    borderWidth: 2,
+    borderStyle: 'dotted',
+    borderColor: '#907FA4',
+    borderRadius: 5,
+    backgroundColor: theme.palette.primary.main,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
+  couponPrice: {
+    color: theme.palette.primary.contrastText
+  },
+  gradient: {
+    background: "linear-gradient(45deg, #dfe6ec, #e0f0ea, #FFF5DA)"
+  },
+})
+
 export const MenuStyles = makeStyles({
   menuListPaper: {
     padding: theme.spacing(2),

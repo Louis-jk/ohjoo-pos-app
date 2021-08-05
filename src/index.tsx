@@ -11,12 +11,6 @@ import initStore from './redux/store';
 const store = initStore();
 const persistor = persistStore(store);
 
-const MyContent = (id: any, message: any) => {
-  return (
-    <p>hello</p>
-  )
-}
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

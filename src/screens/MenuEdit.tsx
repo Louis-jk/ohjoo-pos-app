@@ -263,7 +263,7 @@ export default function MenuEdit(props: IProps) {
                   type="file"
                 // onChange={handleUploadClick}
                 />
-                <label htmlFor="contained-button-file">
+                <label htmlFor="contained-button-file" style={{ position: 'absolute', right: 0, bottom: 10 }}>
                   <Fab component="span" variant="circular" color="primary" style={{ backgroundColor: '#54447B', color: '#FFEB99' }} className={menu.photoSelectIcon}>
                     <AddPhotoAlternateOutlinedIcon />
                   </Fab>
@@ -346,7 +346,7 @@ export default function MenuEdit(props: IProps) {
                 </div>
                 :
                 <div className={base.mb20}>
-                  <Typography variant="body1" component="p" color="secondary">
+                  <Typography variant="body1" component="p" color="textSecondary">
                     ※ 현재 판매중지 상태인 메뉴입니다.
                   </Typography>
                 </div>

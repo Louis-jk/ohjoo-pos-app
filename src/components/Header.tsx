@@ -150,13 +150,13 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="메뉴관리" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/coupons' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="쿠폰관리" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/tips' style={{ color: theme.palette.secondary.contrastText }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
@@ -234,7 +234,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <MenuIcon />
           </IconButton>
           <Box className={base.flexRowStartCenter}>
-            {props.type === 'menuAdd' || props.type === 'menuEdit' ?
+            {props.type === 'menuAdd' || props.type === 'menuEdit' || props.type === 'couponAdd' ?
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -262,7 +262,15 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
                     수정하기
                   </Button>
-                  : null}
+                  : props.type === 'coupon' ?
+                    <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
+                      등록하기
+                    </Button>
+                    : props.type === 'couponAdd' ?
+                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
+                        저장하기
+                      </Button>
+                      : null}
             <IconButton
               color="secondary"
               aria-label="list"

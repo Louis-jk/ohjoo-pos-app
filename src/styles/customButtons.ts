@@ -14,7 +14,7 @@ export const MyButton = styled(Button)({
 });
 
 export const ModalConfirmButton = styled(Button)({
-  background: theme.palette.primary.main,
+  backgroundColor: theme.palette.primary.main,
   borderRadius: 3,
   color: theme.palette.primary.contrastText,
   width: 150,
@@ -28,7 +28,7 @@ export const ModalConfirmButton = styled(Button)({
 });
 
 export const ModalCancelButton = styled(Button)({
-  background: '#ececec',
+  backgroundColor: '#ececec',
   borderRadius: 3,
   color: '#222',
   width: 150,

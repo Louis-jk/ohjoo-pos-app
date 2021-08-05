@@ -15,7 +15,10 @@ import MenuEdit from '../screens/MenuEdit'; // 메뉴 수정
 import MenuAdd from '../screens/MenuAdd'; // 메뉴 추가
 import Category from '../screens/Category'; // 카테고리
 import Reviews from '../screens/Reviews'; // 리뷰
-import StoreInfo from '../screens/StoreInfo'; // 리뷰
+import StoreInfo from '../screens/StoreInfo'; // 매장소개
+import Coupons from '../screens/Coupons'; // 쿠폰
+import CouponAdd from '../screens/CouponAdd'; // 쿠폰 등록
+import Tips from '../screens/Tips'; // 배달팁
 
 
 export default function Routes() {
@@ -37,6 +40,9 @@ export default function Routes() {
         <Route path='/category' component={Category} />
         <Route path='/store_info' component={StoreInfo} />
         <Route path='/reviews' component={Reviews} />
+        <Route path='/coupons' component={Coupons} />
+        <Route path='/coupon_add' component={CouponAdd} />
+        <Route path='/tips' component={Tips} />
         <Route render={({ location }) => (
           <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
             <h2 style={{ color: 'red' }}>존재하지 않는 페이지입니다.</h2>

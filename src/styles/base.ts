@@ -48,10 +48,9 @@ export const LoginContainer = styled(Box)({
   flex: 1,
   height: '100vh',
   backgroundColor: '#fff',
-  
   '& .wrap': {
     minWidth: 250,
-    width: '30%',
+    width: '30%'
   }
 })
 
@@ -62,25 +61,25 @@ export const MyButton = styled(Button)({
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: '#222',
   height: 48,
-  padding: '0 30px',
+  padding: '0 30px'
 });
 
 export const ModalConfirmButton = styled(Button)({
-  background: theme.palette.primary.main,
+  backgroundColor: theme.palette.primary.main,
   borderRadius: 3,
   color: theme.palette.primary.contrastText,
   width: 150,
   boxShadow: 'none',
   '&:hover': {
-    boxShadow: 'none',
+    boxShadow: 'none'
   },
   '&:active': {
-    boxShadow: 'none',
+    boxShadow: 'none'
   }
 });
 
 export const ModalCancelButton = styled(Button)({
-  background: '#ececec',
+  backgroundColor: '#ececec',
   borderRadius: 3,
   color: '#222',
   width: 150,
@@ -181,9 +180,11 @@ export const baseStyles = makeStyles({
     padding: theme.spacing(3, 2, 3),
   },
   modalTitle: {
+    fontSize: '1.6rem',
     fontWeight: 'bold', 
     color: theme.palette.primary.main,
-    marginBottom: 10 
+    marginBottom: 10,
+    marginTop: 0
   },
   modalDescription: {
     marginBottom: 20,
@@ -269,6 +270,38 @@ export const baseStyles = makeStyles({
     backgroundColor: '#ececec',
     padding: 30,
     color: '#222'
+  },
+  txtRoot: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textField: {
+    backgroundColor: '#fff',
+    marginBottom: 10
+  },
+  boxBlur: {
+    boxShadow: '0px 0px 10px 0px #e5e5e5',
+  },
+  gradient: {
+    background: "linear-gradient(45deg, #D5ECC2, #EDF6E5, #FFF5DA)"
+  },
+  border: {
+    borderWidth: 1,
+    borderColor: '#e3e3e3',
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    // boxShadow: '0px 0px 10px 0px #e5e5e5',
+    boxShadow: 'none',
+    background: 'transparent'
   },
   reviewPaper: {
     padding: theme.spacing(3),
