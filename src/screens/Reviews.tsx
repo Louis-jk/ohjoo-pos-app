@@ -169,7 +169,7 @@ export default function Reviews(props: any) {
   console.log("reviewId ?", reviewId);
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="review" />
       <div className={base.alertStyle}>
         <Snackbar
@@ -192,7 +192,7 @@ export default function Reviews(props: any) {
         aria-describedby="transition-modal-description"
         className={base.modal}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -235,8 +235,8 @@ export default function Reviews(props: any) {
               onChange={e => setComment(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 20 }}>
-              <ModalConfirmButton fullWidth variant="contained" color="primary" className={base.confirmBtn} onClick={sendReply}>등록하기</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="contained" className={base.confirmBtn} onClick={handleClose}>닫기</ModalCancelButton>
+              <ModalConfirmButton variant="contained" color="primary" className={base.confirmBtn} onClick={sendReply}>등록하기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" className={base.confirmBtn} onClick={handleClose}>닫기</ModalCancelButton>
             </ButtonGroup>
           </div>
         </Fade>

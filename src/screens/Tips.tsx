@@ -211,7 +211,7 @@ export default function Tips(props: any) {
   }
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="tips" action={handleOpen} />
       <Box className={base.alertStyle}>
         <Snackbar
@@ -234,7 +234,7 @@ export default function Tips(props: any) {
         aria-describedby="transition-modal-description"
         className={base.modal}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -244,7 +244,21 @@ export default function Tips(props: any) {
         <Fade in={open}>
           <Box className={base.modalInner}>
             <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>배달팁 입력</Typography>
-            <IconButton color="primary" aria-label="upload picture" component="span" onClick={handleClose} style={{ position: 'absolute', top: -10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: '#53447A' }}>
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              onClick={handleClose}
+              style={{
+                position: 'absolute',
+                top: -10,
+                right: -10,
+                width: 30,
+                height: 30,
+                color: '#fff',
+                backgroundColor: theme.palette.primary.main
+              }}
+            >
               <CloseRoundedIcon />
             </IconButton>
             <Paper className={base.paper}>
@@ -278,7 +292,7 @@ export default function Tips(props: any) {
                   }}
                 />
               </Box>
-              <Typography>위 금액일 경우, 아래 배달비 적용</Typography>
+              <p className={base.mb20}>위 금액일 경우, 아래 배달비 적용</p>
               <Box className={base.txtRoot}>
                 <TextField
                   value={tipPrice}
@@ -296,8 +310,8 @@ export default function Tips(props: any) {
               </Box>
             </Paper>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 20 }}>
-              <ModalConfirmButton fullWidth variant="contained" color="primary" className={base.confirmBtn} onClick={onSubmitHandler}>등록하기</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="contained" className={base.confirmBtn} onClick={handleClose}>닫기</ModalCancelButton>
+              <ModalConfirmButton variant="contained" color="primary" onClick={onSubmitHandler}>등록하기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={handleClose}>닫기</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>
@@ -321,8 +335,8 @@ export default function Tips(props: any) {
             <h3 className={base.modalTitle}>배달팁 삭제</h3>
             <p className={base.modalDescription}>선택하신 배달팁을 삭제하시겠습니까?</p>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton fullWidth variant="contained" onClick={deleteTipHandler}>예</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="contained" onClick={handleCloseTip}>아니요</ModalCancelButton>
+              <ModalConfirmButton variant="contained" onClick={deleteTipHandler}>예</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={handleCloseTip}>아니요</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>

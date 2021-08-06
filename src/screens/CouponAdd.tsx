@@ -26,9 +26,8 @@ import Alert from '@material-ui/core/Alert';
 import Select, { SelectChangeEvent } from '@material-ui/core/Select';
 import Box from '@material-ui/core/Box';
 import Stack from '@material-ui/core/Stack';
-import { koKR } from '@material-ui/core/locale';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateRangePicker, { DateRange } from '@material-ui/lab/DateRangePicker';
 
 // Local Component
@@ -191,7 +190,7 @@ export default function CouponAdd() {
   }
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="couponAdd" action={addCouponConfirmHandler} />
       <div className={base.alert}>
         <Snackbar
@@ -336,17 +335,20 @@ export default function CouponAdd() {
             </ButtonGroup>
           </Grid>
           <Grid item xs={12} md={12}>
-            <Typography>다운로드 유효기간</Typography>
-            <Grid container spacing={3}>
+            <p className={base.mb20}>다운로드 유효기간</p>
+            {/* <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <p>시작날짜</p>
               </Grid>
               <Grid item xs={12} md={6}>
                 <p>종료날짜</p>
               </Grid>
-            </Grid>
+            </Grid> */}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DateRangePicker
+                okText="확인"
+                cancelText="취소"
+                clearText="클리어"
                 startText="시작날짜"
                 endText="종료날짜"
                 calendars={2}
@@ -357,9 +359,23 @@ export default function CouponAdd() {
                 }}
                 renderInput={(startProps, endProps) => (
                   <React.Fragment>
-                    <TextField {...startProps} />
+                    <TextField {...startProps}
+                      id="date"
+                      label="시작날짜"
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
                     <Box sx={{ mx: 2 }}> 부터 </Box>
-                    <TextField {...endProps} />
+                    <TextField {...endProps}
+                      id="date"
+                      label="종료날짜"
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
                   </React.Fragment>
                 )}
               />

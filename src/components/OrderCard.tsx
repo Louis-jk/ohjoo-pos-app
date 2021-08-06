@@ -7,7 +7,8 @@ import {
   ButtonGroup,
   Button
 } from '@material-ui/core';
-
+import OrderCheckModal from './OrderCheckModal';
+import OrderRejectModal from './OrderRejectModal';
 
 interface orderData {
   [key: string]: string;
@@ -24,18 +25,52 @@ export default function OrderCard(props: OrderProps) {
 
   const history = useHistory();
   const { orders, type } = props;
+  const params = useParams();
+
+  const [odId, setOdId] = React.useState('');
+  const [odType, setOdType] = React.useState('');
+
+  // 신규주문 상태 -> 접수(배달/포장 시간 입력) 모달 핸들러
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const checkOrderHandler = (id: string, type: string) => {
+    setOdId(id);
+    setOdType(type);
+    handleOpen();
+  }
+
+  // 신규주문 -> 주문 거부 모달 핸들러
+  const [rejectOopen, setRejectOpen] = React.useState(false);
+  const handleRejectOpen = () => {
+    setRejectOpen(true);
+  };
+
+  const handleRejectClose = () => {
+    setRejectOpen(false);
+  };
+  const rejectOrderHandler = (id: string) => {
+    setOdId(id);
+    handleRejectOpen();
+  }
 
   const renderList = (): JSX.Element[] => {
     return orders.map((order, index) =>
-      <Grid item xs={12} component="li" key={order.od_id}>
+      <Grid item xs={12} key={order.od_id + index}>
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', background: '#e5e5e5', paddingTop: 5, paddingBottom: 5, paddingLeft: 15, paddingRight: 15 }}>
+        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', background: '#e5e5e5', paddingTop: 5, paddingBottom: 5, paddingLeft: 15, paddingRight: 15 }}>
           <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
           <Typography style={{ margin: 0 }}>{order.od_time}</Typography>
         </Box>
 
 
-        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', background: '#fff', paddingTop: 5, paddingBottom: 5, paddingLeft: 15, paddingRight: 15 }}>
+        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', background: '#fff', paddingTop: 5, paddingBottom: 5, paddingLeft: 15, paddingRight: 15 }}>
           <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', background: '#fff' }}>
             <img src={order.store_logo} style={{ width: 100, height: 100 }} alt="오늘의 주문 로고" />
             <Box>
@@ -50,19 +85,19 @@ export default function OrderCard(props: OrderProps) {
           <Box style={{ display: 'block', width: 1, height: 100, background: '#e5e5e5', marginLeft: 20, marginRight: 20 }}></Box>
 
           <ButtonGroup variant="outlined" color="primary" style={{ backgroundColor: '#e5e5e5', borderColor: '#e5e5e5' }} aria-label="text primary button group">
-            <Button style={{ minWidth: 120, height: 75 }} onClick={() => history.push(`/details/${order.od_id}`)}>상세보기</Button>
+            <Button style={{ minWidth: 120, height: 75 }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
             {
               type === 'new' ?
-                <Button style={{ minWidth: 120, height: 75 }} /* onClick={() => checkOrderHandler(order.od_id, order.od_type)} */>접수</Button>
+                <Button style={{ minWidth: 120, height: 75 }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
                 : type === 'check' ?
-                  <Button style={{ minWidth: 120, height: 75 }}>배달</Button>
+                  <Button style={{ minWidth: 120, height: 75 }}>배달처리</Button>
                   : null
             }
             {
               type === 'new' ?
-                <Button style={{ minWidth: 120, height: 75 }} /* onClick={() => rejectOrderHandler(order.od_id)} */>거부</Button>
+                <Button style={{ minWidth: 120, height: 75 }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
                 : type === 'check' ?
-                  <Button style={{ minWidth: 120, height: 75 }}>취소</Button>
+                  <Button style={{ minWidth: 120, height: 75 }}>취소처리</Button>
                   : null}
           </ButtonGroup>
 
@@ -75,9 +110,9 @@ export default function OrderCard(props: OrderProps) {
   return (
     orders.length > 0 ?
       <>
-        {/* <OrderCheckModal isOpen={open} od_id={odId} od_type={odType} handleClose={handleClose} />
-      <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} /> */}
-        <Grid component="ul" container spacing={3}>
+        <OrderCheckModal isOpen={open} od_id={odId} od_type={odType} handleClose={handleClose} />
+        <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} />
+        <Grid container spacing={3}>
           {renderList()}
         </Grid>
       </>

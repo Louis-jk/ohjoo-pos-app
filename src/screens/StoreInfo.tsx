@@ -184,7 +184,7 @@ export default function StoreInfo(props: IProps) {
   }
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="storeInfo" action={updateStoreInfo} />
       <Box className={base.alert}>
         <Snackbar

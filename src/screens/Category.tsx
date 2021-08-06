@@ -128,7 +128,7 @@ export default function SetCategory(props: any) {
 
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="category" />
       <div className={base.alertStyle}>
         <Snackbar

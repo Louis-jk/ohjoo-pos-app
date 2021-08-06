@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Tabs, Tab, AppBar } from '@material-ui/core';
 import Header from '../components/Header';
-import { MainBox } from '../styles/base';
+import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import SetStoreTime01 from '../components/SetStoreTime01';
 import SetStoreTime02 from '../components/SetStoreTime02';
 import SetStoreTime03 from '../components/SetStoreTime03';
@@ -59,13 +59,14 @@ function LinkTab(props: LinkTabProps) {
 
 export default function SetStoreTime(props: TabPanelProps) {
 
+  const base = baseStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <AppBar position="static" style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>

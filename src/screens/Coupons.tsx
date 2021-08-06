@@ -161,7 +161,7 @@ export default function Tips(props: any) {
 
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="coupon" action={handleOpen} />
       <Box className={base.alertStyle}>
         <Snackbar

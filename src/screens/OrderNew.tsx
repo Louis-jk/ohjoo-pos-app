@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import { Box, Typography } from '@material-ui/core';
 
 import Header from '../components/Header';
-import { MainBox } from '../styles/base';
 import OrderCard from '../components/OrderCard';
 import Api from '../Api';
+import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 
 export default function OrderNew() {
 
+  const base = baseStyles();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -46,7 +47,7 @@ export default function OrderNew() {
 
   return (
 
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <OrderCard orders={list} type="new" />

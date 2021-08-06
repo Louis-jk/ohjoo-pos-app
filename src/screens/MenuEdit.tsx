@@ -239,7 +239,7 @@ export default function MenuEdit(props: IProps) {
 
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="menuEdit" />
       {isLoading ?
         <div className={base.loadingWrap}>
@@ -264,7 +264,7 @@ export default function MenuEdit(props: IProps) {
                 // onChange={handleUploadClick}
                 />
                 <label htmlFor="contained-button-file" style={{ position: 'absolute', right: 0, bottom: 10 }}>
-                  <Fab component="span" variant="circular" color="primary" style={{ backgroundColor: '#54447B', color: '#FFEB99' }} className={menu.photoSelectIcon}>
+                  <Fab component="span" variant="circular" color="primary" style={{ color: theme.palette.primary.contrastText }} className={menu.photoSelectIcon}>
                     <AddPhotoAlternateOutlinedIcon />
                   </Fab>
                 </label>

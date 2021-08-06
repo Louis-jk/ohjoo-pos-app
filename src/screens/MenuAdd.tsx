@@ -147,7 +147,7 @@ export default function MenuAdd(props: any) {
 
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="menuAdd" />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <Grid container spacing={3}>

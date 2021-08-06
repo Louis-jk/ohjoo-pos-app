@@ -8,6 +8,7 @@ import OrderNew from '../screens/OrderNew'; // 신규주문
 import OrderCheck from '../screens/OrderCheck'; // 주문 접수완료
 import OrderDelivery from '../screens/OrderDelivery'; // 주문 배달중
 import OrderDone from '../screens/OrderDone'; // 주문 배달완료
+import OrderDetail from '../screens/OrderDetail'; // 주문 상세
 import SetStoreTime from '../screens/SetStoreTime'; // 영업일 및 휴무일
 import Caculate from '../screens/Caculate'; // 정산내역
 import MenuList from '../screens/MenuList'; // 메뉴 리스트
@@ -32,6 +33,7 @@ export default function Routes() {
         <Route path='/order_check' component={OrderCheck} />
         <Route path='/order_delivery' component={OrderDelivery} />
         <Route path='/order_done' component={OrderDone} />
+        <Route path='/orderdetail/:id' component={OrderDetail} />
         <Route path='/set_storetime' component={SetStoreTime} />
         <Route path='/caculate' component={Caculate} />
         <Route path='/menu' component={MenuList} />

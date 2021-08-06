@@ -194,3 +194,52 @@ export const MenuStyles = makeStyles({
     }
   },
 })
+
+export const OrderStyles = makeStyles({
+  orderPaper: {
+    padding: theme.spacing(2),
+    margin: theme.spacing(1),
+    textAlign: 'center',
+    minHeight: 200,
+    boxShadow: 'none',
+    border: 1,
+    borderColor: theme.palette.primary.main,
+    borderStyle: 'dotted',
+    WebkitBoxShadow: 'none'
+  },
+  orderTitle: {
+    marginBottom: 30,
+    textAlign: 'left'
+  },
+  orderSubtitle: {
+    width: 100,
+    textAlign: 'left'
+  },
+  orderBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginBottom: 10
+  },
+  orderMenuBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    backgroundColor: '#FCDD00',
+    border: 1,
+    borderColor: '#FCDD00',
+    borderStyle: 'solid',
+    borderRadius: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+
+    '& p': {
+      fontWeight: 'bold'
+    }
+
+  }
+})

@@ -24,6 +24,13 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { Divider, Typography } from '@material-ui/core';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import TimePicker from '@material-ui/lab/TimePicker';
+import MobileTimePicker from '@material-ui/lab/MobileTimePicker';
+import DesktopTimePicker from '@material-ui/lab/DesktopTimePicker';
+
+import { ko } from "date-fns/esm/locale";
 
 // Local Component
 import Api from '../Api';
@@ -53,6 +60,9 @@ export default function StoreTimeTab01() {
 
   const checkArr = `["0","1","2","3","4","5","6"]`; // 등록된 값과 비교하기 위한 스트링 데이터 (저장하기 버튼 on/off 유무)
 
+  const [value, setValue] = React.useState<Date | null>(
+    new Date('2018-01-01T00:00:00.000Z'),
+  );
 
   // 요일 선택 핸들러
   const selectDayHandler = (payload: string) => {
@@ -232,7 +242,6 @@ export default function StoreTimeTab01() {
     getStoreTime();
   }, [mt_id, mt_jumju_code])
 
-
   console.log('====================================');
   console.log("strValue === ", strValue);
   console.log("checkArr === ", checkArr);
@@ -342,7 +351,7 @@ export default function StoreTimeTab01() {
         <Grid container spacing={3} className={base.mb20}>
           <Grid item xs={6}>
             <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>시작시간을 설정해주세요.</Typography>
-            <Paper className={classes.paper}>
+            {/* <Paper className={classes.paper}>
               <form className={classes.container} noValidate>
                 <TextField
                   id="time"
@@ -360,7 +369,19 @@ export default function StoreTimeTab01() {
                   disabled={strValue === checkArr ? true : false}
                 />
               </form>
-            </Paper>
+            </Paper> */}
+            <LocalizationProvider dateAdapter={AdapterDateFns} locale={ko}>
+              <Box className={classes.paper}>
+                <MobileTimePicker
+                  label="시작시간"
+                  value={value}
+                  onChange={(newValue) => {
+                    setValue(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Box>
+            </LocalizationProvider>
           </Grid>
           <Grid item xs={6}>
             <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>마감시간을 설정해주세요.</Typography>

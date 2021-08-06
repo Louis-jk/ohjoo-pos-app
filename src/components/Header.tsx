@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -22,6 +21,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import AppsIcon from '@material-ui/icons/Apps';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import PrintIcon from '@material-ui/icons/Print';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
 
 import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
@@ -47,6 +49,7 @@ interface OptionalProps {
 }
 
 export default function ResponsiveDrawer(props: OptionalProps) {
+  console.log("Header props data >>>", props);
   const { window } = props;
   const dispatch = useDispatch();
   const history = useHistory();
@@ -211,7 +214,6 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   return (
     <>
-      <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
@@ -234,7 +236,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <MenuIcon />
           </IconButton>
           <Box className={base.flexRowStartCenter}>
-            {props.type === 'menuAdd' || props.type === 'menuEdit' || props.type === 'couponAdd' ?
+            {props.type === 'menuAdd' || props.type === 'menuEdit' || props.type === 'couponAdd'
+              || props.detail === 'order' || props.detail === 'order_new' || props.detail === 'order_check'
+              ?
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -250,27 +254,53 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             </Typography>
           </Box>
           <Box className={base.flexRowStartCenter}>
-            {props.type === 'menu' ?
-              <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
-                메뉴 추가하기
-              </Button>
-              : props.type === 'menuAdd' ?
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
-                  등록하기
+            {props.detail === 'order_new' ?
+              <Box>
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => props.action}>
+                  접수처리
                 </Button>
-                : props.type === 'menuEdit' ?
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
-                    수정하기
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => props.action02}>
+                  거부처리
+                </Button>
+              </Box>
+              : props.detail === 'order_check' ?
+                <Box>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<DoneIcon />} onClick={() => props.action}>
+                    배달처리
                   </Button>
-                  : props.type === 'coupon' ?
-                    <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<CloseIcon />} onClick={() => props.action02}>
+                    취소처리
+                  </Button>
+                </Box>
+                : props.type === 'menu' ?
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                    메뉴 추가하기
+                  </Button>
+                  : props.type === 'menuAdd' ?
+                    <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
                       등록하기
                     </Button>
-                    : props.type === 'couponAdd' ?
-                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
-                        저장하기
+                    : props.type === 'menuEdit' ?
+                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                        수정하기
                       </Button>
-                      : null}
+                      : props.type === 'coupon' ?
+                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
+                          등록하기
+                        </Button>
+                        : props.type === 'couponAdd' ?
+                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                            저장하기
+                          </Button>
+                          : props.type === 'tips' ?
+                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                              등록하기
+                            </Button>
+                            : props.type === 'storeInfo' ?
+                              <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                                저장하기
+                              </Button>
+                              : null}
             <IconButton
               color="secondary"
               aria-label="list"

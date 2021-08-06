@@ -1,10 +1,9 @@
 import React from 'react';
 import { Box, Typography, Tabs, Tab, AppBar, Divider } from '@material-ui/core';
 import Header from '../components/Header';
-import { MainBox, theme } from '../styles/base';
 import Calculate01 from '../components/Calculate01';
 import Calculate02 from '../components/Calculate02';
-
+import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -81,6 +80,7 @@ function LinkTab(props: LinkTabProps) {
 
 export default function Calculate(props: any) {
 
+  const base = baseStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -88,7 +88,7 @@ export default function Calculate(props: any) {
   };
 
   return (
-    <Box component="div">
+    <Box component="div" className={base.root}>
       <Header type="calculate" />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <AppBar position="static" style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>

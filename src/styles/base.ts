@@ -2,6 +2,8 @@ import * as React from 'react';
 import { styled, makeStyles } from '@material-ui/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Box, Button } from '@material-ui/core';
+import { koKR } from '@material-ui/core/locale';
+// import { ko } from 'date-fns/locale';
 
 export const theme = createTheme({
   breakpoints: {
@@ -27,8 +29,7 @@ export const theme = createTheme({
       contrastText: '#222',
     },
   },
-  
-});
+}, koKR);
 
 export const MainBox = styled(Box)({
   padding: theme.spacing(3),
@@ -69,6 +70,7 @@ export const ModalConfirmButton = styled(Button)({
   borderRadius: 3,
   color: theme.palette.primary.contrastText,
   width: 150,
+  height: 50,
   boxShadow: 'none',
   '&:hover': {
     boxShadow: 'none'
@@ -83,6 +85,7 @@ export const ModalCancelButton = styled(Button)({
   borderRadius: 3,
   color: '#222',
   width: 150,
+  height: 50,
   boxShadow: 'none',
 
   '&:hover': {
@@ -176,7 +179,7 @@ export const baseStyles = makeStyles({
     backgroundColor: theme.palette.background.paper,
     border: 'none',
     borderRadius: 5,
-    boxShadow: theme.shadows[5],
+    boxShadow: 'none',
     padding: theme.spacing(3, 2, 3),
   },
   modalTitle: {
@@ -276,7 +279,8 @@ export const baseStyles = makeStyles({
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 20
   },
   textField: {
     backgroundColor: '#fff',
@@ -300,8 +304,11 @@ export const baseStyles = makeStyles({
     textAlign: 'center',
     color: theme.palette.text.secondary,
     // boxShadow: '0px 0px 10px 0px #e5e5e5',
-    boxShadow: 'none',
-    background: 'transparent'
+    boxShadow: 'none !important',
+    background: 'transparent',
+    '& .MuiPaper-root': {
+      boxShadow: 'none',
+    }
   },
   reviewPaper: {
     padding: theme.spacing(3),
