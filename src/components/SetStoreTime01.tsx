@@ -265,7 +265,7 @@ export default function StoreTimeTab01() {
           aria-describedby="transition-modal-description"
           className={base.modal}
           open={open}
-          onClose={handleClose}
+          // onClose={handleClose}
           closeAfterTransition
           BackdropComponent={Backdrop}
           BackdropProps={{
@@ -274,11 +274,11 @@ export default function StoreTimeTab01() {
         >
           <Fade in={open}>
             <Box className={clsx(base.modalInner, base.colCenter)}>
-              <Typography id="transition-modal-title" component="h5" variant="h5" className={base.modalTitle}>영업시간 삭제</Typography>
-              <Typography id="transition-modal-description" className={base.modalDescription}>해당 영업시간을 삭제하시겠습니까?</Typography>
+              <h2 id="transition-modal-title" className={base.modalTitle}>영업시간 삭제</h2>
+              <p id="transition-modal-description" className={base.modalDescription}>해당 영업시간을 삭제하시겠습니까?</p>
               <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                <ModalConfirmButton fullWidth variant="contained" onClick={deleteStoreTime}>삭제하기</ModalConfirmButton>
-                <ModalCancelButton fullWidth variant="contained" onClick={handleClose}>취소</ModalCancelButton>
+                <ModalConfirmButton variant="contained" onClick={deleteStoreTime}>삭제하기</ModalConfirmButton>
+                <ModalCancelButton fullWidth variant="outlined" onClick={handleClose}>취소</ModalCancelButton>
               </ButtonGroup>
             </Box>
           </Fade>

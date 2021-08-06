@@ -253,11 +253,11 @@ export default function StoreTimeTab01() {
         >
           <Fade in={open}>
             <Box className={clsx(base.modalInner, base.colCenter)}>
-              <Typography id="transition-modal-title" component="h5" variant="h5" className={base.modalTitle}>정기휴무일 삭제</Typography>
-              <Typography id="transition-modal-description" className={base.modalDescription}>정기휴무일을 삭제하시겠습니까?</Typography>
+              <h2 id="transition-modal-title" className={base.modalTitle}>정기휴무일 삭제</h2>
+              <p id="transition-modal-description" className={base.modalDescription}>정기휴무일을 삭제하시겠습니까?</p>
               <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                <ModalConfirmButton fullWidth variant="contained" onClick={deleteStoreClosingDay}>삭제하기</ModalConfirmButton>
-                <ModalCancelButton fullWidth variant="contained" onClick={handleClose}>취소</ModalCancelButton>
+                <ModalConfirmButton variant="contained" onClick={deleteStoreClosingDay}>삭제하기</ModalConfirmButton>
+                <ModalCancelButton variant="outlined" onClick={handleClose}>취소</ModalCancelButton>
               </ButtonGroup>
             </Box>
           </Fade>
@@ -308,7 +308,7 @@ export default function StoreTimeTab01() {
           </FormGroup>
         </FormControl>
         <Divider />
-        <FormControl component="fieldset" style={{ marginTop: 10 }}>
+        <FormControl component="fieldset" style={{ marginTop: 10, marginBottom: 20 }}>
           <FormGroup aria-label="position" row>
             {DayArr && DayArr.map((day, index) => (
               <FormControlLabel

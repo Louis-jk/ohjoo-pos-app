@@ -184,7 +184,7 @@ export default function Tips(props: any) {
         aria-describedby="transition-modal-description"
         className={coupon.couponModal}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -193,8 +193,8 @@ export default function Tips(props: any) {
       >
         <Fade in={open}>
           <Box className={coupon.couponModalInner} style={{ zIndex: 99999 }}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" className={base.modalTitle}>쿠폰 삭제</Typography>
-            <Typography id="transition-modal-description" className={base.modalDescription}>선택하신 쿠폰을 삭제하시겠습니까?</Typography>
+            <h2 id="transition-modal-title" className={base.modalTitle}>쿠폰 삭제</h2>
+            <p id="transition-modal-description" className={base.modalDescription}>선택하신 쿠폰을 삭제하시겠습니까?</p>
             <ButtonGroup variant="text" aria-label="text primary button group">
               <ModalConfirmButton variant="contained" onClick={deleteCouponHandler}>예</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={handleClose}>아니요</ModalCancelButton>
