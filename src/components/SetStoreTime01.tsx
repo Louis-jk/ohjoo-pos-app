@@ -241,7 +241,7 @@ export default function StoreTimeTab01() {
   return (
     isLoading ?
       <Box className={base.loadingWrap}>
-        <CircularProgress disableShrink style={{ width: 50, height: 50, color: theme.palette.primary.main }} />
+        <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
       </Box>
       :
       <section style={{ height: '100vh' }}>

@@ -66,7 +66,7 @@ export default function Main(props: any) {
 
   return (
     <Box className={base.loadingWrap} style={{ flexDirection: 'column', backgroundColor: theme.palette.primary.main }}>
-      <CircularProgress disableShrink style={{ width: 50, height: 50, color: theme.palette.secondary.main, marginBottom: 20 }} />
+      <CircularProgress disableShrink color="secondary" style={{ width: 50, height: 50, marginBottom: 20 }} />
       <Typography style={{ color: theme.palette.primary.contrastText }}>등록된 상점 확인중</Typography>
     </Box>
   );

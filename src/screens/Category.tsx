@@ -148,7 +148,7 @@ export default function SetCategory(props: any) {
 
       {isLoading ?
         <div className={base.loadingWrap}>
-          <CircularProgress disableShrink style={{ width: 50, height: 50, color: '#54447B' }} />
+          <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
         </div>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>

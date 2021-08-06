@@ -205,7 +205,7 @@ export default function Tips(props: any) {
       {/* 쿠폰 삭제 모달 */}
       {isLoading ?
         <Box className={base.loadingWrap}>
-          <CircularProgress disableShrink style={{ width: 50, height: 50, color: '#54447B' }} />
+          <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
         </Box>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>

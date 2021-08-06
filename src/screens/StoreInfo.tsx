@@ -203,7 +203,7 @@ export default function StoreInfo(props: IProps) {
       </Box>
       {isLoading ?
         <Box className={base.loadingWrap}>
-          <CircularProgress disableShrink style={{ width: 50, height: 50, color: '#54447B' }} />
+          <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
         </Box>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
