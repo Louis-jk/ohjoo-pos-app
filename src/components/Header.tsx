@@ -267,7 +267,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                       등록하기
                     </Button>
                     : props.type === 'couponAdd' ?
-                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
+                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
                         저장하기
                       </Button>
                       : null}

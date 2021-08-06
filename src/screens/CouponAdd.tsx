@@ -31,7 +31,6 @@ import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import DateRangePicker, { DateRange } from '@material-ui/lab/DateRangePicker';
 
-
 // Local Component
 import Header from '../components/Header';
 import Api from '../Api';
@@ -62,7 +61,7 @@ export default function CouponAdd() {
   ); // 쿠폰 다운로드 유효기간 종료날짜
 
   // 쿠폰 구분 셀렉트 핸들러
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
   };
 
@@ -215,7 +214,7 @@ export default function CouponAdd() {
         aria-describedby="transition-modal-description"
         className={base.modal}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -224,11 +223,11 @@ export default function CouponAdd() {
       >
         <Fade in={open}>
           <div className={base.modalInner}>
-            <h2 id="transition-modal-title">쿠폰 등록 성공!</h2>
-            <p id="transition-modal-description">쿠폰을 추가로 등록하시겠습니까?</p>
-            <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <Button fullWidth variant="contained" color="primary" className={base.confirmBtn} onClick={reAddHandler}>추가 등록하기</Button>
-              <Button fullWidth variant="contained" className={base.confirmBtn} onClick={goBackList}>아니요</Button>
+            <h2 id="transition-modal-title" className={base.modalTitle}>쿠폰 등록 성공!</h2>
+            <p id="transition-modal-description" className={base.modalDescription}>쿠폰을 추가로 등록하시겠습니까?</p>
+            <ButtonGroup variant="text" aria-label="text primary button group">
+              <ModalConfirmButton variant="contained" onClick={reAddHandler}>추가 등록하기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={goBackList}>아니요</ModalCancelButton>
             </ButtonGroup>
           </div>
         </Fade>
@@ -242,21 +241,15 @@ export default function CouponAdd() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            {/* <Typography>구분</Typography> */}
-            <FormControl fullWidth variant="outlined" className={base.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">구분</InputLabel>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
               <Select
-                fullWidth
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 value={type}
-                // onChange={handleChange}
                 label="카테고리"
-                required
+                onChange={handleChange}
               >
-                <MenuItem value="">
-                  <em>선택해주세요</em>
-                </MenuItem>
                 <MenuItem value={10}>모두 사용가능</MenuItem>
                 <MenuItem value={20}>포장용 쿠폰</MenuItem>
                 <MenuItem value={30}>배달용 쿠폰</MenuItem>
