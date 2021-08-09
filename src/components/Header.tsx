@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
@@ -24,14 +25,18 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import PrintIcon from '@material-ui/icons/Print';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import FormGroup from '@material-ui/core/FormGroup';
+import Switch, { SwitchProps } from '@material-ui/core/Switch';
+import { ButtonGroup } from '@material-ui/core';
 
 import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
 import { theme, baseStyles } from '../styles/base';
-import { ButtonGroup } from '@material-ui/core';
+import { MaterialUISwitch } from './MaterialUISwitch';
+
+import OrderPrint from '../components/ComponentToPrint';
 
 const drawerWidth = 200;
-
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -49,10 +54,11 @@ interface OptionalProps {
 }
 
 export default function ResponsiveDrawer(props: OptionalProps) {
-  console.log("Header props data >>>", props);
+  // console.log("Header props data >>>", props);
   const { window } = props;
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
   const { mt_store } = useSelector((state: any) => state.login);
@@ -60,6 +66,18 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   const [storeListOpen, setStoreListOpen] = React.useState(false); // 매장 선택 드로어  
   const [value, setValue] = React.useState(''); // 매장 선택 값
+  const [curPathName, setCurPathName] = React.useState('');
+
+  React.useEffect(() => {
+    let slice = location.pathname.slice(1);
+    setCurPathName(slice);
+  }, [location])
+
+  // 프린트 출력 부분
+  const componentRef = React.useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
@@ -102,25 +120,25 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       <Toolbar />
       <Divider />
       <List>
-        <ListItem button component={Link} to='/order_new' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="신규주문" />
         </ListItem>
-        <ListItem button component={Link} to='/order_check' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="접수완료" />
         </ListItem>
-        <ListItem button component={Link} to='/order_delivery' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="배달중" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
@@ -199,6 +217,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 label={store.mt_store}
                 style={{ margin: 10, color: '#222' }}
                 onClick={() => setStoreHandler(store, store.id, store.mt_id, store.mt_jumju_code, store.mt_store, store.mt_addr)}
+                checked={store.mt_store === mt_store ? true : false}
               />
               <Divider />
             </Box>
@@ -254,53 +273,100 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             </Typography>
           </Box>
           <Box className={base.flexRowStartCenter}>
+            <FormGroup>
+              <FormControlLabel
+                style={{ marginRight: 30 }}
+                control={<MaterialUISwitch sx={{ m: 1, mr: 0 }} defaultChecked />}
+                label="영업정지"
+              />
+            </FormGroup>
             {props.detail === 'order_new' ?
               <Box>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => props.action}>
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
                   접수처리
                 </Button>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => props.action02}>
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action02}>
                   거부처리
                 </Button>
+                <IconButton
+                  color="secondary"
+                  aria-label="list"
+                  component="span"
+                  onClick={handlePrint}
+                >
+                  <PrintIcon />
+                </IconButton>
+                <Box style={{ display: 'none' }}>
+                  <OrderPrint ref={componentRef} />
+                </Box>
               </Box>
               : props.detail === 'order_check' ?
                 <Box>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<DoneIcon />} onClick={() => props.action}>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<DoneIcon />} onClick={props.action}>
                     배달처리
                   </Button>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<CloseIcon />} onClick={() => props.action02}>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<CloseIcon />} onClick={props.action02}>
                     취소처리
                   </Button>
+                  <IconButton
+                    color="secondary"
+                    aria-label="list"
+                    component="span"
+                    onClick={handlePrint}
+                  >
+                    <PrintIcon />
+                  </IconButton>
+                  <Box style={{ display: 'none' }}>
+                    <OrderPrint ref={componentRef} />
+                  </Box>
                 </Box>
-                : props.type === 'menu' ?
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
-                    메뉴 추가하기
-                  </Button>
-                  : props.type === 'menuAdd' ?
+                : props.detail === 'order' ?
+                  <Box>
+                    <IconButton
+                      color="secondary"
+                      aria-label="list"
+                      component="span"
+                      onClick={handlePrint}
+                    >
+                      <PrintIcon />
+                    </IconButton>
+                    <Box style={{ display: 'none' }}>
+                      <OrderPrint ref={componentRef} />
+                    </Box>
+                  </Box>
+                  : props.type === 'menu' ?
                     <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
-                      등록하기
+                      메뉴 추가하기
                     </Button>
-                    : props.type === 'menuEdit' ?
+                    : props.type === 'menuAdd' ?
                       <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
-                        수정하기
+                        등록하기
                       </Button>
-                      : props.type === 'coupon' ?
-                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
-                          등록하기
+                      : props.type === 'menuEdit' ?
+                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                          수정하기
                         </Button>
-                        : props.type === 'couponAdd' ?
-                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
-                            저장하기
+                        : props.type === 'category' ?
+                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                            카테고리 추가하기
                           </Button>
-                          : props.type === 'tips' ?
-                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                          : props.type === 'coupon' ?
+                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
                               등록하기
                             </Button>
-                            : props.type === 'storeInfo' ?
+                            : props.type === 'couponAdd' ?
                               <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
                                 저장하기
                               </Button>
-                              : null}
+                              : props.type === 'tips' ?
+                                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                                  등록하기
+                                </Button>
+                                : props.type === 'storeInfo' ?
+                                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                                    저장하기
+                                  </Button>
+                                  : null}
             <IconButton
               color="secondary"
               aria-label="list"
