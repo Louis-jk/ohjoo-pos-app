@@ -1,9 +1,11 @@
 import React from 'react';
 import Draggable from 'react-draggable';
+import { useSelector } from 'react-redux';
 
 // Material UI Components
 import Paper, { PaperProps } from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Fab from '@material-ui/core/Fab';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
@@ -25,6 +27,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import QueueIcon from '@material-ui/icons/Queue';
 import PostAddIcon from '@material-ui/icons/PostAdd';
+import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 
 // Local Component
 import Api from '../Api';
@@ -38,6 +41,14 @@ interface IOption {
 interface MenuOption {
   name: string;
   select: IOption[];
+}
+interface ICategory {
+  label: string;
+  value: string;
+}
+interface IMenu {
+  ca_name: string;
+  ca_code: string;
 }
 
 type OptionType = 'default' | 'add'; // 기본옵션 | 추가 옵션
@@ -55,6 +66,9 @@ function PaperComponent(props: PaperProps) {
 export default function MenuAdd(props: any) {
 
   const base = baseStyles();
+  const menu = MenuStyles();
+  const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const [isLoading, setLoading] = React.useState(false);
 
   const [category, setCategory] = React.useState(''); // 카테고리 선택값
   const [options, setOptions] = React.useState<MenuOption[]>([]); // 기본옵션
@@ -66,8 +80,65 @@ export default function MenuAdd(props: any) {
   const [childIndex, setChildIndex] = React.useState(0); // 세부옵션 index
   const [checked01, setChecked01] = React.useState<CheckedType>('0'); // 대표메뉴('1' : 지정 | '0': 지정안함)
   const [checked02, setChecked02] = React.useState<CheckedType>('1'); // 판매가능('1' : 가능 | '0': 불가)
+  const [image, setImage] = React.useState(''); // 메뉴 이미지 URL
 
-  const [files, setFiles] = React.useState([]);
+  // 이미지 업로드
+  const [files, setFiles] = React.useState({});
+  const onChange = (evt: any) => {
+    console.log("img evt?", evt);
+
+    if (evt.target.files.length) {
+      let file = (evt.target.files)[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e: any) => {
+        setImage(e.target.result);
+        console.log("e.target >>> ", e.target);
+        console.log("e.target.result >>> ", e.target.result);
+      }
+    } else {
+      setImage("https://dummyimage.com/500x500/ffffff/000000.png&text=preview+image");
+    }
+  }
+
+  // (등록된)카테고리 불러오기
+  const [menuCategory, setMenuCategory] = React.useState<ICategory[]>([]);
+
+  const getCategoryHandler = () => {
+    setLoading(true);
+    const param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      mode: 'select'
+    }
+
+    Api.send('store_item_category', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+
+        arrItems.map((menu: IMenu) => {
+          setMenuCategory(prev => [
+            ...prev,
+            {
+              label: menu.ca_name,
+              value: menu.ca_code
+            }
+          ]
+          );
+        });
+        setLoading(false);
+      } else {
+        setLoading(false);
+        console.log('메뉴를 가져오지 못했습니다.');
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    getCategoryHandler();
+  }, [mt_id, mt_jumju_code])
 
   const createOption = () => {
     return ({
@@ -145,19 +216,35 @@ export default function MenuAdd(props: any) {
     setOpen(false);
   }
 
-
   return (
     <Box component="div" className={base.root}>
       <Header type="menuAdd" />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <form method="post">
-              <input type="file" hidden />
-              <div style={{ width: '100%', height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#ececec' }}>
-                <p style={{ color: '#666' }}>이미지 업로드</p>
-              </div>
-            </form>
+            <Box className={base.mb10} style={{ position: 'relative' }}>
+              {image ?
+                <img id="menuImg" src={image} className={menu.menuImg} alt="메뉴이미지" />
+                :
+                <Box style={{ position: 'relative', width: '100%', height: 350, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#ececec' }}>
+                  <p style={{ color: '#666' }}>이미지 업로드</p>
+                </Box>
+              }
+              <input
+                accept="image/*"
+                className={menu.menuInput}
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={onChange}
+              // onChange={handleUploadClick}
+              />
+              <label htmlFor="contained-button-file" style={{ position: 'absolute', right: 0, bottom: 10 }}>
+                <Fab component="span" variant="circular" color="primary" style={{ color: theme.palette.primary.contrastText }} className={menu.photoSelectIcon}>
+                  <AddPhotoAlternateOutlinedIcon />
+                </Fab>
+              </label>
+            </Box>
             <div className={base.mb20}></div>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="0">
@@ -234,19 +321,18 @@ export default function MenuAdd(props: any) {
             <FormControl fullWidth variant="outlined" className={base.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">카테고리</InputLabel>
               <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
                 value={category}
                 onChange={e => setCategory(e.target.value as string)}
                 label="카테고리"
                 required
               >
-                <MenuItem value="">
-                  <em>선택해주세요</em>
-                </MenuItem>
-                <MenuItem value={10}>세트류</MenuItem>
-                <MenuItem value={20}>밥류</MenuItem>
-                <MenuItem value={30}>면류</MenuItem>
+                {menuCategory && menuCategory.length > 0 ?
+                  menuCategory.map((category, index) => (
+                    <MenuItem key={index} value={category.value}>{category.label}</MenuItem>
+                  ))
+                  : <MenuItem value="">
+                    <em>등록된 카테고리가 없습니다.</em>
+                  </MenuItem>}
               </Select>
               <div className={base.mb30}></div>
               <TextField
