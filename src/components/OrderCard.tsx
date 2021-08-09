@@ -5,10 +5,13 @@ import {
   Typography,
   Grid,
   ButtonGroup,
-  Button
+  Button,
+  Divider
 } from '@material-ui/core';
-import OrderCheckModal from './OrderCheckModal';
-import OrderRejectModal from './OrderRejectModal';
+import OrderCheckModal from './OrderCheckModal'; // 신규주문 주문 접수 모달
+import OrderRejectModal from './OrderRejectModal'; // 신규주문 주문 거부 모달
+import OrderDeliveryModal from './OrderDeliveryModal'; // 접수완료 주문 배달처리 모달
+import OrderCancelModal from './OrderCancelModal'; // 접수완료 주문 취소 모달
 
 interface orderData {
   [key: string]: string;
@@ -46,6 +49,20 @@ export default function OrderCard(props: OrderProps) {
     handleOpen();
   }
 
+  // 접수완료 상태 -> 배달중 모달 핸들러
+  const [deliveryOpen, setDeliveryOpen] = React.useState(false);
+  const handleDeliveryOpen = () => {
+    setDeliveryOpen(true);
+  };
+
+  const handleDeliveryClose = () => {
+    setDeliveryOpen(false);
+  };
+  const deliveryOrderHandler = (id: string) => {
+    setOdId(id);
+    handleDeliveryOpen();
+  }
+
   // 신규주문 -> 주문 거부 모달 핸들러
   const [rejectOopen, setRejectOpen] = React.useState(false);
   const handleRejectOpen = () => {
@@ -60,29 +77,42 @@ export default function OrderCard(props: OrderProps) {
     handleRejectOpen();
   }
 
+  // 접수완료 상태 -> 주문 취소 모달 핸들러
+  const [cancelModalOpen, setCancelModalOpen] = React.useState(false);
+  const cancelModalOpenHandler = () => {
+    setCancelModalOpen(true);
+  };
+
+  const cancelModalCloseHandler = () => {
+    setCancelModalOpen(false);
+  };
+
+  const checkCancelModalHandler = (id: string) => {
+    setOdId(id);
+    cancelModalOpenHandler();
+  }
+
   const renderList = (): JSX.Element[] => {
     return orders.map((order, index) =>
-      <Grid item xs={12} key={order.od_id + index}>
+      <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} >
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', background: '#e5e5e5', paddingTop: 5, paddingBottom: 5, paddingLeft: 15, paddingRight: 15 }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: '#e5e5e5' }}>
           <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
           <Typography style={{ margin: 0 }}>{order.od_time}</Typography>
         </Box>
-
-
-        <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', background: '#fff', paddingTop: 5, paddingBottom: 5, paddingLeft: 15, paddingRight: 15 }}>
-          <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', background: '#fff' }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2}>
+          <Box display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center" px={1}>
             <img src={order.store_logo} style={{ width: 100, height: 100 }} alt="오늘의 주문 로고" />
             <Box>
-              <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 7 }}>
-                <Typography style={{ color: '#666', fontSize: 14, margin: 0, marginRight: 5 }}>{order.od_settle_case}</Typography>
-                <Typography style={{ color: '#666', fontSize: 14, margin: 0 }}>{order.od_receipt_price}원</Typography>
+              <Box display="flex" flexDirection="row" mb={1}>
+                <Typography style={{ fontSize: 15, margin: 0, marginRight: 5 }}>{order.od_settle_case}</Typography>
+                <Typography style={{ fontSize: 15, margin: 0 }}>{order.od_receipt_price}원</Typography>
               </Box>
               <Typography style={{ margin: 0 }}>{order.od_addr1 + order.od_addr2}</Typography>
               <Typography style={{ margin: 0 }}>{order.od_addr3}</Typography>
             </Box>
           </Box>
-          <Box style={{ display: 'block', width: 1, height: 100, background: '#e5e5e5', marginLeft: 20, marginRight: 20 }}></Box>
+          <Divider />
 
           <ButtonGroup variant="outlined" color="primary" style={{ backgroundColor: '#e5e5e5', borderColor: '#e5e5e5' }} aria-label="text primary button group">
             <Button style={{ minWidth: 120, height: 75 }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
@@ -90,14 +120,14 @@ export default function OrderCard(props: OrderProps) {
               type === 'new' ?
                 <Button style={{ minWidth: 120, height: 75 }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
                 : type === 'check' ?
-                  <Button style={{ minWidth: 120, height: 75 }}>배달처리</Button>
+                  <Button style={{ minWidth: 120, height: 75 }} onClick={() => deliveryOrderHandler(order.od_id)}>배달처리</Button>
                   : null
             }
             {
               type === 'new' ?
                 <Button style={{ minWidth: 120, height: 75 }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
                 : type === 'check' ?
-                  <Button style={{ minWidth: 120, height: 75 }}>취소처리</Button>
+                  <Button style={{ minWidth: 120, height: 75 }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
                   : null}
           </ButtonGroup>
 
@@ -112,6 +142,8 @@ export default function OrderCard(props: OrderProps) {
       <>
         <OrderCheckModal isOpen={open} od_id={odId} od_type={odType} handleClose={handleClose} />
         <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} />
+        <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} handleClose={handleDeliveryClose} />
+        <OrderCancelModal isOpen={cancelModalOpen} od_id={odId} handleClose={cancelModalCloseHandler} />
         <Grid container spacing={3}>
           {renderList()}
         </Grid>
