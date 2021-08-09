@@ -30,6 +30,7 @@ import { theme, MainBox, baseStyles, ModalConfirmButton, ModalCancelButton } fro
 import { OrderStyles } from '../styles/custom';
 import OrderCheckModal from '../components/OrderCheckModal'; // 신규주문 주문 접수 모달
 import OrderRejectModal from '../components/OrderRejectModal'; // 신규주문 주문 거부 모달
+import { rejectInitState, cancelInitState } from '../assets/datas/orders'; // 주문 거부/취소 리스트
 
 
 interface OrderId {
@@ -39,7 +40,6 @@ interface OrderId {
 interface IDetails {
   [key: string]: string;
 }
-
 
 export default function OrdersDetail(od_id: string) {
 
@@ -67,58 +67,6 @@ export default function OrdersDetail(od_id: string) {
 
   const [odId, setOdId] = React.useState('');
   const [odType, setOdType] = React.useState('');
-
-  // 주문 거부 선택 값
-  const rejectInitState = [
-    {
-      label: '배달 불가 지역',
-      value: '1'
-    },
-    {
-      label: '메뉴 및 업소 정보 다름',
-      value: '2'
-    },
-    {
-      label: '재료 소진',
-      value: '3'
-    },
-    {
-      label: '배달 지연',
-      value: '4'
-    },
-    {
-      label: '고객 정보 부정확',
-      value: '5'
-    },
-    {
-      label: '기타',
-      value: '6'
-    },
-  ]
-
-  // 주문 취소 선택 값
-  const cancelInitState = [
-    {
-      label: '고객 요청',
-      value: '1'
-    },
-    {
-      label: '업소 사정',
-      value: '2'
-    },
-    {
-      label: '배달 불가',
-      value: '3'
-    },
-    {
-      label: '재료 소진',
-      value: '4'
-    },
-    {
-      label: '기타',
-      value: '5'
-    }
-  ]
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -266,7 +214,9 @@ export default function OrdersDetail(od_id: string) {
         setToastState({ msg: '주문을 배달 처리하였습니다.', severity: 'success' });
         handleOpenAlert();
         handleCloseDelivery();
-        history.push('/order_delivery');
+        setTimeout(() => {
+          history.push('/order_delivery');
+        }, 700);
       } else {
         setToastState({ msg: '주문을 배달 처리하는데 문제가 생겼습니다.', severity: 'error' });
         handleOpenAlert();
@@ -308,7 +258,7 @@ export default function OrdersDetail(od_id: string) {
           handleOpenAlert();
           handleCloseCancel();
           setTimeout(() => {
-            history.push('/');
+            history.push('/order_check');
           }, 700);
         } else {
           setToastState({ msg: '주문을 취소 처리하는데 문제가 생겼습니다.', severity: 'error' });
@@ -328,7 +278,9 @@ export default function OrdersDetail(od_id: string) {
           detail={
             detailOrder.od_process_status === '신규주문' ? 'order_new'
               : detailOrder.od_process_status === '접수완료' ? 'order_check'
-                : 'order'}
+                : detailOrder.od_process_status === '배달중' ? 'order_delivery'
+                  : detailOrder.od_process_status === '배달완료' ? 'order_done'
+                    : null}
           action={
             detailOrder.od_process_status === '신규주문' ? () => newFn()
               : detailOrder.od_process_status === '접수완료' ? () => checkFn()
