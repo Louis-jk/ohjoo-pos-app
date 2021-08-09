@@ -147,49 +147,49 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       </List>
       <Divider />
       <List>
-        <ListItem button component={Link} to='/set_storetime' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="영업일 및 휴무일" />
         </ListItem>
-        <ListItem button component={Link} to='/caculate' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/caculate' style={{ color: curPathName === 'caculate' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'caculate' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="정산내역" />
         </ListItem>
-        <ListItem button component={Link} to='/category' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/category' style={{ color: curPathName === 'category' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'category' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="카테고리" />
         </ListItem>
-        <ListItem button component={Link} to='/menu' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/menu' style={{ color: curPathName === 'menu' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="메뉴관리" />
         </ListItem>
-        <ListItem button component={Link} to='/coupons' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="쿠폰관리" />
         </ListItem>
-        <ListItem button component={Link} to='/tips' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/tips' style={{ color: curPathName === 'tips' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'tips' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="배달팁" />
         </ListItem>
-        <ListItem button component={Link} to='/store_info' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="매장소개" />
         </ListItem>
-        <ListItem button component={Link} to='/reviews' style={{ color: theme.palette.secondary.contrastText }}>
+        <ListItem button component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
             <InboxIcon />
           </ListItemIcon>
@@ -357,7 +357,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                           등록하기
                         </Button>
                         : props.type === 'menuEdit' ?
-                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
                             수정하기
                           </Button>
                           : props.type === 'category' ?
