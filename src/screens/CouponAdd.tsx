@@ -241,12 +241,12 @@ export default function CouponAdd() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
+              <InputLabel id="demo-simple-select-label">구분</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={type}
-                label="카테고리"
+                label="구분"
                 onChange={handleChange}
               >
                 <MenuItem value={10}>모두 사용가능</MenuItem>
@@ -314,8 +314,8 @@ export default function CouponAdd() {
                   height: 56,
                   width: 56,
                   fontWeight: 'bold',
-                  color: discountType === 'currency' ? '#fff' : '#54447B',
-                  backgroundColor: discountType === 'currency' ? '#54447B' : '#fff',
+                  color: discountType === 'currency' ? '#fff' : theme.palette.primary.main,
+                  backgroundColor: discountType === 'currency' ? theme.palette.primary.main : '#fff',
                 }}
                 onClick={() => setDiscountType('currency')}>
                 원
@@ -326,8 +326,8 @@ export default function CouponAdd() {
                   height: 56,
                   width: 56,
                   fontWeight: 'bold',
-                  color: discountType === 'ratio' ? '#fff' : '#54447B',
-                  backgroundColor: discountType === 'ratio' ? '#54447B' : '#fff',
+                  color: discountType === 'ratio' ? '#fff' : theme.palette.primary.main,
+                  backgroundColor: discountType === 'ratio' ? theme.palette.primary.main : '#fff',
                 }}
                 onClick={() => setDiscountType('ratio')}>
                 %
