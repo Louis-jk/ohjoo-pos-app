@@ -24,6 +24,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/core/Alert';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -102,6 +107,66 @@ export default function MenuEdit(props: IProps) {
   const [optionType, setOptionType] = React.useState<OptionType>("default");
   const [parentIndex, setParentIndex] = React.useState(0);
   const [childIndex, setChildIndex] = React.useState(0);
+  const [image, setImage] = React.useState(''); // 메뉴 이미지 URL
+
+
+  // 이미지 업로드
+  const [source, setSource] = React.useState({});
+  const imgData = new FormData();
+
+  const onChange = (evt: any) => {
+    console.log("img evt?", evt);
+    console.log("img evt file?", evt.target);
+
+    const img = evt.target.files[0];
+
+    imgData.append('it_img1', img);
+    setSource(img);
+
+    console.log("img?", img);
+
+    // const formData = new FormData();
+    // formData.append('img', img);
+    // console.log(formData);
+    // for (const keyValue of formData) console.log(keyValue);
+    // const blob = new Blob([new ArrayBuffer(img)], { type: 'image/*' })
+    // const url = window.URL.createObjectURL(blob);
+    // window.URL.revokeObjectURL(url);
+    // console.log("blob ??", blob);
+    // console.log("url ??", url);
+
+    // const formData = new FormData();
+    // formData.append('img', img);
+
+    // console.log("formData", formData); // Formdata {}
+    // console.log("img <<< ???", img); // Formdata {}
+
+    if (evt.target.files.length) {
+      let file = (evt.target.files)[0];
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e: any) => {
+
+        // console.log("img type?", file.type);
+        // console.log("img name?", file.name);
+        // console.log("img size?", file.size);
+
+        setImage(e.target.result);
+
+        // setSource({
+        //   uri: url,
+        //   type: file.type,
+        //   name: file.name,
+        // })
+      }
+    } else {
+      setImage('');
+    }
+  }
+
+
+
 
   const createOption = () => {
     return ({
@@ -113,6 +178,19 @@ export default function MenuEdit(props: IProps) {
         }
       ],
     });
+  };
+
+  // Toast(Alert) 관리
+  const [toastState, setToastState] = React.useState({
+    msg: '',
+    severity: ''
+  });
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  };
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
   const optionAddHandler = (payload: OptionType) => {
@@ -137,10 +215,6 @@ export default function MenuEdit(props: IProps) {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCategory(event.target.value as string);
   };
 
   const handleClickOpen = (type: OptionType, parent: number, child: number) => {
@@ -220,12 +294,13 @@ export default function MenuEdit(props: IProps) {
       if (resultItem.result === 'Y') {
         console.log("success?", arrItems)
         setDetails(arrItems);
+        setImage(arrItems.it_img1);
         setCategory(arrItems.ca_code);
         setOptions(arrItems.menuOption);
         setAddOptions(arrItems.menuAddOption);
       } else {
-        console.log("faild?", arrItems)
         setDetails({});
+        setImage('');
         setOptions([]);
         setAddOptions([]);
       }
@@ -237,38 +312,114 @@ export default function MenuEdit(props: IProps) {
     getMenusDetailHandler();
   }, [])
 
+  const isEmptyObj = (obj: any) => {
+    if (obj.constructor === Object && Object.keys(obj).length === 0) {
+      return true;
+    }
+    return false;
+  };
+
+  const editMenuHandler = () => {
+
+    let param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      it_id: id,
+      mode: 'update',
+      ca_id2: category,
+      menuName: details.menuName,
+      menuInfo: details.menuInfo,
+      menuPrice: details.menuPrice,
+      menuDescription: details.menuDescription,
+      it_type1: details.it_type1,
+      it_use: details.it_use,
+      menuOption: JSON.stringify(options),
+      menuAddOption: JSON.stringify(addOptions),
+      it_img1: source
+    };
+
+    // if (!isEmptyObj(source)) {
+    //   param.it_img1 = source;
+    // }
+
+    console.log("param >>>", param);
+
+    Api.send2('store_item_update', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      console.log("resultItem ??", resultItem);
+      console.log("arrItems ??", arrItems);
+
+      if (resultItem.result === 'Y') {
+        console.log('====================================');
+        console.log('메뉴 수정 resultItem :: ', resultItem);
+        console.log('메뉴 수정 :: ', arrItems);
+        console.log('====================================');
+        setToastState({ msg: '메뉴가 수정되었습니다.', severity: 'success' });
+        handleOpenAlert();
+        setTimeout(() => {
+          history.push('/menu');
+        }, 700);
+      } else {
+        setToastState({ msg: `메뉴를 수정중에 오류가 발생되었습니다.\n다시 한번 시도해주세요.`, severity: 'error' });
+        handleOpenAlert();
+      }
+    });
+  }
+
 
   return (
     <Box component="div" className={base.root}>
-      <Header type="menuEdit" />
+      <Header type="menuEdit" action={editMenuHandler} />
+      <Box className={base.alertStyle}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+          open={openAlert}
+          autoHideDuration={5000}
+          onClose={handleCloseAlert}
+        >
+          <Alert onClose={handleCloseAlert} severity={toastState.severity === 'error' ? 'error' : 'success'}>
+            {toastState.msg}
+          </Alert>
+        </Snackbar>
+      </Box>
       {isLoading ?
-        <div className={base.loadingWrap}>
+        <Box className={base.loadingWrap}>
           <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
-        </div>
+        </Box>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <div className={base.mb10} style={{ position: 'relative' }}>
-                {details.it_img1 ?
-                  <Typography component="img" src={details.it_img1} className={menu.menuImg} alt={details.menuName} />
+              <Box className={base.mb10} style={{ position: 'relative' }}>
+                {image ?
+                  <img id="menuImg" src={image} className={menu.menuImg} alt={details.menuName} />
                   :
-                  <Box className={menu.menuImg} style={{ display: 'block', backgroundColor: '#e5e5e5' }}></Box>
+                  <Box style={{ position: 'relative', width: '100%', height: 350, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#ececec' }}>
+                    <p style={{ color: '#666' }}>이미지 업로드</p>
+                  </Box>
                 }
-                <input
-                  accept="image/*"
-                  className={menu.menuInput}
-                  id="contained-button-file"
-                  multiple
-                  type="file"
-                // onChange={handleUploadClick}
-                />
+                <form id="imgForm" name="imgForm">
+                  <input
+                    accept="image/*"
+                    className={menu.menuInput}
+                    id="contained-button-file"
+                    // multiple
+                    type="file"
+                    onChange={onChange}
+                  // onChange={handleUploadClick}
+                  />
+                </form>
                 <label htmlFor="contained-button-file" style={{ position: 'absolute', right: 0, bottom: 10 }}>
                   <Fab component="span" variant="circular" color="primary" style={{ color: theme.palette.primary.contrastText }} className={menu.photoSelectIcon}>
                     <AddPhotoAlternateOutlinedIcon />
                   </Fab>
                 </label>
-              </div>
+              </Box>
               <FormControl component="fieldset">
                 <RadioGroup row aria-label="position" name="position" defaultValue="0">
                   <FormControlLabel
@@ -356,20 +507,21 @@ export default function MenuEdit(props: IProps) {
               <FormControl fullWidth variant="outlined" className={base.formControl}>
                 <InputLabel id="demo-simple-select-outlined-label">카테고리</InputLabel>
                 <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
                   value={category}
-                  // onChange={handleChange}
+                  onChange={e => setCategory(e.target.value as string)}
                   label="카테고리"
+                  required
                 >
-                  <MenuItem value="">
+                  {/* <MenuItem value="">
                     <em>선택해주세요</em>
-                  </MenuItem>
+                  </MenuItem> */}
                   {menuCategory && menuCategory.length > 0 ?
                     menuCategory.map((category, index) => (
                       <MenuItem key={index} value={category.value}>{category.label}</MenuItem>
                     ))
-                    : null}
+                    : <MenuItem value="">
+                      <em>등록된 카테고리가 없습니다.</em>
+                    </MenuItem>}
 
                 </Select>
                 <div className={base.mb30}></div>
