@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import clsx from 'clsx';
 
 // Material UI Components
 import { styled } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -13,9 +15,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+
 
 // Material icons
-
 
 // Local Component
 import Header from '../components/Header';
@@ -85,7 +90,24 @@ export default function SetCategory(props: any) {
     }
   ]);
   const [isLoading, setLoading] = React.useState(false);
+  const [open, setOpen] = React.useState(false); // 카테고리 등록 모달
+  const [name, setName] = React.useState(''); // 신규 카테고리 명
+  const [editOpen, setEditOpen] = React.useState(false); // 카테고리 수정 모달
+  const [categoryId, setCategoryId] = React.useState(''); // 수정할 카테고리 ID
+  const [editName, setEditName] = React.useState(''); // 수정한 카테고리 명
+  const inputRef = React.useRef<HTMLDivElement | null>(null); // 신규 카테고리명 textField Reference
+  const inputEditRef = React.useRef<HTMLDivElement | null>(null); // 수정 카테고리명 textField Reference
+  const [visible, setVisible] = React.useState(false); // 신규 카테고리 노출 여부
+  const [editVisible, setEditVisible] = React.useState(false); // 카테고리 수정 노출 여부
 
+  // 신규 카테고리 노출 여부 토글
+  const visibleToggle = (type: string) => {
+    if (type === 'new') {
+      setVisible(prev => !prev);
+    } else {
+      setEditVisible(prev => !prev);
+    }
+  }
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -99,6 +121,36 @@ export default function SetCategory(props: any) {
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
+
+  // 카테고리 등록 모달 핸들러
+  const openNewCategoryModal = () => {
+    setOpen(true);
+  }
+
+  const closeNewCategoryModal = () => {
+    setOpen(false);
+  }
+
+  const setNewCategoryModalHandler = () => {
+    openNewCategoryModal();
+  }
+
+  // 카테고리 수정 모달 핸들러
+  const openEditCategoryModal = () => {
+    setEditOpen(true);
+  }
+
+  const closeEditCategoryModal = () => {
+    setEditOpen(false);
+  }
+
+  const setEditCategoryModalHandler = (cId: string, cName: string, cVisible: boolean) => {
+    setCategoryId(cId);
+    setEditName(cName);
+    setEditVisible(cVisible);
+    openEditCategoryModal();
+  }
+
 
   // 등록된 팁 정보 가져오기
   const getCategoryHandler = () => {
@@ -127,10 +179,83 @@ export default function SetCategory(props: any) {
   }, [mt_id, mt_jumju_code]);
 
 
+
+  // 신규 카테고리 등록 핸들러
+  const setCategoryHandler = () => {
+
+    const filter = (element: any) => element.ca_name === name;
+    let filtered = lists.some(filter);
+
+    console.log("filtered ?", filtered);
+
+    if (filtered) {
+      setToastState({ msg: '이미 등록된 카테고리명입니다.', severity: 'error' });
+      handleOpenAlert();
+    } else {
+      let param = {
+        jumju_id: mt_id,
+        jumju_code: mt_jumju_code,
+        ca_name: name,
+        ca_use: visible ? '1' : '0'
+      };
+
+      Api.send('store_item_category_input', param, (args: any) => {
+        let resultItem = args.resultItem;
+        let arrItems = args.arrItems;
+        if (resultItem.result === 'Y') {
+          setToastState({ msg: '카테고리를 등록하였습니다.', severity: 'success' });
+          handleOpenAlert();
+          setName('');
+          closeNewCategoryModal();
+          getCategoryHandler();
+        } else {
+          setToastState({ msg: '카테고리를 등록하는데 문제가 생겼습니다.', severity: 'error' });
+          handleOpenAlert();
+          setName('');
+          closeNewCategoryModal();
+          getCategoryHandler();
+        }
+      });
+    }
+  }
+
+  // 신규 카테고리 등록 핸들러
+  const editCategoryHandler = () => {
+    let param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      ca_id: categoryId,
+      ca_name: editName,
+      ca_use: editVisible ? '1' : '0'
+    };
+
+    Api.send('store_item_category_update', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+      if (resultItem.result === 'Y') {
+        setToastState({ msg: '카테고리를 수정하였습니다.', severity: 'success' });
+        handleOpenAlert();
+        setEditName('');
+        closeEditCategoryModal();
+        getCategoryHandler();
+      } else {
+        setToastState({ msg: '카테고리를 수정하는데 문제가 생겼습니다.', severity: 'error' });
+        handleOpenAlert();
+        setEditName('');
+        closeEditCategoryModal();
+        getCategoryHandler();
+      }
+    });
+  }
+
+  console.log("lists", lists);
+  console.log("name", name);
+  console.log("visible", visible);
+
   return (
     <Box component="div" className={base.root}>
-      <Header type="category" />
-      <div className={base.alertStyle}>
+      <Header type="category" action={setNewCategoryModalHandler} />
+      <Box className={base.alertStyle}>
         <Snackbar
           anchorOrigin={{
             vertical: 'top',
@@ -144,7 +269,7 @@ export default function SetCategory(props: any) {
             {toastState.msg}
           </Alert>
         </Snackbar>
-      </div>
+      </Box>
 
       {isLoading ?
         <div className={base.loadingWrap}>
@@ -152,6 +277,90 @@ export default function SetCategory(props: any) {
         </div>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          {/* 신규 카테고리 추가 모달 */}
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={base.modal}
+            open={open}
+            // onClose={handleCloseCancel}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={open}>
+              <Box className={clsx(base.modalInner, base.colCenter)}>
+                <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>카테고리 등록</Typography>
+                <Typography id="transition-modal-description">신규 카테고리 명과 노출여부를 입력 및 지정해주세요.</Typography>
+                <TextField
+                  inputRef={inputRef}
+                  value={name}
+                  style={{ margin: 20 }}
+                  fullWidth
+                  id="outlined-basic"
+                  label="신규 카테고리"
+                  variant="outlined"
+                  required
+                  InputProps={{
+                    endAdornment: <Android12Switch defaultChecked onChange={() => visibleToggle('new')} checked={visible ? true : false} />
+                  }}
+                  onChange={e => setName(e.target.value as string)}
+                />
+                <Box mb={2}>
+                  <p style={{ color: visible ? theme.palette.primary.main : '#222' }}>{visible ? '노출로 설정하였습니다.' : '비노출로 설정하였습니다.'}</p>
+                </Box>
+                <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+                  <ModalConfirmButton fullWidth variant="contained" onClick={setCategoryHandler}>등록하기</ModalConfirmButton>
+                  <ModalCancelButton fullWidth variant="outlined" onClick={closeNewCategoryModal}>취소</ModalCancelButton>
+                </ButtonGroup>
+              </Box>
+            </Fade>
+          </Modal>
+          {/* // 신규 카테고리 추가 모달 */}
+          {/* 카테고리 수정 모달 */}
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={base.modal}
+            open={editOpen}
+            // onClose={handleCloseCancel}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={editOpen}>
+              <Box className={clsx(base.modalInner, base.colCenter)}>
+                <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>카테고리 수정</Typography>
+                <Typography id="transition-modal-description">카테고리명 또는 노출여부를 수정할 수 있습니다.</Typography>
+                <TextField
+                  inputRef={inputEditRef}
+                  value={editName}
+                  style={{ margin: 20 }}
+                  fullWidth
+                  id="outlined-basic"
+                  label="카테고리명"
+                  variant="outlined"
+                  required
+                  InputProps={{
+                    endAdornment: <Android12Switch defaultChecked onChange={() => visibleToggle('edit')} checked={editVisible ? true : false} />
+                  }}
+                  onChange={e => setEditName(e.target.value as string)}
+                />
+                <Box mb={2}>
+                  <p style={{ color: editVisible ? theme.palette.primary.main : '#222' }}>{editVisible ? '노출로 설정하였습니다.' : '비노출로 설정하였습니다.'}</p>
+                </Box>
+                <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+                  <ModalConfirmButton fullWidth variant="contained" onClick={editCategoryHandler}>수정하기</ModalConfirmButton>
+                  <ModalCancelButton fullWidth variant="outlined" onClick={closeEditCategoryModal}>취소</ModalCancelButton>
+                </ButtonGroup>
+              </Box>
+            </Fade>
+          </Modal>
+          {/* // 카테고리 수정 모달 */}
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) =>
               <Grid item xs={6} sm={6} md={4} key={list.ca_id} style={{ position: 'relative' }}>
@@ -169,17 +378,14 @@ export default function SetCategory(props: any) {
                       result[index].ca_name = e.target.value as string;
                       return result;
                     })}
+                    onClick={() => setEditCategoryModalHandler(list.ca_id, list.ca_name, list.ca_use === '1' ? true : false)}
                     // onMouseLeave={() => alert('end?')}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     InputProps={{
-                      // endAdornment: <InputAdornment position="end">원 이상</InputAdornment>,
-                      endAdornment:
-                        <>
-                          <FormControlLabel
-                            control={<Android12Switch defaultChecked />}
-                            label=""
-                          />
-                          {/* <Button style={{ minWidth: 45 }} disabled>수정</Button> */}
-                        </>
+                      readOnly: true,
+                      endAdornment: <Android12Switch defaultChecked checked={list.ca_use === '1' ? true : false} />
                     }}
                   />
                 </div>
