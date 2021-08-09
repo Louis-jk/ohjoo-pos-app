@@ -80,7 +80,7 @@ export default function OrderCheckModal(props: IProps) {
           handleOpenAlert();
           props.handleClose();
           setTimeout(() => {
-            history.push('/checkOrder');
+            history.push('/order_check');
           }, 700);
         } else {
           setToastState({ msg: '주문을 접수하는데 문제가 생겼습니다.', severity: 'error' });
@@ -122,7 +122,7 @@ export default function OrderCheckModal(props: IProps) {
       >
         <Fade in={props.isOpen}>
           <Box className={clsx(base.modalInner, base.colCenter)}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: '#53447A' }}>{`${props.od_type === '포장' ? '포장' : '배달'} 예상시간 등록`}</Typography>
+            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>{`${props.od_type === '포장' ? '포장' : '배달'} 예상시간 등록`}</Typography>
             <Typography id="transition-modal-description">{`${props.od_type === '포장' ? '포장' : '배달'} 예상시간을 입력해주세요.`}</Typography>
             <TextField
               value={deliveryTime}

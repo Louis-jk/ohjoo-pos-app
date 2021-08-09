@@ -131,7 +131,7 @@ export default function OrderRejectModal(props: IProps) {
           handleOpenAlert();
           handleCloseReject();
           setTimeout(() => {
-            history.push('/newOrder');
+            history.push('/order_new');
           }, 700);
         } else {
           setToastState({ msg: '주문을 거절 처리하는데 문제가 생겼습니다.', severity: 'error' });

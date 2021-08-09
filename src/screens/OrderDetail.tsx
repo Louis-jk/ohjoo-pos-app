@@ -266,7 +266,7 @@ export default function OrdersDetail(od_id: string) {
         setToastState({ msg: '주문을 배달 처리하였습니다.', severity: 'success' });
         handleOpenAlert();
         handleCloseDelivery();
-        history.push('/deliveryOrder');
+        history.push('/order_delivery');
       } else {
         setToastState({ msg: '주문을 배달 처리하는데 문제가 생겼습니다.', severity: 'error' });
         handleOpenAlert();
@@ -324,13 +324,13 @@ export default function OrdersDetail(od_id: string) {
   return (
     <Box component="div" className={base.root}>
       {detailOrder ?
-        < Header
+        <Header
           detail={
             detailOrder.od_process_status === '신규주문' ? 'order_new'
               : detailOrder.od_process_status === '접수완료' ? 'order_check'
                 : 'order'}
           action={
-            detailOrder.od_process_status === '신규주문' ? () => handleOpen()
+            detailOrder.od_process_status === '신규주문' ? () => newFn()
               : detailOrder.od_process_status === '접수완료' ? () => checkFn()
                 : () => { return false }
           }
@@ -372,7 +372,7 @@ export default function OrdersDetail(od_id: string) {
         aria-describedby="transition-modal-description"
         className={base.modal}
         open={openDelivery}
-        onClose={handleClose}
+        // onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -381,7 +381,7 @@ export default function OrdersDetail(od_id: string) {
       >
         <Fade in={openDelivery}>
           <Box className={clsx(base.modalInner, base.colCenter)}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: '#53447A' }}>배달처리</Typography>
+            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>배달처리</Typography>
             <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>배달처리를 하시겠습니까?</Typography>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
               <ModalConfirmButton variant="contained" color="primary" className={base.confirmBtn} style={{ marginLeft: 0, minWidth: 150 }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
@@ -398,7 +398,7 @@ export default function OrdersDetail(od_id: string) {
         aria-describedby="transition-modal-description"
         className={base.modal}
         open={openCancel}
-        onClose={handleCloseCancel}
+        // onClose={handleCloseCancel}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -429,8 +429,8 @@ export default function OrdersDetail(od_id: string) {
               onChange={e => setCancelEtc(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton fullWidth variant="contained" color="primary" className={base.confirmBtn} style={{ marginLeft: 0, minWidth: 150 }} onClick={sendCancelHandler}>보내기</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="contained" className={base.confirmBtn} style={{ minWidth: 150 }} onClick={handleCloseCancel}>취소</ModalCancelButton>
+              <ModalConfirmButton fullWidth variant="contained" onClick={sendCancelHandler}>보내기</ModalConfirmButton>
+              <ModalCancelButton fullWidth variant="outlined" onClick={handleCloseCancel}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>
