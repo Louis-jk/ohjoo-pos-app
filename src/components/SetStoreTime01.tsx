@@ -123,7 +123,7 @@ export default function StoreTimeTab01() {
 
           let flatArr = result.flat(Infinity);
           let flatArrSort = flatArr.sort();
-          console.log("flatArrSort", flatArrSort);
+          // console.log("flatArrSort", flatArrSort);
           setGetDays(flatArrSort);
           let stringifyValue = JSON.stringify(flatArrSort);
           setStringValue(stringifyValue);
@@ -242,10 +242,10 @@ export default function StoreTimeTab01() {
     getStoreTime();
   }, [mt_id, mt_jumju_code])
 
-  console.log('====================================');
-  console.log("strValue === ", strValue);
-  console.log("checkArr === ", checkArr);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log("strValue === ", strValue);
+  // console.log("checkArr === ", checkArr);
+  // console.log('====================================');
 
   return (
     isLoading ?
@@ -379,6 +379,7 @@ export default function StoreTimeTab01() {
                     setValue(newValue);
                   }}
                   renderInput={(params) => <TextField {...params} />}
+                  disabled={strValue === checkArr ? true : false}
                 />
               </Box>
             </LocalizationProvider>
@@ -407,7 +408,7 @@ export default function StoreTimeTab01() {
           </Grid>
         </Grid>
         {/* <p>영업시간은 사용자앱에서 주문할 수 있는 시간과 연동됩니다.</p> */}
-        {console.log("getDays", getDays)}
+
 
         {strValue === checkArr ?
           <Button disabled className={classes.button} style={{ height: 50 }} variant="contained" disableElevation>
