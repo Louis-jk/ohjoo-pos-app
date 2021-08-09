@@ -361,7 +361,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                             수정하기
                           </Button>
                           : props.type === 'category' ?
-                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
                               카테고리 추가하기
                             </Button>
                             : props.type === 'coupon' ?
