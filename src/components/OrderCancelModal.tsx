@@ -156,7 +156,7 @@ export default function OrderCancelModal(props: IProps) {
             <Grid container spacing={1} style={{ margin: 20 }}>
               {cancelInitState.map((item, index) => (
                 <Grid item xs={6} md={4} key={index}>
-                  <Button variant="outlined" style={{ width: '100%', padding: 10, backgroundColor: cancelValue === item.value ? '#FCDD00' : '#fff', color: '#222', borderColor: cancelValue === item.value ? '#FCDD00' : '#e6e6e6' }} onClick={() => cancelHandler(item.value)}>{item.label}</Button>
+                  <Button variant="outlined" style={{ width: '100%', padding: 10, backgroundColor: cancelValue === item.value ? theme.palette.primary.main : '#fff', color: '#222', borderColor: cancelValue === item.value ? theme.palette.primary.main : '#e6e6e6' }} onClick={() => cancelHandler(item.value)}>{item.label}</Button>
                 </Grid>
               ))}
             </Grid>
@@ -173,8 +173,8 @@ export default function OrderCancelModal(props: IProps) {
               onChange={e => setCancelEtc(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton fullWidth variant="contained" onClick={sendCancelHandler}>보내기</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendCancelHandler}>보내기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>

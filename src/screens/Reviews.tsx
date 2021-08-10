@@ -202,7 +202,7 @@ export default function Reviews(props: any) {
         <Fade in={open}>
           <div className={base.modalInner}>
             {/* <h2 id="transition-modal-title">코멘트 입력</h2> */}
-            <IconButton color="primary" aria-label="upload picture" component="span" onClick={handleClose} style={{ position: 'absolute', top: -10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: '#53447A' }}>
+            <IconButton color="primary" aria-label="upload picture" component="span" onClick={handleClose} style={{ position: 'absolute', top: -10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: theme.palette.primary.main }}>
               <CloseRoundedIcon />
             </IconButton>
             <Box className={clsx(base.flexRow, base.mb10)}>
@@ -235,7 +235,7 @@ export default function Reviews(props: any) {
               onChange={e => setComment(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 20 }}>
-              <ModalConfirmButton variant="contained" color="primary" className={base.confirmBtn} onClick={sendReply}>등록하기</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} className={base.confirmBtn} onClick={sendReply}>등록하기</ModalConfirmButton>
               <ModalCancelButton variant="outlined" className={base.confirmBtn} onClick={handleClose}>닫기</ModalCancelButton>
             </ButtonGroup>
           </div>
@@ -265,7 +265,7 @@ export default function Reviews(props: any) {
                         color="primary"
                         aria-label="button"
                         startIcon={<AddCommentOutlinedIcon />}
-                        style={{ color: '#54447B' }}
+                        // style={{ color: theme.palette.primary.dark }}
                         onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
                       >
                         답글달기

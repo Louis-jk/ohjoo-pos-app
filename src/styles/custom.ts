@@ -57,7 +57,7 @@ export const CouponStyles = makeStyles({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     backgroundColor: '#fff',
-    boxShadow: '0px 5px 5px 1px #e5e5e5'
+    boxShadow: '0px 0px 10px 2px #f1f1f1 !important'
   },
   couponBox: {
     position: 'relative',
@@ -86,7 +86,7 @@ export const MenuStyles = makeStyles({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     backgroundColor: '#fff',
-    boxShadow: '0px 0px 10px 2px #e3e3e3'
+    boxShadow: '0px 0px 10px 2px #f1f1f1 !important'
   },
   menuListWrap: {
     display: 'flex',
@@ -201,11 +201,11 @@ export const OrderStyles = makeStyles({
     margin: theme.spacing(1),
     textAlign: 'center',
     minHeight: 200,
-    boxShadow: 'none',
     border: 1,
     borderColor: theme.palette.primary.main,
     borderStyle: 'dotted',
-    WebkitBoxShadow: 'none'
+    WebkitBoxShadow: 'none',
+    boxShadow: 'none !important'
   },
   orderTitle: {
     marginBottom: 30,
@@ -227,17 +227,19 @@ export const OrderStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    backgroundColor: '#FCDD00',
+    backgroundColor: theme.palette.primary.light,
     border: 1,
-    borderColor: '#FCDD00',
+    borderColor: theme.palette.primary.light,
     borderStyle: 'solid',
     borderRadius: 5,
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
+    marginTop: 10,
 
     '& p': {
+      fontSize: 15,
       fontWeight: 'bold'
     }
 

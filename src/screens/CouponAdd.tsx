@@ -225,7 +225,7 @@ export default function CouponAdd() {
             <h2 id="transition-modal-title" className={base.modalTitle}>쿠폰 등록 성공!</h2>
             <p id="transition-modal-description" className={base.modalDescription}>쿠폰을 추가로 등록하시겠습니까?</p>
             <ButtonGroup variant="text" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" onClick={reAddHandler}>추가 등록하기</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={reAddHandler}>추가 등록하기</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={goBackList}>아니요</ModalCancelButton>
             </ButtonGroup>
           </div>

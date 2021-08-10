@@ -106,8 +106,8 @@ export default function OrderCheckModal(props: IProps) {
             <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>배달처리</Typography>
             <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>배달처리를 하시겠습니까?</Typography>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" color="primary" className={base.confirmBtn} style={{ marginLeft: 0, minWidth: 150 }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
-              <ModalCancelButton variant="outlined" className={base.confirmBtn} style={{ minWidth: 150 }} onClick={props.handleClose}>취소</ModalCancelButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>

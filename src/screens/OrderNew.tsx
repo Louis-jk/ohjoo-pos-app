@@ -45,12 +45,14 @@ export default function OrderNew() {
     getOrderListHandler();
   }, [mt_id, mt_jumju_code]);
 
+
   return (
 
     <Box component="div" className={base.root}>
       <Header />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <OrderCard orders={list} type="new" />
+
       </MainBox>
     </Box>
 

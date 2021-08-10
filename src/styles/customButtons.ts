@@ -29,6 +29,8 @@ export const ModalConfirmButton = styled(Button)({
 
 export const ModalCancelButton = styled(Button)({
   backgroundColor: '#ececec',
+  borderWidth: 1,
+  borderColor: '#ececec',
   borderRadius: 3,
   color: '#222',
   width: 150,

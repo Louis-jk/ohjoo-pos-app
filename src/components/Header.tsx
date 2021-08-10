@@ -35,6 +35,7 @@ import { theme, baseStyles } from '../styles/base';
 import { MaterialUISwitch } from './MaterialUISwitch';
 
 import OrderPrint from '../components/ComponentToPrint';
+import PrintModal from './PrintModal';
 
 const drawerWidth = 200;
 interface Props {
@@ -72,6 +73,20 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     let slice = location.pathname.slice(1);
     setCurPathName(slice);
   }, [location])
+
+
+  const [printOpen, setPrintOpen] = React.useState(false);
+  const openPrintModal = () => {
+    setPrintOpen(true);
+  }
+
+  const closePrintModal = () => {
+    setPrintOpen(false);
+  }
+
+  const handlePrint02 = () => {
+    openPrintModal();
+  }
 
   // 프린트 출력 부분
   const componentRef = React.useRef(null);
@@ -233,6 +248,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   return (
     <>
+      <PrintModal isOpen={printOpen} isClose={closePrintModal} />
       <AppBar
         position="fixed"
         sx={{
@@ -282,43 +298,43 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             </FormGroup>
             {props.detail === 'order_new' ?
               <Box>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                   접수처리
                 </Button>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action02}>
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action02}>
                   거부처리
                 </Button>
                 <IconButton
                   color="secondary"
                   aria-label="list"
                   component="span"
-                  onClick={handlePrint}
+                  onClick={handlePrint02}
                 >
                   <PrintIcon />
                 </IconButton>
-                <Box style={{ display: 'none' }}>
+                {/* <Box style={{ display: 'none' }}>
                   <OrderPrint ref={componentRef} />
-                </Box>
+                </Box> */}
               </Box>
               : props.detail === 'order_check' ?
                 <Box>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<DoneIcon />} onClick={props.action}>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} startIcon={<DoneIcon />} onClick={props.action}>
                     배달처리
                   </Button>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} startIcon={<CloseIcon />} onClick={props.action02}>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} startIcon={<CloseIcon />} onClick={props.action02}>
                     취소처리
                   </Button>
                   <IconButton
                     color="secondary"
                     aria-label="list"
                     component="span"
-                    onClick={handlePrint}
+                    onClick={handlePrint02}
                   >
                     <PrintIcon />
                   </IconButton>
-                  <Box style={{ display: 'none' }}>
+                  {/* <Box style={{ display: 'none' }}>
                     <OrderPrint ref={componentRef} />
-                  </Box>
+                  </Box> */}
                 </Box>
                 : props.detail === 'order_delivery' ?
                   <Box>
@@ -326,13 +342,13 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                       color="secondary"
                       aria-label="list"
                       component="span"
-                      onClick={handlePrint}
+                      onClick={handlePrint02}
                     >
                       <PrintIcon />
                     </IconButton>
-                    <Box style={{ display: 'none' }}>
+                    {/* <Box style={{ display: 'none' }}>
                       <OrderPrint ref={componentRef} />
-                    </Box>
+                    </Box> */}
                   </Box>
                   : props.detail === 'order_done' ?
                     <Box>
@@ -340,44 +356,44 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                         color="secondary"
                         aria-label="list"
                         component="span"
-                        onClick={handlePrint}
+                        onClick={handlePrint02}
                       >
                         <PrintIcon />
                       </IconButton>
-                      <Box style={{ display: 'none' }}>
+                      {/* <Box style={{ display: 'none' }}>
                         <OrderPrint ref={componentRef} />
-                      </Box>
+                      </Box> */}
                     </Box>
                     : props.type === 'menu' ?
-                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={() => history.push('/menu_add')}>
                         메뉴 추가하기
                       </Button>
                       : props.type === 'menuAdd' ?
-                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                           등록하기
                         </Button>
                         : props.type === 'menuEdit' ?
-                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                             수정하기
                           </Button>
                           : props.type === 'category' ?
-                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                               카테고리 추가하기
                             </Button>
                             : props.type === 'coupon' ?
-                              <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/coupon_add')}>
+                              <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={() => history.push('/coupon_add')}>
                                 등록하기
                               </Button>
                               : props.type === 'couponAdd' ?
-                                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                                   저장하기
                                 </Button>
                                 : props.type === 'tips' ?
-                                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                                     등록하기
                                   </Button>
                                   : props.type === 'storeInfo' ?
-                                    <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
+                                    <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
                                       저장하기
                                     </Button>
                                     : null}

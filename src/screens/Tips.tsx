@@ -310,7 +310,7 @@ export default function Tips(props: any) {
               </Box>
             </Paper>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 20 }}>
-              <ModalConfirmButton variant="contained" color="primary" onClick={onSubmitHandler}>등록하기</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={onSubmitHandler}>등록하기</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={handleClose}>닫기</ModalCancelButton>
             </ButtonGroup>
           </Box>
@@ -335,7 +335,7 @@ export default function Tips(props: any) {
             <h3 className={base.modalTitle}>배달팁 삭제</h3>
             <p className={base.modalDescription}>선택하신 배달팁을 삭제하시겠습니까?</p>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" onClick={deleteTipHandler}>예</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={deleteTipHandler}>예</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={handleCloseTip}>아니요</ModalCancelButton>
             </ButtonGroup>
           </Box>

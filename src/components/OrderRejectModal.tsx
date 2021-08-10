@@ -195,7 +195,7 @@ export default function OrderRejectModal(props: IProps) {
               onChange={e => setRejectEtc(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" color="primary" onClick={sendRejectHandler}>보내기</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendRejectHandler}>보내기</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={handleCloseReject}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>

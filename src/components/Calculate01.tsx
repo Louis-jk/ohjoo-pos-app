@@ -173,7 +173,13 @@ export default function CalculateTab01() {
             </option>
           ))}
         </TextField>
-        <Button variant="contained" color="primary" className={clsx(base.confirmBtn, base.ml20)} style={{ height: 55, minWidth: 100, fontSize: 16, fontWeight: 'bold' }}>조회</Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={clsx(base.confirmBtn, base.ml20)}
+          style={{ height: 55, minWidth: 100, fontSize: 16, fontWeight: 'bold', boxShadow: 'none' }}>
+          조회
+        </Button>
       </Box>
       <Box>
         {calculateData && calculateData.map((data, index) =>

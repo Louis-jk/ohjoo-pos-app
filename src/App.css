@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.MuiSwitch-track {
+  background-color: #b3b3b3 !important;
+}

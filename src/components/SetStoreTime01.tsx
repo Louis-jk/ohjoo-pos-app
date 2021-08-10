@@ -286,7 +286,7 @@ export default function StoreTimeTab01() {
               <h2 id="transition-modal-title" className={base.modalTitle}>영업시간 삭제</h2>
               <p id="transition-modal-description" className={base.modalDescription}>해당 영업시간을 삭제하시겠습니까?</p>
               <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                <ModalConfirmButton variant="contained" onClick={deleteStoreTime}>삭제하기</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={deleteStoreTime}>삭제하기</ModalConfirmButton>
                 <ModalCancelButton fullWidth variant="outlined" onClick={handleClose}>취소</ModalCancelButton>
               </ButtonGroup>
             </Box>

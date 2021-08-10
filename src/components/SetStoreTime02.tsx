@@ -256,7 +256,7 @@ export default function StoreTimeTab01() {
               <h2 id="transition-modal-title" className={base.modalTitle}>정기휴무일 삭제</h2>
               <p id="transition-modal-description" className={base.modalDescription}>정기휴무일을 삭제하시겠습니까?</p>
               <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                <ModalConfirmButton variant="contained" onClick={deleteStoreClosingDay}>삭제하기</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={deleteStoreClosingDay}>삭제하기</ModalConfirmButton>
                 <ModalCancelButton variant="outlined" onClick={handleClose}>취소</ModalCancelButton>
               </ButtonGroup>
             </Box>

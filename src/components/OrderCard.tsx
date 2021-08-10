@@ -12,6 +12,7 @@ import OrderCheckModal from './OrderCheckModal'; // 신규주문 주문 접수 �
 import OrderRejectModal from './OrderRejectModal'; // 신규주문 주문 거부 모달
 import OrderDeliveryModal from './OrderDeliveryModal'; // 접수완료 주문 배달처리 모달
 import OrderCancelModal from './OrderCancelModal'; // 접수완료 주문 취소 모달
+import { theme } from '../styles/base';
 
 interface orderData {
   [key: string]: string;
@@ -114,26 +115,26 @@ export default function OrderCard(props: OrderProps) {
           </Box>
           <Divider />
 
-          <ButtonGroup variant="outlined" color="primary" style={{ backgroundColor: '#e5e5e5', borderColor: '#e5e5e5' }} aria-label="text primary button group">
-            <Button style={{ minWidth: 120, height: 75 }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
+          <ButtonGroup variant="outlined" color="primary" style={{ color: theme.palette.primary.contrastText, borderColor: '#e5e5e5' }} aria-label="text primary button group">
+            <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
             {
               type === 'new' ?
-                <Button style={{ minWidth: 120, height: 75 }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
+                <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
                 : type === 'check' ?
-                  <Button style={{ minWidth: 120, height: 75 }} onClick={() => deliveryOrderHandler(order.od_id)}>배달처리</Button>
+                  <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => deliveryOrderHandler(order.od_id)}>배달처리</Button>
                   : null
             }
             {
               type === 'new' ?
-                <Button style={{ minWidth: 120, height: 75 }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
+                <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
                 : type === 'check' ?
-                  <Button style={{ minWidth: 120, height: 75 }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
+                  <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
                   : null}
           </ButtonGroup>
 
         </Box>
         {/* </Link> */}
-      </Grid>
+      </Grid >
     )
   }
 

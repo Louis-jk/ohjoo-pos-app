@@ -30,6 +30,7 @@ import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } fro
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
   '& .MuiSwitch-track': {
+    backgroundColor: '#b3b3b3',
     borderRadius: 22 / 2,
     '&:before, &:after': {
       content: '""',
@@ -304,7 +305,7 @@ export default function SetCategory(props: any) {
                   variant="outlined"
                   required
                   InputProps={{
-                    endAdornment: <Android12Switch defaultChecked onChange={() => visibleToggle('new')} checked={visible ? true : false} />
+                    endAdornment: <Android12Switch color="primary" defaultChecked onChange={() => visibleToggle('new')} checked={visible ? true : false} />
                   }}
                   onChange={e => setName(e.target.value as string)}
                 />
@@ -312,8 +313,8 @@ export default function SetCategory(props: any) {
                   <p style={{ color: visible ? theme.palette.primary.main : '#222' }}>{visible ? '노출로 설정하였습니다.' : '비노출로 설정하였습니다.'}</p>
                 </Box>
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                  <ModalConfirmButton fullWidth variant="contained" onClick={setCategoryHandler}>등록하기</ModalConfirmButton>
-                  <ModalCancelButton fullWidth variant="outlined" onClick={closeNewCategoryModal}>취소</ModalCancelButton>
+                  <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={setCategoryHandler}>등록하기</ModalConfirmButton>
+                  <ModalCancelButton variant="outlined" onClick={closeNewCategoryModal}>취소</ModalCancelButton>
                 </ButtonGroup>
               </Box>
             </Fade>
@@ -354,8 +355,8 @@ export default function SetCategory(props: any) {
                   <p style={{ color: editVisible ? theme.palette.primary.main : '#222' }}>{editVisible ? '노출로 설정하였습니다.' : '비노출로 설정하였습니다.'}</p>
                 </Box>
                 <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                  <ModalConfirmButton fullWidth variant="contained" onClick={editCategoryHandler}>수정하기</ModalConfirmButton>
-                  <ModalCancelButton fullWidth variant="outlined" onClick={closeEditCategoryModal}>취소</ModalCancelButton>
+                  <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={editCategoryHandler}>수정하기</ModalConfirmButton>
+                  <ModalCancelButton variant="outlined" onClick={closeEditCategoryModal}>취소</ModalCancelButton>
                 </ButtonGroup>
               </Box>
             </Fade>

@@ -17,15 +17,15 @@ export const theme = createTheme({
   },
   palette: {
     primary: {
-      light: '#c490be',
-      main: '#93628e',
-      dark: '#643761',
-      contrastText: '#fff',
+      light: '#ffe082',
+      main: '#ffc739',
+      dark: '#ffa000',
+      contrastText: '#222',
     },
     secondary: {
       light: '#ffffff',
-      main: '#f3e7d7',
-      dark: '#c0b5a6',
+      main: '#fff8e1',
+      dark: '#ccc5af',
       contrastText: '#222',
     },
   },
@@ -316,7 +316,7 @@ export const baseStyles = makeStyles({
     color: theme.palette.text.secondary,
     marginBottom: 30,
     backgroundColor: '#fff',
-    boxShadow: '0px 0px 10px 2px #e3e3e3'
+    boxShadow: '0px 0px 10px 2px #f1f1f1 !important'
   },
   small: {
     width: theme.spacing(3),

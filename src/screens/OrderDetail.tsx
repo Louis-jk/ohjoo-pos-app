@@ -336,8 +336,8 @@ export default function OrdersDetail(od_id: string) {
             <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>배달처리</Typography>
             <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>배달처리를 하시겠습니까?</Typography>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" color="primary" className={base.confirmBtn} style={{ marginLeft: 0, minWidth: 150 }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
-              <ModalConfirmButton variant="outlined" className={base.confirmBtn} style={{ minWidth: 150 }} onClick={handleCloseDelivery}>취소</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
+              <ModalConfirmButton variant="outlined" onClick={handleCloseDelivery}>취소</ModalConfirmButton>
             </ButtonGroup>
           </Box>
         </Fade>
@@ -359,12 +359,12 @@ export default function OrdersDetail(od_id: string) {
       >
         <Fade in={openCancel}>
           <Box className={clsx(base.modalInner, base.colCenter)}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: '#53447A' }}>주문 취소 사유 등록</Typography>
+            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>주문 취소 사유 등록</Typography>
             <Typography id="transition-modal-description">주문 취소 사유를 선택 또는 입력해주세요.</Typography>
             <Grid container spacing={1} style={{ margin: 20 }}>
               {cancelInitState.map((item, index) => (
                 <Grid item xs={6} md={4} key={index}>
-                  <Button variant="outlined" style={{ width: '100%', padding: 10, backgroundColor: cancelValue === item.value ? '#FCDD00' : '#fff', color: '#222', borderColor: cancelValue === item.value ? '#FCDD00' : '#e6e6e6' }} onClick={() => cancelHandler(item.value)}>{item.label}</Button>
+                  <Button variant="outlined" style={{ width: '100%', padding: 10, backgroundColor: cancelValue === item.value ? theme.palette.primary.main : '#fff', color: '#222', borderColor: cancelValue === item.value ? theme.palette.primary.main : '#e6e6e6' }} onClick={() => cancelHandler(item.value)}>{item.label}</Button>
                 </Grid>
               ))}
             </Grid>
@@ -381,8 +381,8 @@ export default function OrdersDetail(od_id: string) {
               onChange={e => setCancelEtc(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton fullWidth variant="contained" onClick={sendCancelHandler}>보내기</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="outlined" onClick={handleCloseCancel}>취소</ModalCancelButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendCancelHandler}>보내기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={handleCloseCancel}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>

@@ -80,7 +80,7 @@ export default function MenuList(props: any) {
                       }
                       <Box className={menu.menuListTextWrap}>
                         <Box className={menu.menuListTitle}>
-                          <p className={menu.menuListCategory}>{list.ca_name}</p>
+                          <Typography component="p" mr={1} fontWeight="bold">{list.ca_name}</Typography>
                           {list.it_type1 === '1' ? <span className={menu.menuListLabel01}>대표메뉴</span> : null}
                           {list.it_use === '1' ? <span className={menu.menuListLabel02}>판매중</span> : <span className={menu.menuListLabel03}>판매중지</span>}
                         </Box>

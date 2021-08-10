@@ -196,7 +196,7 @@ export default function Tips(props: any) {
             <h2 id="transition-modal-title" className={base.modalTitle}>쿠폰 삭제</h2>
             <p id="transition-modal-description" className={base.modalDescription}>선택하신 쿠폰을 삭제하시겠습니까?</p>
             <ButtonGroup variant="text" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" onClick={deleteCouponHandler}>예</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={deleteCouponHandler}>예</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={handleClose}>아니요</ModalCancelButton>
             </ButtonGroup>
           </Box>
