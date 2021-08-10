@@ -353,7 +353,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                         메뉴 추가하기
                       </Button>
                       : props.type === 'menuAdd' ?
-                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={() => history.push('/menu_add')}>
+                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main }} onClick={props.action}>
                           등록하기
                         </Button>
                         : props.type === 'menuEdit' ?
