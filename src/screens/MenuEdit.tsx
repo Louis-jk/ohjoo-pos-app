@@ -112,34 +112,12 @@ export default function MenuEdit(props: IProps) {
 
   // 이미지 업로드
   const [source, setSource] = React.useState({});
-  const imgData = new FormData();
 
   const onChange = (evt: any) => {
-    console.log("img evt?", evt);
-    console.log("img evt file?", evt.target);
 
     const img = evt.target.files[0];
 
-    imgData.append('it_img1', img);
     setSource(img);
-
-    console.log("img?", img);
-
-    // const formData = new FormData();
-    // formData.append('img', img);
-    // console.log(formData);
-    // for (const keyValue of formData) console.log(keyValue);
-    // const blob = new Blob([new ArrayBuffer(img)], { type: 'image/*' })
-    // const url = window.URL.createObjectURL(blob);
-    // window.URL.revokeObjectURL(url);
-    // console.log("blob ??", blob);
-    // console.log("url ??", url);
-
-    // const formData = new FormData();
-    // formData.append('img', img);
-
-    // console.log("formData", formData); // Formdata {}
-    // console.log("img <<< ???", img); // Formdata {}
 
     if (evt.target.files.length) {
       let file = (evt.target.files)[0];
@@ -147,38 +125,12 @@ export default function MenuEdit(props: IProps) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e: any) => {
-
-        // console.log("img type?", file.type);
-        // console.log("img name?", file.name);
-        // console.log("img size?", file.size);
-
         setImage(e.target.result);
-
-        // setSource({
-        //   uri: url,
-        //   type: file.type,
-        //   name: file.name,
-        // })
       }
     } else {
       setImage('');
     }
   }
-
-
-
-
-  const createOption = () => {
-    return ({
-      multiple: false,
-      name: '',
-      select: [
-        {
-          value: '', price: '',
-        }
-      ],
-    });
-  };
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -191,6 +143,18 @@ export default function MenuEdit(props: IProps) {
   };
   const handleCloseAlert = () => {
     setOpenAlert(false);
+  };
+
+  const createOption = () => {
+    return ({
+      multiple: false,
+      name: '',
+      select: [
+        {
+          value: '', price: '',
+        }
+      ],
+    });
   };
 
   const optionAddHandler = (payload: OptionType) => {
@@ -342,20 +306,11 @@ export default function MenuEdit(props: IProps) {
     //   param.it_img1 = source;
     // }
 
-    console.log("param >>>", param);
-
     Api.send2('store_item_update', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
-      console.log("resultItem ??", resultItem);
-      console.log("arrItems ??", arrItems);
-
       if (resultItem.result === 'Y') {
-        console.log('====================================');
-        console.log('메뉴 수정 resultItem :: ', resultItem);
-        console.log('메뉴 수정 :: ', arrItems);
-        console.log('====================================');
         setToastState({ msg: '메뉴가 수정되었습니다.', severity: 'success' });
         handleOpenAlert();
         setTimeout(() => {
@@ -618,14 +573,6 @@ export default function MenuEdit(props: IProps) {
                       color="secondary"
                       startIcon={<HighlightOffIcon />}
                       onClick={() =>
-                        // setAddOptions(options => {
-                        //   const result = [...options];
-                        //   result[index].select.push({
-                        //     value: '', price: '',
-                        //   });
-                        //   return result;
-                        // })
-
                         setOptions(options => {
                           const result = [...options];
                           result.splice(index, 1);
@@ -741,9 +688,7 @@ export default function MenuEdit(props: IProps) {
                       onClick={() =>
                         setAddOptions(options => {
                           const result = [...options];
-                          result[index].select.push({
-                            value: '', price: '',
-                          });
+                          result.splice(index, 1);
                           return result;
                         })
                       }
