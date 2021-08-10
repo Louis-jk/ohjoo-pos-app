@@ -122,13 +122,12 @@ export default function Login() {
 
   return (
     <LoginContainer component="section">
-      <Box className="wrap">
-        <img src={Logo} alt="오늘의 주문 로고" style={{ width: '80%' }} />
-        <Typography variant="h6">로그인</Typography>
-        <Box>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+        <img src={Logo} alt="오늘의 주문 로고" style={{ width: 300, marginBottom: 30 }} />
+        {/* <Typography variant="h6">로그인</Typography> */}
+        <Box mb={2}>
           <TextField
             value={values.email}
-            id="outlined-secondary"
             label="아이디"
             variant="outlined"
             className={base.loginInput}
@@ -140,7 +139,6 @@ export default function Login() {
           <FormControl fullWidth variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-password"
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
               className={base.loginInput}
