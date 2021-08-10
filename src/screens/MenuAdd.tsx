@@ -1,6 +1,7 @@
 import React from 'react';
-import Draggable from 'react-draggable';
 import { useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom'
+import Draggable from 'react-draggable';
 
 // Material UI Components
 import Paper, { PaperProps } from '@material-ui/core/Paper';
@@ -22,6 +23,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/core/Alert';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -67,10 +70,15 @@ export default function MenuAdd(props: any) {
 
   const base = baseStyles();
   const menu = MenuStyles();
+  const history = useHistory();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const [isLoading, setLoading] = React.useState(false);
 
   const [category, setCategory] = React.useState(''); // 카테고리 선택값
+  const [menuName, setMenuName] = React.useState(''); // 메뉴명
+  const [menuInfo, setMenuInfo] = React.useState(''); // 메뉴 기본설명
+  const [menuPrice, setMenuPrice] = React.useState(''); // 메뉴 판매가격
+  const [menuDescription, setMenuDescription] = React.useState(''); // 메뉴 상세설명
   const [options, setOptions] = React.useState<MenuOption[]>([]); // 기본옵션
   const [addOptions, setAddOptions] = React.useState<MenuOption[]>([]); // 추가옵션
   const [open, setOpen] = React.useState(false);
@@ -83,21 +91,24 @@ export default function MenuAdd(props: any) {
   const [image, setImage] = React.useState(''); // 메뉴 이미지 URL
 
   // 이미지 업로드
-  const [files, setFiles] = React.useState({});
+  const [source, setSource] = React.useState({});
+
   const onChange = (evt: any) => {
-    console.log("img evt?", evt);
+
+    const img = evt.target.files[0];
+
+    setSource(img);
 
     if (evt.target.files.length) {
       let file = (evt.target.files)[0];
+
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e: any) => {
         setImage(e.target.result);
-        console.log("e.target >>> ", e.target);
-        console.log("e.target.result >>> ", e.target.result);
       }
     } else {
-      setImage("https://dummyimage.com/500x500/ffffff/000000.png&text=preview+image");
+      setImage('');
     }
   }
 
@@ -139,6 +150,19 @@ export default function MenuAdd(props: any) {
   React.useEffect(() => {
     getCategoryHandler();
   }, [mt_id, mt_jumju_code])
+
+  // Toast(Alert) 관리
+  const [toastState, setToastState] = React.useState({
+    msg: '',
+    severity: ''
+  });
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  };
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
   const createOption = () => {
     return ({
@@ -216,9 +240,76 @@ export default function MenuAdd(props: any) {
     setOpen(false);
   }
 
+  const addMenuHandler = () => {
+    if (category === '') {
+      setToastState({ msg: '카테고리를 선택해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (menuName === '') {
+      setToastState({ msg: '메뉴명을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (menuInfo === '') {
+      setToastState({ msg: '기본설명을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (menuPrice === '') {
+      setToastState({ msg: '판매가격을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (menuDescription === '') {
+      setToastState({ msg: '상세설명을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else {
+      let param = {
+        jumju_id: mt_id,
+        jumju_code: mt_jumju_code,
+        mode: 'insert',
+        ca_id2: category,
+        menuName: menuName,
+        menuInfo: menuInfo,
+        menuPrice: menuPrice,
+        menuDescription: menuDescription,
+        it_type1: checked01,
+        it_use: checked02,
+        menuOption: JSON.stringify(options),
+        menuAddOption: JSON.stringify(addOptions),
+        it_img1: source
+      };
+
+      Api.send2('store_item_input', param, (args: any) => {
+
+        let resultItem = args.resultItem;
+        let arrItems = args.arrItems;
+
+        if (resultItem.result === 'Y') {
+          setToastState({ msg: '메뉴가 등록되었습니다.', severity: 'success' });
+          handleOpenAlert();
+          setTimeout(() => {
+            history.push('/menu');
+          }, 700);
+        } else {
+          setToastState({ msg: '메뉴를 등록 중에 오류가 발생하였습니다.', severity: 'error' });
+          handleOpenAlert();
+        }
+      });
+    }
+  }
+
   return (
     <Box component="div" className={base.root}>
-      <Header type="menuAdd" />
+      <Header type="menuAdd" action={addMenuHandler} />
+      <Box className={base.alertStyle}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+          open={openAlert}
+          autoHideDuration={5000}
+          onClose={handleCloseAlert}
+        >
+          <Alert onClose={handleCloseAlert} severity={toastState.severity === 'error' ? 'error' : 'success'}>
+            {toastState.msg}
+          </Alert>
+        </Snackbar>
+      </Box>
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
@@ -336,56 +427,40 @@ export default function MenuAdd(props: any) {
               </Select>
               <div className={base.mb30}></div>
               <TextField
-                // value={details.menuName === null || details.menuName === undefined ? '' : details.menuName}
-                id="outlined-basic"
+                value={menuName}
                 label="메뉴명"
                 variant="outlined"
                 required
-              // onChange={e => setDetails({
-              // ...details,
-              // menuName: e.target.value as string
-              // })}
+                onChange={e => setMenuName(e.target.value as string)}
               />
               <div className={base.mb30}></div>
               <TextField
-                // value={details.menuInfo === null || details.menuInfo === undefined ? '' : details.menuInfo}
-                id="outlined-basic"
+                value={menuInfo}
                 label="기본설명"
                 variant="outlined"
                 required
-              // onChange={e => setDetails({
-              // ...details,
-              // menuInfo: e.target.value as string
-              // })}
+                onChange={e => setMenuInfo(e.target.value as string)}
               />
               <div className={base.mb30}></div>
               <TextField
-                // value={details.menuPrice === null || details.menuPrice === undefined ? '' : Api.comma(details.menuPrice)}
-                id="outlined-basic"
+                value={menuPrice}
                 label="판매가격"
                 variant="outlined"
                 required
-              // onChange={e => setDetails({
-              // ...details,
-              // menuPrice: e.target.value as string
-              // })}
+                onChange={e => setMenuPrice(e.target.value as string)}
               />
               <div className={base.mb30}></div>
               <TextField
-                // value={details.menuDescription === null || details.menuDescription === undefined ? '' : details.menuDescription}
+                value={menuDescription}
                 fullWidth
                 className={base.multiTxtField}
-                id="outlined-multiline-static"
                 label="메뉴상세설명"
                 required
                 multiline
                 rows={10}
                 placeholder="메뉴 상세설명을 작성해주세요."
                 variant="outlined"
-              // onChange={e => setDetails({
-              //     ...details,
-              //     menuDescription: e.target.value as string
-              // })}
+                onChange={e => setMenuDescription(e.target.value as string)}
               />
             </FormControl>
           </Grid>
@@ -414,7 +489,7 @@ export default function MenuAdd(props: any) {
                   <TextField
                     value={option.name === null || option.name === undefined ? '' : option.name}
                     id="outlined-basic"
-                    label={`기본옵션 ${index < 9 ? '0' : ''}${index + 1} - 옵션명`}
+                    label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 옵션명`}
                     variant="outlined"
                     className={base.fieldMargin}
                     style={{ width: '40%', marginRight: '1%' }}
@@ -432,16 +507,14 @@ export default function MenuAdd(props: any) {
                     color="secondary"
                     startIcon={<HighlightOffIcon />}
                     onClick={() =>
-                      setAddOptions(options => {
+                      setOptions(options => {
                         const result = [...options];
-                        result[index].select.push({
-                          value: '', price: '',
-                        });
+                        result.splice(index, 1);
                         return result;
                       })
                     }
                   >
-                    옵션삭제
+                    삭제
                   </Button>
                   <Button
                     style={{ width: '29%', height: 56, color: '#666', borderColor: '#e5e5e5' }}
@@ -458,7 +531,7 @@ export default function MenuAdd(props: any) {
                       })
                     }
                   >
-                    세부추가
+                    추가
                   </Button>
                 </Box>
                 {option.select && option.select.map((item, selectIndex) => (
@@ -467,7 +540,7 @@ export default function MenuAdd(props: any) {
                       style={{ width: '40%', marginRight: '1%' }}
                       value={item.value === null || item.value === undefined ? '' : item.value}
                       id="outlined-basic"
-                      label={`기본옵션 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                      label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
                       variant="outlined"
                       onChange={e => {
                         setOptions(options => {
@@ -481,7 +554,7 @@ export default function MenuAdd(props: any) {
                       style={{ width: '39%', marginRight: '1%' }}
                       value={item.price === null || item.price === undefined ? '' : item.price}
                       id="outlined-basic"
-                      label={`기본옵션 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                      label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
                       variant="outlined"
                       onChange={e => {
                         setOptions(options => {
@@ -494,7 +567,7 @@ export default function MenuAdd(props: any) {
                     <Button
                       style={{ width: '19%', height: 55, color: '#666', borderColor: '#e5e5e5' }}
                       variant="outlined"
-                      startIcon={<HighlightOffIcon />}
+                      // startIcon={<HighlightOffIcon />}
                       onClick={() => handleClickOpen('default', index, selectIndex)}
                     >
                       삭제
@@ -530,7 +603,7 @@ export default function MenuAdd(props: any) {
                   <TextField
                     value={option.name === null || option.name === undefined ? '' : option.name}
                     id="outlined-basic"
-                    label={`추가옵션 ${index < 9 ? '0' : ''}${index + 1} - 옵션명`}
+                    label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 옵션명`}
                     variant="outlined"
                     className={base.fieldMargin}
                     style={{ width: '40%', marginRight: '1%' }}
@@ -550,14 +623,12 @@ export default function MenuAdd(props: any) {
                     onClick={() =>
                       setAddOptions(options => {
                         const result = [...options];
-                        result[index].select.push({
-                          value: '', price: '',
-                        });
+                        result.splice(index, 1);
                         return result;
                       })
                     }
                   >
-                    옵션삭제
+                    삭제
                   </Button>
                   <Button
                     style={{ width: '29%', height: 56, color: '#666', borderColor: '#e5e5e5' }}
@@ -574,7 +645,7 @@ export default function MenuAdd(props: any) {
                       })
                     }
                   >
-                    세부추가
+                    추가
                   </Button>
                 </Box>
                 {option.select && option.select.map((item, selectIndex) => (
@@ -583,7 +654,7 @@ export default function MenuAdd(props: any) {
                       style={{ width: '40%', marginRight: '1%' }}
                       value={item.value === null || item.value === undefined ? '' : item.value}
                       id="outlined-basic"
-                      label={`추가옵션 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                      label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
                       variant="outlined"
                       onChange={e => {
                         setAddOptions(options => {
@@ -597,7 +668,7 @@ export default function MenuAdd(props: any) {
                       style={{ width: '39%', marginRight: '1%' }}
                       value={item.price === null || item.price === undefined ? '' : item.price}
                       id="outlined-basic"
-                      label={`추가옵션 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                      label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
                       variant="outlined"
                       onChange={e => {
                         setAddOptions(options => {
@@ -611,7 +682,7 @@ export default function MenuAdd(props: any) {
                       style={{ width: '19%', height: 55, color: '#666', borderColor: '#e5e5e5' }}
                       variant="outlined"
                       color="secondary"
-                      startIcon={<HighlightOffIcon />}
+                      // startIcon={<HighlightOffIcon />}
                       onClick={() => handleClickOpen('add', index, selectIndex)}
                     >
                       삭제
