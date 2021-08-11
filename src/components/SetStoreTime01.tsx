@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import moment from 'moment';
 import 'moment/locale/ko';
+import { ko } from "date-fns/esm/locale";
 
 // Material UI Components
 import TextField from '@material-ui/core/TextField';
@@ -26,11 +27,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { Divider, Typography } from '@material-ui/core';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import TimePicker from '@material-ui/lab/TimePicker';
-import MobileTimePicker from '@material-ui/lab/MobileTimePicker';
 import DesktopTimePicker from '@material-ui/lab/DesktopTimePicker';
-
-import { ko } from "date-fns/esm/locale";
 
 // Local Component
 import Api from '../Api';
@@ -53,16 +50,13 @@ export default function StoreTimeTab01() {
   const [id, setId] = React.useState('');
   const [open, setOpen] = React.useState(false); // 모달 on/off
   const [selectDay, setSelectDay] = React.useState<Array<string>>([]); // 선택 요일
-  const [startTime, setStartTime] = React.useState('14:00'); // 시작 시간
-  const [endTime, setEndTime] = React.useState('19:00'); // 마감 시간
+  const [startTime, setStartTime] = React.useState<Date | null>(new Date()); // 시작 시간
+  const [endTime, setEndTime] = React.useState<Date | null>(new Date()); // 마감 시간
   const [getDays, setGetDays] = React.useState<Array<string>>([]); // 등록된 요일
   const [strValue, setStringValue] = React.useState(''); // getDays의 stringify
 
   const checkArr = `["0","1","2","3","4","5","6"]`; // 등록된 값과 비교하기 위한 스트링 데이터 (저장하기 버튼 on/off 유무)
 
-  const [value, setValue] = React.useState<Date | null>(
-    new Date('2018-01-01T00:00:00.000Z'),
-  );
 
   // 요일 선택 핸들러
   const selectDayHandler = (payload: string) => {
@@ -348,76 +342,53 @@ export default function StoreTimeTab01() {
           </FormGroup>
         </FormControl>
 
+        <Typography className={clsx(classes.pointTxt, base.mb10)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>영업 시작시간과 마감시간을 설정해주세요.</Typography>
         <Grid container spacing={3} className={base.mb20}>
           <Grid item xs={6}>
-            <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>시작시간을 설정해주세요.</Typography>
-            {/* <Paper className={classes.paper}>
-              <form className={classes.container} noValidate>
-                <TextField
-                  id="time"
-                  label="시작시간"
-                  type="time"
-                  defaultValue={startTime}
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
-                  onChange={e => setStartTime(e.target.value)}
-                  disabled={strValue === checkArr ? true : false}
-                />
-              </form>
-            </Paper> */}
             <LocalizationProvider dateAdapter={AdapterDateFns} locale={ko}>
-              <Box className={classes.paper}>
-                <MobileTimePicker
-                  label="시작시간"
-                  value={value}
-                  onChange={(newValue) => {
-                    setValue(newValue);
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  disabled={strValue === checkArr ? true : false}
-                />
+              <Box display="flex" flexDirection="row" className={classes.paper}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <DesktopTimePicker
+                      label="시작시간"
+                      value={startTime}
+                      inputFormat="a hh:mm"
+                      onChange={(newValue) => {
+                        setStartTime(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                      disabled={strValue === checkArr ? true : false}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <DesktopTimePicker
+                      label="마감시간"
+                      value={endTime}
+                      inputFormat="a hh:mm"
+                      onChange={(newValue) => {
+                        setEndTime(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                      disabled={strValue === checkArr ? true : false}
+                    />
+                  </Grid>
+                </Grid>
               </Box>
             </LocalizationProvider>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography className={clsx(classes.pointTxt, base.mb20)} style={{ color: strValue === checkArr ? 'rgba(0, 0, 0, 0.26)' : theme.palette.primary.main }}>마감시간을 설정해주세요.</Typography>
-            <Paper className={classes.paper}>
-              <form className={classes.container} noValidate>
-                <TextField
-                  id="time"
-                  label="마감시간"
-                  type="time"
-                  defaultValue={endTime}
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
-                  onChange={e => setEndTime(e.target.value)}
-                  disabled={strValue === checkArr ? true : false}
-                />
-              </form>
-            </Paper>
           </Grid>
         </Grid>
         {/* <p>영업시간은 사용자앱에서 주문할 수 있는 시간과 연동됩니다.</p> */}
 
 
-        {strValue === checkArr ?
-          <Button disabled className={classes.button} style={{ height: 50 }} variant="contained" disableElevation>
-            저장하기
-          </Button>
-          :
-          <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={addStoreTime}>
-            저장하기
-          </Button>
+        {
+          strValue === checkArr ?
+            <Button disabled className={classes.button} style={{ height: 50 }} variant="contained" disableElevation>
+              저장하기
+            </Button>
+            :
+            <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={addStoreTime}>
+              저장하기
+            </Button>
         }
       </section >
 
