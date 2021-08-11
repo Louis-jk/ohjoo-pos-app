@@ -394,18 +394,18 @@ export default function OrdersDetail(od_id: string) {
           <Grid container justifyContent="space-between" alignItems="flex-end" style={{ marginBottom: 30 }}>
             <Grid item xs={12} md={6}>
               <Paper className={order.orderPaper}>
-                <Typography variant="h6" component="h6" className={order.orderTitle}>주문매장</Typography>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>상호명</Typography>
+                <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>주문정보</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>주문매장 : </Typography>
                   <Typography variant="body1">{detailStore.mb_company}</Typography>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>주문시간</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>주문시간 : </Typography>
                   <Typography variant="body1">{moment(detailStore.od_time).format('YYYY년 M월 D일 HH시 mm분')}</Typography>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>주문방법</Typography>
-                  <Typography variant="body1">{detailOrder.od_type}</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>주문방법 : </Typography>
+                  <Typography variant="body1">{detailOrder.od_type} 주문</Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -425,60 +425,60 @@ export default function OrdersDetail(od_id: string) {
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper className={order.orderPaper}>
-                <Typography variant="h6" component="h6" className={order.orderTitle}>요청사항</Typography>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>사장님께</Typography>
+                <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>요청사항</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>사장님께 : </Typography>
                   <Typography variant="body1">{detailOrder.order_seller !== '' ? detailOrder.order_seller : '요청사항이 없습니다.'}</Typography>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>배달기사님께</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>배달기사님께 : </Typography>
                   <Typography variant="body1">{detailOrder.order_officer !== '' ? detailOrder.order_officer : '요청사항이 없습니다.'}</Typography>
                 </Box>
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper className={order.orderPaper}>
-                <Typography variant="h6" component="h6" className={order.orderTitle}>배달정보</Typography>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>배달주소</Typography>
-                  <Box style={{ textAlign: 'left' }}>
+                <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>배달정보</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>배달주소 : </Typography>
+                  <Box style={{ textAlign: 'right' }}>
                     <Typography variant="body1">{detailOrder.order_addr1}</Typography>
                     <Typography variant="body1">{detailOrder.order_addr3}</Typography>
                   </Box>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>전화번호</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>전화번호 : </Typography>
                   <Typography variant="body1">{detailOrder.order_hp}</Typography>
                 </Box>
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper className={order.orderPaper}>
-                <Typography variant="h6" component="h6" className={order.orderTitle}>결제정보</Typography>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>총 주문금액</Typography>
+                <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>결제정보</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>총 주문금액 : </Typography>
                   <Typography variant="body1">{Api.comma(detailOrder.odder_cart_price)} 원</Typography>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>배달팁</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>배달팁 : </Typography>
                   <Typography variant="body1">{Api.comma(detailOrder.order_cost)} 원</Typography>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>포인트</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>포인트 : </Typography>
                   <Typography variant="body1">{Api.comma(detailOrder.order_point)} P</Typography>
                 </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>쿠폰할인</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>쿠폰할인 : </Typography>
                   <Typography variant="body1">{Api.comma(detailOrder.order_coupon)} 원</Typography>
                 </Box>
                 <Divider style={{ marginTop: 20, marginBottom: 20 }} />
-                <Box fontSize={14} className={order.orderBox} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
-                  <Typography variant="subtitle1" className={order.orderSubtitle} style={{ fontWeight: 'bold' }}>총 결제금액</Typography>
-                  <Typography variant="h6">{Api.comma(detailOrder.order_sumprice)} 원</Typography>
-                </Box>
-                <Box fontSize={14} className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>결제방법</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>결제방법 : </Typography>
                   <Typography variant="body1">{detailOrder.od_settle_case}</Typography>
+                </Box>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="subtitle1" className={order.orderSubtitle} style={{ fontWeight: 'bold' }}>총 결제금액 : </Typography>
+                  <Typography variant="h6">{Api.comma(detailOrder.order_sumprice)} 원</Typography>
                 </Box>
               </Paper>
             </Grid>
