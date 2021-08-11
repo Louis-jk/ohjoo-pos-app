@@ -55,7 +55,7 @@ const PrintModal = (props: any) => {
         }}
       >
         <Fade in={props.isOpen}>
-          <Box display="block" width="80mm" height="150mm" overflow="auto" zIndex={99999} px={3} pb={3} pt={1} style={{ backgroundColor: '#fff' }}>
+          <Box display="block" width="80mm" height="160mm" overflow="auto" zIndex={99999} px={3} pb={3} pt={1} style={{ backgroundColor: '#fff' }}>
             <Box display="flex" flexDirection="row" justifyContent="flex-end" alignItems="center">
               {/* <FontAwesomeIcon icon={faPrint} size="1x" /> */}
               <IconButton
