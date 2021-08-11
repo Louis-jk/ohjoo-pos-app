@@ -1,76 +1,182 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { theme, baseStyles } from '../styles/base';
-
-import DayPicker, { LocaleUtils, DateUtils } from 'react-day-picker';
-import 'react-day-picker/lib/style.css';
-import MomentLocaleUtils from 'react-day-picker/moment';
 import 'moment/locale/ko';
+import 'react-modern-calendar-datepicker/lib/DatePicker.css';
+import DatePicker, { Calendar, DayValue, DayRange, Day } from 'react-modern-calendar-datepicker'
 
+// Material UI Components
+import Chip from '@material-ui/core/Chip';
+import Stack from '@material-ui/core/Stack';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import { Typography, IconButton } from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
-function formatMonthTitle(d: any, locale: any) {
-  return `${d.getFullYear()}년 ${d.getMonth() + 1}월`
-}
+// Local Component
+import { myCustomLocale } from '../assets/datas/calendar_locale';
+import Api from '../Api';
+import { theme, baseStyles } from '../styles/base';
 
 export default function StoreTimeTab03() {
 
   const base = baseStyles();
-  const [selectedDays, setSelectedDays] = useState([]);
+  const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const [selectedDayRange, setSelectedDayRange] = useState<Day[]>([]); // 마커용
+  const [dayFormatArray, setDayFormatArray] = useState<string[]>([]); // 리스트용 - Chip
+
+  // 리스트용 포맷 핸들러
+  const dayFormatHandler = (dates: any) => {
+    console.log("dayFormatHandler 눌린거 들고온 데이트 ?", dates);
+    let result = dates.map((date: any, index: number) => {
+      return date.year + '-' + date.month + '-' + date.day;
+    })
+
+    setDayFormatArray(result);
+
+    // API 휴무일 업데이트
+    let lastDate = dates[dates.length - 1];
+    let lastDateToStr = lastDate.year + '-' + lastDate.month + '-' + lastDate.day;
+    let formatApiDate = moment(lastDateToStr, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    selectHolidayHandler(formatApiDate);
+  }
+
+  // 휴무일 가져오기 
+  const getStoreClosedHandler = () => {
+    const param = {
+      encodeJson: true,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      mode: 'list'
+    };
+
+    Api.send('store_hoilday', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+
+        let obj: Day; // 캘린더 Day type 지정(마커용)
+        let toArr: Day[] = []; // 빈배열 생성 (캘린더 Day[] 타입 지정)(마커용)
+        let toChipArr: string[] = []; // 빈배열 생성(리스트용 - Chip)
+
+        arrItems.map((date: any) => {
+
+          // API에서 가져온 날짜 형식 moment로 포맷(마커용)
+          let year = moment(date.sh_date, 'YYYY-MM-DD').format('YYYY');
+          let month = moment(date.sh_date, 'YYYY-MM-DD').format('MM');
+          let day = moment(date.sh_date, 'YYYY-MM-DD').format('DD');
+
+          // moment로 포맷한 string Data 캘린더 Day type형식에 맞게 숫자로 변환(마커용)
+          let yearToNum = Number(year);
+          let monthToNum = Number(month);
+          let dayToNum = Number(day);
+
+          // 캘린더 Day type 형식에 맞춘 Data, Day type 새 오브젝트에 대입(마커용)
+          obj = {
+            day: dayToNum,
+            month: monthToNum,
+            year: yearToNum
+          }
+          toArr.push(obj);
+
+          toChipArr.push(date.sh_date);
+        });
+
+        // 대입된 값들을 캘린더 상태값에 저장(마커용)
+        setSelectedDayRange(toArr);
+
+        // 대입된 값들 상태값에 저장(리스트용 - Chip)
+        setDayFormatArray(toChipArr);
+
+      } else {
+
+      }
+    });
+  }
+
+  useEffect(() => {
+    getStoreClosedHandler();
+  }, []);
 
 
-  const modifiers = {
-    thursdays: { daysOfWeek: [4] },
-    birthday: new Date(2018, 9, 30),
+  // 휴무일 업데이트 핸들러
+  const selectHolidayHandler = (date: string) => {
 
+    const param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      sh_date: date,
+      mode: 'update'
+    };
+
+    console.log("param은?", param);
+
+    Api.send('store_hoilday', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log('업데이트 완료');
+      } else {
+        console.log('업데이트 실패');
+      }
+    });
   };
 
-  const modifiersStyles = {
-    birthday: {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
-    },
-    // thursdays: {
-    //   color: '#ffc107',
-    //   backgroundColor: '#fffdee',
-    // },
-  }
+  // 리스트 - Chip 에서 날짜 삭제 핸들러
+  const handleDelete = (date: string) => {
+    console.log("handleDelete date?", date);
+    console.log("handleDelete date type?", typeof date);
+    let filtered = dayFormatArray.filter(chipDate => chipDate !== date);
+    setDayFormatArray(filtered);
 
-  const handleDayClick = (day: any) => {
+    // 리스트용 - Chip 삭제 필터
+    let obj: Day;
+    let yearToNum = Number(moment(date, 'YYYY-MM-DD').format('YYYY'));
+    let monthToNum = Number(moment(date, 'YYYY-MM-DD').format('MM'));
+    let dayToNum = Number(moment(date, 'YYYY-MM-DD').format('DD'));
 
-    let formatDay = moment(day).format('YYYY-MM-DD');
-
-    const filtered = selectedDays.find(selectedDay => moment(selectedDay).format('YYYY-MM-DD') === formatDay);
-    console.log("filtered ?", filtered);
-
-    if (filtered) {
-      const removeObj = selectedDays.filter(selectedDay => moment(selectedDay).format('YYYY-MM-DD') !== formatDay);
-      console.log("removeObj", removeObj);
-      setSelectedDays(removeObj);
-    } else {
-      let result = selectedDays.concat(day);
-      setSelectedDays(result);
+    obj = {
+      day: dayToNum,
+      month: monthToNum,
+      year: yearToNum
     }
-  }
 
-  console.log("selectedDays ???", selectedDays);
+    // 마커 삭제
+    let markerFiltered = selectedDayRange.filter(markerDate => JSON.stringify(markerDate) !== JSON.stringify(obj));
+    setSelectedDayRange(markerFiltered);
+
+    // API 휴무일 업데이트
+    let formatApiDate = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    selectHolidayHandler(formatApiDate);
+  };
+
 
   return (
-    // <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width="100%">
-
-    <DayPicker
-      localeUtils={{ ...MomentLocaleUtils, formatMonthTitle }}
-      locale="ko"
-      selectedDays={selectedDays}
-      onDayClick={handleDayClick}
-      modifiers={modifiers}
-      modifiersStyles={modifiersStyles}
-    />
-
-    // </Box >
+    <React.Fragment>
+      <Grid container spacing={3}>
+        <Grid item md={6}>
+          <Calendar
+            value={selectedDayRange}
+            onChange={(day) => {
+              setSelectedDayRange(day);
+              dayFormatHandler(day);
+              console.log("보자 day", day);
+            }}
+            shouldHighlightWeekends
+            locale={myCustomLocale}
+            colorPrimary={theme.palette.primary.main}
+            calendarClassName="custom-calendar"
+            calendarTodayClassName="custom-today-day"
+          />
+        </Grid>
+        <Grid item md={6}>
+          <Stack direction="column" spacing={1}>
+            {dayFormatArray?.map((date, index) => (
+              <Chip key={date + index} label={date} variant="outlined" onDelete={() => handleDelete(date)} />
+            ))}
+          </Stack>
+        </Grid>
+      </Grid>
+    </React.Fragment>
   )
 }
