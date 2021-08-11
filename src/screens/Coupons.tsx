@@ -212,13 +212,13 @@ export default function Tips(props: any) {
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) => (
               <Grid key={list.cz_no} item xs={12} md={6} style={{ position: 'relative' }}>
-                <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => deleteCouponConfirmHandler(list.cz_no)} style={{ position: 'absolute', top: 10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: '#53447A' }}>
+                <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => deleteCouponConfirmHandler(list.cz_no)} style={{ position: 'absolute', top: 10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: theme.palette.primary.main }}>
                   <CloseRoundedIcon />
                 </IconButton>
                 <Paper className={clsx(base.paper, coupon.gradient)}>
-                  <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#53447A' }}>{list.cz_subject}</Typography>
+                  <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
                   <Box component="article" className={coupon.couponBox}>
-                    <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: '#000' }}>✂</Typography>
+                    <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: theme.palette.primary.contrastText }}>✂</Typography>
                     {list.cz_price_type === '1' ?
                       <Typography variant="h5" component="em" className={coupon.couponPrice}>{list.cz_price}%</Typography>
                       :

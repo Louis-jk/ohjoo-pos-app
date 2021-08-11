@@ -358,56 +358,62 @@ export default function Tips(props: any) {
                   onClick={() => deleteTipConfirmHandler(list.dd_id)}
                   style={{
                     position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    width: 20,
-                    height: 20,
+                    top: 15,
+                    right: -7,
+                    width: 25,
+                    height: 25,
                     color: '#fff',
-                    backgroundColor: '#53447A'
+                    backgroundColor: theme.palette.primary.main
                   }}
                 >
                   <CloseRoundedIcon />
                 </IconButton>
                 <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ backgroundColor: '#f1f1f1' }}>
                   <Box className={base.txtRoot}>
-                    <FormControl fullWidth className={base.margin} variant="outlined">
-                      <InputLabel htmlFor="outlined-adornment-amount">최소금액</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-amount"
-                        value={list.dd_charge_start}
-                        style={{ backgroundColor: '#fff' }}
-                        endAdornment={<InputAdornment position="start">원 이상</InputAdornment>}
-                        contentEditable={false}
-                        disabled={true}
-                      />
-                    </FormControl>
+                    <TextField
+                      value={list.dd_charge_start}
+                      variant="outlined"
+                      label="최소금액"
+                      style={{ backgroundColor: '#fff' }}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="start">원 이상</InputAdornment>
+                      }}
+                      contentEditable={false}
+                    />
                   </Box>
                   <Box className={base.txtRoot}>
-                    <FormControl fullWidth className={base.margin} variant="outlined">
-                      <InputLabel htmlFor="outlined-adornment-amount">최대금액</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-amount"
-                        value={list.dd_charge_end}
-                        style={{ backgroundColor: '#fff' }}
-                        endAdornment={<InputAdornment position="start">원 미만</InputAdornment>}
-                        contentEditable={false}
-                        disabled={true}
-                      />
-                    </FormControl>
+                    <TextField
+                      value={list.dd_charge_end}
+                      variant="outlined"
+                      label="최대금액"
+                      style={{ backgroundColor: '#fff' }}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="start">원 미만</InputAdornment>
+                      }}
+                      contentEditable={false}
+                    />
                   </Box>
-                  <Typography>위 금액일 경우, 아래 배달비 적용</Typography>
+                  <Typography mb={3}>위 금액일 경우, 아래 배달비 적용</Typography>
                   <Box className={base.txtRoot}>
-                    <FormControl fullWidth className={base.margin} variant="outlined">
-                      <InputLabel htmlFor="outlined-adornment-amount">배달비</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-amount"
-                        value={list.dd_charge_price}
-                        style={{ backgroundColor: '#fff' }}
-                        endAdornment={<InputAdornment position="start">원</InputAdornment>}
-                        contentEditable={false}
-                        disabled={true}
-                      />
-                    </FormControl>
+                    <TextField
+                      value={list.dd_charge_price}
+                      variant="outlined"
+                      label="배달비"
+                      style={{ backgroundColor: '#fff' }}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="start">원</InputAdornment>
+                      }}
+                      contentEditable={false}
+                    />
                   </Box>
                 </Paper>
               </Grid>
