@@ -34,8 +34,26 @@ import loginAction from '../redux/actions';
 import { theme, baseStyles } from '../styles/base';
 import { MaterialUISwitch } from './MaterialUISwitch';
 
+import FiberNewIcon from '@material-ui/icons/FiberNew';
+import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
+import FiberNewOutlinedIcon from '@material-ui/icons/FiberNewOutlined';
+import PlaylistAddCheckOutlinedIcon from '@material-ui/icons/PlaylistAddCheckOutlined';
+import FactCheckOutlinedIcon from '@material-ui/icons/FactCheckOutlined';
+import DeliveryDiningOutlinedIcon from '@material-ui/icons/DeliveryDiningOutlined';
+import FileDownloadDoneOutlinedIcon from '@material-ui/icons/FileDownloadDoneOutlined';
+import AccessTimeOutlinedIcon from '@material-ui/icons/AccessTimeOutlined';
+import CalculateOutlinedIcon from '@material-ui/icons/CalculateOutlined';
+import CategoryOutlinedIcon from '@material-ui/icons/CategoryOutlined';
+import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+import RestaurantMenuOutlinedIcon from '@material-ui/icons/RestaurantMenuOutlined';
+import ConfirmationNumberOutlinedIcon from '@material-ui/icons/ConfirmationNumberOutlined';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
+import RateReviewOutlinedIcon from '@material-ui/icons/RateReviewOutlined';
+
 import OrderPrint from '../components/ComponentToPrint';
 import PrintModal from './PrintModal';
+import Logo from '../assets/images/logo_bk.png';
 
 const drawerWidth = 200;
 interface Props {
@@ -131,31 +149,32 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   // 메뉴 드로어
   const drawer = (
-    <div style={{ backgroundColor: theme.palette.secondary.main }}>
-      <Toolbar />
-      <Divider />
+    <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
+      <Toolbar style={{ backgroundColor: theme.palette.primary.main }}>
+        <img src={Logo} alt="오늘의주문" style={{ width: 130 }} />
+      </Toolbar>
       <List>
         <ListItem button component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <ListAltOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="신규주문" />
         </ListItem>
         <ListItem button component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <PlaylistAddCheckOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="접수완료" />
         </ListItem>
         <ListItem button component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <DeliveryDiningOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="배달중" />
         </ListItem>
         <ListItem button component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <FileDownloadDoneOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="배달완료" />
         </ListItem>
@@ -164,49 +183,49 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       <List>
         <ListItem button component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <AccessTimeOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="영업일 및 휴무일" />
         </ListItem>
         <ListItem button component={Link} to='/caculate' style={{ color: curPathName === 'caculate' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'caculate' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <CalculateOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="정산내역" />
         </ListItem>
         <ListItem button component={Link} to='/category' style={{ color: curPathName === 'category' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'category' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <MenuOpenOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="카테고리" />
         </ListItem>
         <ListItem button component={Link} to='/menu' style={{ color: curPathName === 'menu' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <RestaurantMenuOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="메뉴관리" />
         </ListItem>
         <ListItem button component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <ConfirmationNumberOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="쿠폰관리" />
         </ListItem>
         <ListItem button component={Link} to='/tips' style={{ color: curPathName === 'tips' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'tips' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <InfoOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="배달팁" />
         </ListItem>
         <ListItem button component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <StorefrontOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="매장소개" />
         </ListItem>
         <ListItem button component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? theme.palette.primary.main : 'transparent' }}>
           <ListItemIcon style={{ color: theme.palette.secondary.contrastText }}>
-            <InboxIcon />
+            <RateReviewOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="리뷰관리" />
         </ListItem>
@@ -254,6 +273,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          boxShadow: 'none'
         }}
       >
         <Toolbar style={{
@@ -284,7 +304,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <ArrowBackIcon />
               </IconButton>
               : null}
-            <Typography variant="h6" noWrap component="div">
+            <Typography variant="h5" noWrap component="h5" fontWeight="bold">
               {mt_store}
             </Typography>
           </Box>
@@ -433,7 +453,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, border: 'none' },
           }}
           open
         >
