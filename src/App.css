@@ -37,6 +37,21 @@
   }
 }
 
-.MuiSwitch-track {
-  background-color: #b3b3b3 !important;
+.custom-calendar {
+  position: absolute;
+  top: 200px;
+  display: flex;
+  border: 1px solid #ececec;
+  box-shadow: none;
+  transform: scale(1.2);
+  /* box-shadow: 0 1em 3em rgba(156, 136, 255,0.2); */
+}
+
+.custom-today-day {
+  color: #222 !important;
+  border: 1px solid #ffe082 !important;
+}
+
+.custom-today-day::after {
+  visibility: hidden; /* hide small border under the text */
 }
