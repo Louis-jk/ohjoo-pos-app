@@ -7,6 +7,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import Routes from './routes';
 import { getToken, onMessageListener } from './firebaseConfig';
 import { theme } from './styles/base';
+import './App.css';
 
 function App() {
   const [audio] = React.useState(new Audio('https://dmonster1452.cafe24.com/api/sound.mp3'));
