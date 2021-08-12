@@ -8,7 +8,6 @@ import DatePicker, { Calendar, DayValue, DayRange, Day } from 'react-modern-cale
 // Material UI Components
 import Chip from '@material-ui/core/Chip';
 import Stack from '@material-ui/core/Stack';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
 // Local Component
