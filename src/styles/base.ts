@@ -48,21 +48,23 @@ export const LoginContainer = styled(Box)({
   alignItems: 'center',
   flex: 1,
   height: '100vh',
-  backgroundColor: '#fff',
+  backgroundColor: '#ffc739',
   '& .wrap': {
     minWidth: 250,
     width: '30%'
   }
 })
 
-export const MyButton = styled(Button)({
-  background: 'linear-gradient(45deg, #fdd835 30%, #fbc02d 90%)',
-  border: 0,
-  borderRadius: 3,
-  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+export const LoginButton = styled(Button)({
+  fontSize: '18px !important',
+  fontWeight: 'bold',
   color: '#222',
   height: 48,
-  padding: '0 30px'
+  border: 0,
+  borderRadius: 3,
+  background: 'linear-gradient(45deg, #ffc739 30%, #ffc739 90%)',
+  padding: '0 30px',
+  boxShadow: '0 0 5px 2px rgba(255, 220, 100, 1)'
 });
 
 export const ModalConfirmButton = styled(Button)({
@@ -270,7 +272,8 @@ export const baseStyles = makeStyles({
   },
   commantWrap: {
     borderRadius: 5,
-    backgroundColor: '#ececec',
+    backgroundColor: '#f7f7f7',
+    // background: "linear-gradient(45deg, #FFF6da, #FFF5DA)",
     padding: 30,
     color: '#222'
   },
@@ -290,7 +293,8 @@ export const baseStyles = makeStyles({
     boxShadow: '0px 0px 10px 0px #e5e5e5',
   },
   gradient: {
-    background: "linear-gradient(45deg, #D5ECC2, #EDF6E5, #FFF5DA)"
+    // background: "linear-gradient(45deg, #D5ECC2, #EDF6E5, #FFF5DA)"
+    background: "linear-gradient(45deg, #FFF6da, #FFF5DA)"
   },
   border: {
     borderWidth: 1,
@@ -340,7 +344,8 @@ export const baseStyles = makeStyles({
     lineHeight: 2,
     padding: 20,
     borderRadius: 5,
-    backgroundColor: '#ececec',
+    backgroundColor: '#f7f7f7',
+    // background: "linear-gradient(45deg, #FFF6da, #FFF5DA)"
   },
   reviewMultiTxtField: {
     fontSize: 30,
