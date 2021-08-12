@@ -1,4 +1,5 @@
 import * as loginAction from './loginAction';
+import * as orderAction from './orderAction';
 import * as orderDetailAction from './orderDetailAction';
 import * as storeAction from './storeAction';
 // import * as idxAction from './idxAction';
@@ -8,11 +9,11 @@ import * as storeAction from './storeAction';
 // import * as regularHolidayAction from './regularHolidayAction';
 // import * as storeTimeAction from './storeTimeAction';
 // import * as closedDayAction from './closedDayAction';
-// import * as orderAction from './orderAction';
 
 const ActionCreators = Object.assign(
   {},
   loginAction,
+  orderAction,
   orderDetailAction,
   storeAction,
   // idxAction,
@@ -22,7 +23,6 @@ const ActionCreators = Object.assign(
   // regularHolidayAction,
   // storeTimeAction,
   // closedDayAction,
-  // orderAction
 );
 
 export default ActionCreators;
