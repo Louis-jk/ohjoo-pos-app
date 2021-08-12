@@ -2,24 +2,17 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {
-  Box,
-  Typography,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment,
-  IconButton
-} from '@material-ui/core';
+
+// Material UI Components
+import { Box, Typography, TextField, FormControlLabel, Checkbox, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+
+// Local Component
 import Logo from '../assets/images/logo_bk.png';
 import Api from '../Api';
 import loginAction from '../redux/actions';
 import { getToken, onMessageListener } from '../firebaseConfig';
-import { LoginContainer, baseStyles, MyButton } from '../styles/base';
+import { LoginContainer, baseStyles, LoginButton } from '../styles/base';
 
 interface State {
   email: string;
@@ -106,6 +99,11 @@ export default function Login() {
         // storeAddToken();
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
         history.replace('/main');
+        setValues({
+          ...values,
+          email: '',
+          password: '',
+        });
         // setLoading(false);
       } else {
         // setLoading(false);
@@ -119,53 +117,51 @@ export default function Login() {
   }, [])
 
   console.log('token', token);
+  console.log('values', values);
 
   return (
     <LoginContainer component="section">
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-        <img src={Logo} alt="오늘의 주문 로고" style={{ width: 300, marginBottom: 30 }} />
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 20, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
+        <img src={Logo} alt="오늘의 주문 로고" style={{ width: 150, marginBottom: 30 }} />
         {/* <Typography variant="h6">로그인</Typography> */}
-        <Box mb={2}>
+        <Box mb={2} style={{ minWidth: 300 }}>
           <TextField
             value={values.email}
             label="아이디"
             variant="outlined"
             className={base.loginInput}
-            // onChange={e => setUserEmail(e.target.value)}
             onChange={handleChange('email')}
           />
         </Box>
-        <Box>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
-            <OutlinedInput
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              className={base.loginInput}
-              onChange={handleChange('password')}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+
+        <Box mb={2} style={{ minWidth: 300 }}>
+          <TextField
+            type={values.showPassword ? 'text' : 'password'}
+            value={values.password}
+            label="패스워드"
+            variant="outlined"
+            className={base.loginInput}
+            onChange={handleChange('password')}
+            InputProps={{
+              endAdornment: <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {values.showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            }}
+          />
         </Box>
 
-        <MyButton
+        <LoginButton
           variant="contained"
           className={base.w100}
           onClick={onLoginHandler}
         >
           로그인
-        </MyButton>
+        </LoginButton>
 
         <FormControlLabel
           value="end"
