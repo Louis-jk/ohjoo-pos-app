@@ -368,7 +368,7 @@ export default function Tips(props: any) {
                 >
                   <CloseRoundedIcon />
                 </IconButton>
-                <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ backgroundColor: '#f1f1f1' }}>
+                <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #FFF6da, #FFF5DA)" }}>
                   <Box className={base.txtRoot}>
                     <TextField
                       value={list.dd_charge_start}
