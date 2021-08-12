@@ -18,13 +18,12 @@ const defaultState = {
       mt_store: '',
       mt_addr: ''
     },
+    closedStore: []
   };
 
 
 const store = (state: State = defaultState, action: any) => {
   
-  let store = new Set();
-
   switch (action.type) {
   case types.UPDATE_STORE:
     return {
@@ -41,6 +40,11 @@ const store = (state: State = defaultState, action: any) => {
         mt_store: action.mt_store,
         mt_addr: action.mt_addr
       }
+    };
+    case types.CLOSED_STORE:
+    return {
+      ...state,
+      closedStore: action.storeClosed
     };
   default:
     return state;

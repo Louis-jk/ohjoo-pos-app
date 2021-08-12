@@ -1,7 +1,6 @@
 import types from './types';
 
 export function updateStore(store: any) {
-  console.log("움직이는가?", store);
   return {
     type: types.UPDATE_STORE,
     storeUpdate: store,
@@ -16,5 +15,13 @@ export function selectStore(id: string, mt_jumju_id: string, mt_jumju_code: stri
     mt_jumju_code: mt_jumju_code,
     mt_store: mt_store,
     mt_addr: mt_addr,
+  };
+}
+
+export function closedStore(store: any) {
+  console.log("closed Redux action", store);
+  return {
+    type: types.CLOSED_STORE,
+    storeClosed: store,
   };
 }
