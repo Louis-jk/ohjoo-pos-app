@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import loginReducer from './loginReducer';
 import OrderDetailReducer from './OrderDetailReducer';
 import allStoreReducer from './allStoreReducer';
+import orderReducer from './orderReducer';
 // import indexReducer from './indexReducer';
 // import gpsReducer from './gpsReducer';
 // import sconfReducer from './sconfReducer';
@@ -13,7 +14,6 @@ import allStoreReducer from './allStoreReducer';
 // import holidayReducer from './holidayReducer';
 // import storeTimeReducer from './storeTimeReducer';
 // import closeDayReducer from './closeDayReducer';
-// import orderReducer from './orderReducer';
 
 const persistConfig = {
   key: 'root',
@@ -26,6 +26,7 @@ const rootReducer = combineReducers({
   login: loginReducer,
   orderDetail: OrderDetailReducer,
   store: allStoreReducer,
+  order: orderReducer,
   // index: indexReducer,
   // gps: gpsReducer,
   
