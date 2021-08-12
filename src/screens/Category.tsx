@@ -6,21 +6,16 @@ import clsx from 'clsx';
 import { styled } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 import Switch, { SwitchProps } from '@material-ui/core/Switch';
 import Alert from '@material-ui/core/Alert';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-
-
-// Material icons
 
 // Local Component
 import Header from '../components/Header';
@@ -61,14 +56,6 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-interface State {
-  amount: string;
-  password: string;
-  weight: string;
-  weightRange: string;
-  showPassword: boolean;
-}
-
 interface ICategory {
   ca_id: string;
   ca_code: string;
@@ -76,6 +63,7 @@ interface ICategory {
   ca_name: string;
   ca_use: string;
 }
+
 
 export default function SetCategory(props: any) {
 
