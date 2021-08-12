@@ -474,7 +474,8 @@ export default function MenuAdd(props: any) {
                   기본옵션
                 </Typography>
                 <Button
-                  variant="outlined"
+                  variant="contained"
+                  style={{ boxShadow: 'none' }}
                   onClick={() => optionAddHandler('default')}
                   color="primary"
                   startIcon={<QueueIcon />}
@@ -588,7 +589,8 @@ export default function MenuAdd(props: any) {
                   추가옵션
                 </Typography>
                 <Button
-                  variant="outlined"
+                  variant="contained"
+                  style={{ boxShadow: 'none' }}
                   onClick={() => optionAddHandler('add')}
                   color="primary"
                   startIcon={<QueueIcon />}
