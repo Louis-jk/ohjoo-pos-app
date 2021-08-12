@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
+
+// Material UI Components
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -26,44 +27,36 @@ import PrintIcon from '@material-ui/icons/Print';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import FormGroup from '@material-ui/core/FormGroup';
-import Switch, { SwitchProps } from '@material-ui/core/Switch';
-import { ButtonGroup } from '@material-ui/core';
+import Badge from '@material-ui/core/Badge';
 
-import storeAction from '../redux/actions';
-import loginAction from '../redux/actions';
-import { theme, baseStyles } from '../styles/base';
-import { MaterialUISwitch } from './MaterialUISwitch';
-
-import FiberNewIcon from '@material-ui/icons/FiberNew';
+// Material icons
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
-import FiberNewOutlinedIcon from '@material-ui/icons/FiberNewOutlined';
 import PlaylistAddCheckOutlinedIcon from '@material-ui/icons/PlaylistAddCheckOutlined';
-import FactCheckOutlinedIcon from '@material-ui/icons/FactCheckOutlined';
 import DeliveryDiningOutlinedIcon from '@material-ui/icons/DeliveryDiningOutlined';
 import FileDownloadDoneOutlinedIcon from '@material-ui/icons/FileDownloadDoneOutlined';
 import AccessTimeOutlinedIcon from '@material-ui/icons/AccessTimeOutlined';
 import CalculateOutlinedIcon from '@material-ui/icons/CalculateOutlined';
-import CategoryOutlinedIcon from '@material-ui/icons/CategoryOutlined';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import RestaurantMenuOutlinedIcon from '@material-ui/icons/RestaurantMenuOutlined';
 import ConfirmationNumberOutlinedIcon from '@material-ui/icons/ConfirmationNumberOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import RateReviewOutlinedIcon from '@material-ui/icons/RateReviewOutlined';
+import LogoutOutlinedIcon from '@material-ui/icons/LogoutOutlined';
+import StopCircleOutlinedIcon from '@material-ui/icons/StopCircleOutlined';
+import StoreIcon from '@material-ui/icons/Store';
 
-import OrderPrint from '../components/ComponentToPrint';
+// Local Component
 import PrintModal from './PrintModal';
+// import OrderPrint from '../components/ComponentToPrint';
+import storeAction from '../redux/actions';
+import loginAction from '../redux/actions';
+import { theme, baseStyles } from '../styles/base';
+import { MaterialUISwitch } from './MaterialUISwitch';
 import Logo from '../assets/images/logo_bk.png';
+import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
 
 const drawerWidth = 200;
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
-}
-
 interface OptionalProps {
   type?: string;
   detail?: string | null;
@@ -81,11 +74,23 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
   const { mt_store } = useSelector((state: any) => state.login);
-  const { allStore, selectedStore } = useSelector((state: any) => state.store);
+  const { allStore, closedStore } = useSelector((state: any) => state.store);
 
   const [storeListOpen, setStoreListOpen] = React.useState(false); // 매장 선택 드로어  
   const [value, setValue] = React.useState(''); // 매장 선택 값
   const [curPathName, setCurPathName] = React.useState('');
+
+  const [closeStoreModalOpen, setCloseStoreModalOpen] = React.useState(false); // 영업정지 모달 상태
+
+  const openCloseStoreModal = () => {
+    setCloseStoreModalOpen(true);
+  }
+  const closeCloseStoreModal = () => {
+    setCloseStoreModalOpen(false);
+  }
+  const openCloseStoreModalHandler = () => {
+    openCloseStoreModal();
+  }
 
   React.useEffect(() => {
     let slice = location.pathname.slice(1);
@@ -106,6 +111,13 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     openPrintModal();
   }
 
+  // 로그아웃
+  const logout = async () => {
+    await dispatch(storeAction.closedStore([]));
+    await localStorage.removeItem('userAccount');
+    await history.push('/login');
+  }
+
   // 프린트 출력 부분
   const componentRef = React.useRef(null);
   const handlePrint = useReactToPrint({
@@ -116,14 +128,17 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     setValue((event.target as HTMLInputElement).value);
   };
 
+  // 사이드바 드로어 핸들러 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  // 매장 선택 드로어 핸들러
   const handleStoreDrawerToggle = () => {
     setStoreListOpen(!storeListOpen);
   };
 
+  // 매장 선택 핸들러
   const setStoreHandler = (store: any, id: string, jumju_id: string, jumju_code: string, storeName: string, addr: string) => {
     dispatch(storeAction.selectStore(id, jumju_id, jumju_code, storeName, addr));
     dispatch(loginAction.updateLogin(JSON.stringify(store)));
@@ -237,29 +252,37 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const storeListDrawer = (
     <Box style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
       {/* <div className={classes.toolbar} /> */}
-      <Box /* className={classes.toolbar}  */ style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', backgroundColor: theme.palette.secondary.main, color: '#fff', padding: '5px 10px' }}>
+      <Box display="flex" justifyContent="flex-start" alignItems="center" py={0.5} px={1} style={{ backgroundColor: theme.palette.primary.main, color: '#fff' }}>
         <Typography variant="h5" component="h5" style={{ fontWeight: 500, color: theme.palette.secondary.contrastText, margin: '12px 20px' }}>매장선택</Typography>
       </Box>
       <Divider />
-      <FormControl component="fieldset" style={{ padding: 10 }}>
-        <RadioGroup aria-label="select_store" name="store" value={value} onChange={handleChange}>
-          {allStore && allStore.length > 0 ? allStore.map((store: any, index: number) => (
-            <Box key={index}>
-              <FormControlLabel
-                value={store.mt_store}
-                control={<Radio color="primary" />}
-                label={store.mt_store}
-                style={{ margin: 10, color: '#222' }}
-                onClick={() => setStoreHandler(store, store.id, store.mt_id, store.mt_jumju_code, store.mt_store, store.mt_addr)}
-                checked={store.mt_store === mt_store ? true : false}
-              />
-              <Divider />
-            </Box>
-          )) :
-            <Typography style={{ fontWeight: 500, margin: 20 }}>등록된 매장이 없습니다.</Typography>
-          }
-        </RadioGroup>
-      </FormControl>
+      <Box display="flex" flex={3}>
+        <FormControl component="fieldset" style={{ padding: 10 }}>
+          <RadioGroup aria-label="select_store" name="store" value={value} onChange={handleChange}>
+            {allStore && allStore.length > 0 ? allStore.map((store: any, index: number) => (
+              <Box key={index}>
+                <FormControlLabel
+                  value={store.mt_store}
+                  control={<Radio color="primary" />}
+                  label={store.mt_store}
+                  style={{ margin: 10, color: '#222' }}
+                  onClick={() => setStoreHandler(store, store.id, store.mt_id, store.mt_jumju_code, store.mt_store, store.mt_addr)}
+                  checked={store.mt_store === mt_store ? true : false}
+                />
+                <Divider />
+              </Box>
+            )) :
+              <Typography style={{ fontWeight: 500, margin: 20 }}>등록된 매장이 없습니다.</Typography>
+            }
+          </RadioGroup>
+        </FormControl>
+      </Box>
+      <Box justifySelf="flex-end" p={1} style={{ backgroundColor: '#ececec' }}>
+        <Button style={{ color: theme.palette.primary.contrastText }} onClick={logout}>
+          <LogoutOutlinedIcon />
+          <Typography ml={1}>로그아웃</Typography>
+        </Button>
+      </Box>
     </Box>
   );
 
@@ -268,6 +291,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   return (
     <>
       <PrintModal isOpen={printOpen} isClose={closePrintModal} />
+      <CloseStoreModal isOpen={closeStoreModalOpen} isClose={closeCloseStoreModal} />
       <AppBar
         position="fixed"
         sx={{
@@ -309,13 +333,23 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             </Typography>
           </Box>
           <Box className={base.flexRowStartCenter}>
-            <FormGroup>
+            {/* <FormGroup>
               <FormControlLabel
                 style={{ marginRight: 30 }}
                 control={<MaterialUISwitch sx={{ m: 1, mr: 0 }} defaultChecked />}
                 label="영업정지"
               />
-            </FormGroup>
+            </FormGroup> */}
+            {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
+              && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
+              ?
+              <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
+                <Badge badgeContent={closedStore.length} color="secondary">
+                  <StopCircleOutlinedIcon style={{ color: closedStore.length > 0 ? '#F8485E' : '#222' }} />
+                </Badge>
+                <Typography ml={1}>영업일시정지</Typography>
+              </Button>
+              : null}
             {props.detail === 'order_new' ?
               <Box>
                 <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
