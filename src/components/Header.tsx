@@ -169,7 +169,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       <Toolbar style={{ backgroundColor: theme.palette.primary.main }}>
         <img src={Logo} alt="오늘의주문" style={{ width: 130 }} />
       </Toolbar>
-      <List>
+      <List sx={{ padding: 0 }}>
         <ListItem button component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.primary.dark : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <Badge badgeContent={newOrder.length} color="primary" >
@@ -204,7 +204,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         </ListItem>
       </List>
       <Divider />
-      <List>
+      <List sx={{ padding: 0 }}>
         <ListItem button component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? theme.palette.primary.dark : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <AccessTimeOutlinedIcon />
@@ -340,18 +340,11 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <ArrowBackIcon />
               </IconButton>
               : null}
-            <Typography variant="h5" noWrap component="h5" fontWeight="bold">
+            <Typography noWrap fontSize='1.3rem' fontWeight="bold">
               {mt_store}
             </Typography>
           </Box>
           <Box className={base.flexRowStartCenter}>
-            {/* <FormGroup>
-              <FormControlLabel
-                style={{ marginRight: 30 }}
-                control={<MaterialUISwitch sx={{ m: 1, mr: 0 }} defaultChecked />}
-                label="영업정지"
-              />
-            </FormGroup> */}
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
               ?
@@ -371,7 +364,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   거부처리
                 </Button>
                 <IconButton
-                  color="secondary"
+                  color="info"
                   aria-label="list"
                   component="span"
                   onClick={handlePrint02}
@@ -391,7 +384,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                     취소처리
                   </Button>
                   <IconButton
-                    color="secondary"
+                    color="info"
                     aria-label="list"
                     component="span"
                     onClick={handlePrint02}
@@ -405,7 +398,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 : props.detail === 'order_delivery' ?
                   <Box>
                     <IconButton
-                      color="secondary"
+                      color="info"
                       aria-label="list"
                       component="span"
                       onClick={handlePrint02}
@@ -419,7 +412,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   : props.detail === 'order_done' ?
                     <Box>
                       <IconButton
-                        color="secondary"
+                        color="info"
                         aria-label="list"
                         component="span"
                         onClick={handlePrint02}
@@ -464,7 +457,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                                     </Button>
                                     : null}
             <IconButton
-              color="secondary"
+              color="info"
               aria-label="list"
               component="span"
               onClick={handleStoreDrawerToggle}
