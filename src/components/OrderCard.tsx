@@ -13,6 +13,8 @@ import OrderRejectModal from './OrderRejectModal'; // 신규주문 주문 거부
 import OrderDeliveryModal from './OrderDeliveryModal'; // 접수완료 주문 배달처리 모달
 import OrderCancelModal from './OrderCancelModal'; // 접수완료 주문 취소 모달
 import { theme } from '../styles/base';
+import Api from '../Api';
+import moment from 'moment';
 
 interface orderData {
   [key: string]: string;
@@ -97,17 +99,18 @@ export default function OrderCard(props: OrderProps) {
     return orders.map((order, index) =>
       <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} >
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.primary.light }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.secondary.main }}>
           <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
-          <Typography style={{ margin: 0 }}>{order.od_time}</Typography>
+          <Typography style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD / a h:mm')}</Typography>
         </Box>
         <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2}>
           <Box display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center" px={1}>
-            <img src={order.store_logo} style={{ width: 100, height: 100 }} alt="오늘의 주문 로고" />
+            <img src={order.store_logo} style={{ width: 100, height: 100, marginRight: 20 }} alt="오늘의 주문 로고" />
             <Box>
+              <Typography fontSize={18} fontWeight="bold" mb={1}>[메뉴] {order.od_good_name}</Typography>
               <Box display="flex" flexDirection="row" mb={1}>
-                <Typography style={{ fontSize: 15, margin: 0, marginRight: 5 }}>{order.od_settle_case}</Typography>
-                <Typography style={{ fontSize: 15, margin: 0 }}>{order.od_receipt_price}원</Typography>
+                <Typography mr={1}>{order.od_settle_case}</Typography>
+                <Typography>{Api.comma(order.od_receipt_price)}원</Typography>
               </Box>
               <Typography style={{ margin: 0 }}>{order.od_addr1 + order.od_addr2}</Typography>
               <Typography style={{ margin: 0 }}>{order.od_addr3}</Typography>
@@ -115,7 +118,7 @@ export default function OrderCard(props: OrderProps) {
           </Box>
           <Divider />
 
-          <ButtonGroup variant="outlined" color="primary" style={{ color: theme.palette.primary.contrastText, borderColor: theme.palette.primary.light }} aria-label="text primary button group">
+          <ButtonGroup variant="text" color="info" style={{ color: theme.palette.primary.contrastText }} aria-label="text primary button group">
             <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
             {
               type === 'new' ?
