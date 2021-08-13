@@ -216,7 +216,7 @@ export const OrderStyles = makeStyles({
     textAlign: 'left'
   },
   orderBox: {
-    display: 'flex',
+    // display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -224,12 +224,13 @@ export const OrderStyles = makeStyles({
   },
   orderMenuBox: {
     display: 'flex',
-    flexDirection: 'row',
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    backgroundColor: theme.palette.primary.light,
+    // backgroundColor: theme.palette.primary.light,
     border: 1,
-    borderColor: theme.palette.primary.light,
+    borderColor: theme.palette.info.light,
     borderStyle: 'solid',
     borderRadius: 5,
     paddingTop: 10,
