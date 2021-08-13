@@ -511,6 +511,11 @@ export default function MenuEdit(props: IProps) {
                     ...details,
                     menuPrice: e.target.value as string
                   })}
+                  InputProps={{
+                    endAdornment: <p>원</p>,
+                    inputMode: 'numeric',
+                  }}
+
                 />
                 <div className={base.mb30}></div>
                 <TextField
