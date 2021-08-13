@@ -133,10 +133,10 @@ export const MenuStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 0,
-    background: theme.palette.secondary.main,
+    background: theme.palette.info.main,
     borderRadius: 2,
     fontSize: 12,
-    color: theme.palette.secondary.contrastText,
+    color: theme.palette.info.contrastText,
     padding: 2,
     paddingRight: 5,
     paddingLeft: 5
