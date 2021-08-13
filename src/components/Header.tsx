@@ -298,15 +298,18 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <>
+    <Box>
       <PrintModal isOpen={printOpen} isClose={closePrintModal} />
       <CloseStoreModal isOpen={closeStoreModalOpen} isClose={closeCloseStoreModal} />
+
+      {/* 상단 매장명, 각종 버튼 헤더 */}
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          boxShadow: 'none'
+          boxShadow: 'none',
+          flex: 1
         }}
       >
         <Toolbar style={{
@@ -471,9 +474,11 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* 왼쪽 사이드바 */}
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ flex: 1, width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -518,6 +523,6 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           {storeListDrawer}
         </Drawer>
       </Box>
-    </>
+    </Box>
   );
 }
