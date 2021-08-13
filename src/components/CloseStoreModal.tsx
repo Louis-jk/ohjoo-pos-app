@@ -20,7 +20,7 @@ import { styled } from '@material-ui/core/styles';
 import Switch, { SwitchProps } from '@material-ui/core/Switch';
 
 // Local Component
-import { theme, baseStyles } from '../styles/base';
+import { theme, baseStyles, ModalCancelButton } from '../styles/base';
 import storeAction from '../redux/actions';
 
 interface IProps {
@@ -139,7 +139,7 @@ export default function CloseStoreModal(props: IProps) {
           ))
             : <Typography textAlign="left">등록된 매장이 없습니다.</Typography>
           }
-          <Button fullWidth color="primary" sx={{ fontSize: 16, marginTop: 3 }} style={{ boxShadow: 'none' }} variant="contained" onClick={props.isClose}>닫기</Button>
+          <ModalCancelButton fullWidth color="primary" sx={{ fontSize: 16, marginTop: 3 }} style={{ boxShadow: 'none' }} variant="contained" onClick={props.isClose}>닫기</ModalCancelButton>
         </Box>
       </Fade>
     </Modal>
