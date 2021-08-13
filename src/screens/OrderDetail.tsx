@@ -445,7 +445,7 @@ export default function OrdersDetail(od_id: string) {
 
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         {detailStore && detailOrder && detailProduct ?
-          <Grid container justifyContent="space-between" alignItems="flex-end" style={{ marginBottom: 30 }}>
+          <Grid container justifyContent="flex-start" alignItems="flex-start" style={{ marginBottom: 30 }}>
             <Grid item xs={12} md={6}>
               <Paper className={order.orderPaper}>
                 <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>주문정보</Typography>
@@ -465,12 +465,33 @@ export default function OrdersDetail(od_id: string) {
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper className={order.orderPaper}>
+                <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>배달정보</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>배달주소 : </Typography>
+                  <Box style={{ textAlign: 'right' }}>
+                    <Typography variant="body1">{detailOrder.order_addr1}</Typography>
+                    <Typography variant="body1">{detailOrder.order_addr3}</Typography>
+                  </Box>
+                </Box>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
+                  <Typography variant="body1" className={order.orderSubtitle}>전화번호 : </Typography>
+                  <Typography variant="body1">{detailOrder.order_hp}</Typography>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper className={order.orderPaper}>
                 <Typography variant="h6" component="h6" className={order.orderTitle}>메뉴정보</Typography>
                 <Box fontSize={14} className={order.orderBox}>
                   {detailProduct.map((menu, index) => (
                     <Box className={order.orderMenuBox} key={index}>
                       <Typography variant="body1" style={{ marginRight: 10 }}>메뉴 : {menu.it_name}</Typography>
-                      <Typography variant="body1" style={{ marginRight: 10 }}>/</Typography>
+                      <Typography variant="body1">옵션 - {menu.ct_option}</Typography>
+                    </Box>
+                  ))}
+                  {[{ it_name: '짬뽕 + 탕수육 세트', ct_option: '탕수육 사이즈 - 소' }, { it_name: '짬뽕 + 탕수육 세트', ct_option: '탕수육 사이즈 - 소' }].map((menu, index) => (
+                    <Box className={order.orderMenuBox} key={index}>
+                      <Typography variant="body1" style={{ marginRight: 10 }}>메뉴 : {menu.it_name}</Typography>
                       <Typography variant="body1">옵션 - {menu.ct_option}</Typography>
                     </Box>
                   ))}
@@ -487,22 +508,6 @@ export default function OrdersDetail(od_id: string) {
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
                   <Typography variant="body1" className={order.orderSubtitle}>배달기사님께 : </Typography>
                   <Typography variant="body1">{detailOrder.order_officer !== '' ? detailOrder.order_officer : '요청사항이 없습니다.'}</Typography>
-                </Box>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper className={order.orderPaper}>
-                <Typography variant="h6" component="h6" mb={2} className={order.orderTitle}>배달정보</Typography>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>배달주소 : </Typography>
-                  <Box style={{ textAlign: 'right' }}>
-                    <Typography variant="body1">{detailOrder.order_addr1}</Typography>
-                    <Typography variant="body1">{detailOrder.order_addr3}</Typography>
-                  </Box>
-                </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={order.orderBox}>
-                  <Typography variant="body1" className={order.orderSubtitle}>전화번호 : </Typography>
-                  <Typography variant="body1">{detailOrder.order_hp}</Typography>
                 </Box>
               </Paper>
             </Grid>
