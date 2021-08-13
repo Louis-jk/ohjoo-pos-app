@@ -97,7 +97,7 @@ export default function OrderCard(props: OrderProps) {
 
   const renderList = (): JSX.Element[] => {
     return orders.map((order, index) =>
-      <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} >
+      <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} p={0} >
         {/* <Link to={`/details/${order.od_id}`}> */}
         <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.secondary.main }}>
           <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
@@ -148,9 +148,9 @@ export default function OrderCard(props: OrderProps) {
         <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} />
         <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} handleClose={handleDeliveryClose} />
         <OrderCancelModal isOpen={cancelModalOpen} od_id={odId} handleClose={cancelModalCloseHandler} />
-        <Grid container spacing={3}>
+        <Box>
           {renderList()}
-        </Grid>
+        </Box>
       </>
       :
       <Box style={{ display: 'flex', flex: 1, height: '80vh', justifyContent: 'center', alignItems: 'center' }}>
