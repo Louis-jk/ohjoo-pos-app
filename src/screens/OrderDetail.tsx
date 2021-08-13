@@ -31,7 +31,7 @@ import { OrderStyles } from '../styles/custom';
 import OrderCheckModal from '../components/OrderCheckModal'; // 신규주문 주문 접수 모달
 import OrderRejectModal from '../components/OrderRejectModal'; // 신규주문 주문 거부 모달
 import { rejectInitState, cancelInitState } from '../assets/datas/orders'; // 주문 거부/취소 리스트
-
+import orderAction from '../redux/actions';
 
 interface OrderId {
   id: string;
@@ -196,6 +196,56 @@ export default function OrdersDetail(od_id: string) {
     setRejectOpen(false);
   };
 
+  // 현재 접수완료 주문 가져오기
+  const getCheckOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '접수완료'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("접수완료 success?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        getDeliveryOrderHandler();
+
+      } else {
+        console.log("접수완료 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        getDeliveryOrderHandler();
+      }
+    });
+  }
+
+  // 현재 배달중 주문 가져오기
+  const getDeliveryOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '배달중'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("배달중 success?", arrItems);
+        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+      } else {
+        console.log("배달중 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+      }
+    });
+  }
 
   // 배달처리 (접수완료 -> 배달 중 상태)
   const sendDeliveryHandler = () => {
@@ -214,13 +264,15 @@ export default function OrdersDetail(od_id: string) {
         setToastState({ msg: '주문을 배달 처리하였습니다.', severity: 'success' });
         handleOpenAlert();
         handleCloseDelivery();
+        getCheckOrderHandler();
         setTimeout(() => {
-          history.push('/order_delivery');
+          history.push('/order_check');
         }, 700);
       } else {
         setToastState({ msg: '주문을 배달 처리하는데 문제가 생겼습니다.', severity: 'error' });
         handleOpenAlert();
         handleCloseDelivery();
+        getCheckOrderHandler();
       }
     });
   };
@@ -257,6 +309,7 @@ export default function OrdersDetail(od_id: string) {
           setToastState({ msg: '주문을 정상적으로 취소 처리 하였습니다.', severity: 'success' });
           handleOpenAlert();
           handleCloseCancel();
+          getCheckOrderHandler();
           setTimeout(() => {
             history.push('/order_check');
           }, 700);
@@ -264,6 +317,7 @@ export default function OrdersDetail(od_id: string) {
           setToastState({ msg: '주문을 취소 처리하는데 문제가 생겼습니다.', severity: 'error' });
           handleOpenAlert();
           handleCloseCancel();
+          getCheckOrderHandler();
         }
       });
     }

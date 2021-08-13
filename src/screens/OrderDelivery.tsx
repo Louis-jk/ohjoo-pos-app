@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography } from '@material-ui/core';
 
 import Header from '../components/Header';
 import OrderCard from '../components/OrderCard';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
+import orderAction from '../redux/actions';
 
 export default function OrderDelivery() {
 
   const base = baseStyles();
+  const dispatch = useDispatch();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const { deliveryOrder } = useSelector((state: any) => state.order);
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
@@ -43,7 +46,7 @@ export default function OrderDelivery() {
 
   useEffect(() => {
     getOrderListHandler();
-  }, [mt_id, mt_jumju_code]);
+  }, [mt_id, mt_jumju_code, deliveryOrder]);
 
   return (
 

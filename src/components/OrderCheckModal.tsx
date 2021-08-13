@@ -19,7 +19,7 @@ import Alert from '@material-ui/lab/Alert';
 // Local Component
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
-
+import orderAction from '../redux/actions';
 
 interface IProps {
   isOpen: boolean;
@@ -30,11 +30,10 @@ interface IProps {
 
 export default function OrderCheckModal(props: IProps) {
 
-  console.log("check modal props", props);
-  console.log("check modal isOpen", props.isOpen);
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const history = useHistory();
   const base = baseStyles();
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false); // 신규 주문 -> 접수(배달/포장 시간 입력 모달)
   const [deliveryTime, setDeliveryTime] = React.useState(''); // 신규 주문 -> 배달시간 입력
 
@@ -51,6 +50,53 @@ export default function OrderCheckModal(props: IProps) {
     setOpenAlert(false);
   };
 
+  // 현재 신규주문 건수 가져오기
+  const getNewOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '신규주문'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        getCheckOrderHandler();
+      } else {
+        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        getCheckOrderHandler();
+      }
+    });
+  }
+
+  // 현재 접수완료 주문 가져오기
+  const getCheckOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '접수완료'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("접수완료 success?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+      } else {
+        console.log("접수완료 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+      }
+    });
+  }
 
   // 신규주문 접수하기 (신규주문 상태 -> 접수완료 상태)
   const checkOrderHandler = () => {
@@ -79,13 +125,15 @@ export default function OrderCheckModal(props: IProps) {
           setToastState({ msg: '주문을 접수하였습니다.', severity: 'success' });
           handleOpenAlert();
           props.handleClose();
+          getNewOrderHandler();
           setTimeout(() => {
-            history.push('/order_check');
+            history.push('/order_new');
           }, 700);
         } else {
           setToastState({ msg: '주문을 접수하는데 문제가 생겼습니다.', severity: 'error' });
           handleOpenAlert();
           props.handleClose();
+          getNewOrderHandler();
         }
       });
     }
@@ -137,8 +185,8 @@ export default function OrderCheckModal(props: IProps) {
               onChange={e => setDeliveryTime(e.target.value as string)}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton fullWidth variant="contained" color="primary" onClick={checkOrderHandler}>보내기</ModalConfirmButton>
-              <ModalCancelButton fullWidth variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
+              <ModalConfirmButton variant="contained" color="primary" style={{ boxShadow: 'none' }} onClick={checkOrderHandler}>보내기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>

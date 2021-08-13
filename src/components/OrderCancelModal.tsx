@@ -21,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import { cancelInitState } from '../assets/datas/orders';
-
+import orderAction from '../redux/actions';
 interface IProps {
   isOpen: boolean;
   od_id: string;
@@ -33,6 +33,7 @@ export default function OrderCancelModal(props: IProps) {
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const history = useHistory();
   const base = baseStyles();
+  const dispatch = useDispatch();
   const [openCancel, setOpenCancel] = React.useState(false); // 접수 완료 -> 주문 취소
   const [cancelValue, setCancelValue] = React.useState(''); // 접수 완료 -> 주문 취소 사유 선택
   const [cancelEtc, setCancelEtc] = React.useState(''); // 접수 완료 -> 주문 취소 사유 '기타' 직접 입력 값
@@ -64,6 +65,30 @@ export default function OrderCancelModal(props: IProps) {
 
   const checkCancelHandler = () => {
     handleOpenCancel();
+  }
+
+  // 현재 접수완료 주문 가져오기
+  const getCheckOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '접수완료'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("접수완료 success?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+      } else {
+        console.log("접수완료 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+      }
+    });
   }
 
   // 접수완료 상태 -> 주문 취소 핸들러
@@ -107,6 +132,7 @@ export default function OrderCancelModal(props: IProps) {
           setToastState({ msg: '주문을 정상적으로 취소 처리 하였습니다.', severity: 'success' });
           handleOpenAlert();
           props.handleClose();
+          getCheckOrderHandler();
           setTimeout(() => {
             history.push('/order_check');
           }, 700);
@@ -114,6 +140,7 @@ export default function OrderCancelModal(props: IProps) {
           setToastState({ msg: '주문을 취소 처리하는데 문제가 생겼습니다.', severity: 'error' });
           handleOpenAlert();
           props.handleClose();
+          getCheckOrderHandler();
         }
       });
     }

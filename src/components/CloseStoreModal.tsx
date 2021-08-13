@@ -96,7 +96,7 @@ export default function CloseStoreModal(props: IProps) {
       aria-describedby="transition-modal-description"
       className={base.modal}
       open={props.isOpen}
-      onClose={props.isClose}
+      // onClose={props.isClose}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
@@ -139,6 +139,7 @@ export default function CloseStoreModal(props: IProps) {
           ))
             : <Typography textAlign="left">등록된 매장이 없습니다.</Typography>
           }
+          <Button fullWidth color="primary" sx={{ fontSize: 16, marginTop: 3 }} style={{ boxShadow: 'none' }} variant="contained" onClick={props.isClose}>닫기</Button>
         </Box>
       </Fade>
     </Modal>

@@ -101,7 +101,7 @@ export default function Main(props: any) {
     });
   }
 
-  // 현재 접수완료 주문 가져오기
+  // 현재 배달중 주문 가져오기
   const getDeliveryOrderHandler = () => {
 
     const param = {
@@ -127,7 +127,7 @@ export default function Main(props: any) {
     });
   }
 
-  // 현재 접수완료 주문 가져오기
+  // 현재 배달완료 주문 가져오기
   const getDoneOrderHandler = () => {
 
     const param = {

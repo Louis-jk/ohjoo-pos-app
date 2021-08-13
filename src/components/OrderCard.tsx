@@ -97,7 +97,7 @@ export default function OrderCard(props: OrderProps) {
     return orders.map((order, index) =>
       <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} >
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: '#e5e5e5' }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.primary.light }}>
           <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
           <Typography style={{ margin: 0 }}>{order.od_time}</Typography>
         </Box>
@@ -115,7 +115,7 @@ export default function OrderCard(props: OrderProps) {
           </Box>
           <Divider />
 
-          <ButtonGroup variant="outlined" color="primary" style={{ color: theme.palette.primary.contrastText, borderColor: '#e5e5e5' }} aria-label="text primary button group">
+          <ButtonGroup variant="outlined" color="primary" style={{ color: theme.palette.primary.contrastText, borderColor: theme.palette.primary.light }} aria-label="text primary button group">
             <Button style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75 }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
             {
               type === 'new' ?

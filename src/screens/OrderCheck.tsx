@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography } from '@material-ui/core';
 
 import Header from '../components/Header';
 import { MainBox, baseStyles } from '../styles/base';
 import OrderCard from '../components/OrderCard';
 import Api from '../Api';
+import orderAction from '../redux/actions';
 
 export default function OrderCheck() {
 
   const base = baseStyles();
+  const dispatch = useDispatch();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const { checkOrder } = useSelector((state: any) => state.order);
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
@@ -32,10 +35,12 @@ export default function OrderCheck() {
       if (resultItem.result === 'Y') {
         console.log("success?", arrItems)
         setList(arrItems);
+        // dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
         setLoading(false);
       } else {
         console.log("faild?", arrItems)
         setList([]);
+        // dispatch(dispatch(orderAction.updateCheckOrder(null)));
         setLoading(false);
       }
     });
@@ -43,7 +48,7 @@ export default function OrderCheck() {
 
   useEffect(() => {
     getOrderListHandler();
-  }, [mt_id, mt_jumju_code]);
+  }, [mt_id, mt_jumju_code, checkOrder]);
 
   return (
 

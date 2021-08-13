@@ -19,6 +19,7 @@ import Alert from '@material-ui/lab/Alert';
 // Local Component
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
+import orderAction from '../redux/actions';
 
 interface IProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export default function OrderCheckModal(props: IProps) {
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const history = useHistory();
   const base = baseStyles();
+  const dispatch = useDispatch();
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -45,6 +47,58 @@ export default function OrderCheckModal(props: IProps) {
     setOpenAlert(false);
   };
 
+  // 현재 접수완료 주문 가져오기
+  const getCheckOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '접수완료'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("접수완료 success?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        getDeliveryOrderHandler();
+
+      } else {
+        console.log("접수완료 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        getDeliveryOrderHandler();
+      }
+    });
+  }
+
+  // 현재 배달중 주문 가져오기
+  const getDeliveryOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '배달중'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("배달중 success?", arrItems);
+        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+      } else {
+        console.log("배달중 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+      }
+    });
+  }
+
+  // 접수완료 => 배달중 처리 핸들러
   const sendDeliveryHandler = () => {
 
     let param = {
@@ -61,13 +115,15 @@ export default function OrderCheckModal(props: IProps) {
         setToastState({ msg: '주문을 배달 처리하였습니다.', severity: 'success' });
         handleOpenAlert();
         props.handleClose();
+        getCheckOrderHandler();
         setTimeout(() => {
-          history.push('/order_delivery');
+          history.push('/order_check');
         }, 700);
       } else {
         setToastState({ msg: '주문을 배달 처리하는데 문제가 생겼습니다.', severity: 'error' });
         handleOpenAlert();
         props.handleClose();
+        getCheckOrderHandler();
       }
     });
   };
