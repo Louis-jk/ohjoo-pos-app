@@ -28,6 +28,12 @@ export const theme = createTheme({
       dark: '#ccc5af',
       contrastText: '#222',
     },
+    info: {
+      light: '#CBE2B0',
+      main: '#9FE6A0',
+      dark: '#21BF73',
+      contrastText: '#222'
+    }
   },
 }, koKR);
 
