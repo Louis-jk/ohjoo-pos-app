@@ -30,10 +30,16 @@ export const theme = createTheme({
     },
     info: {
       light: '#CBE2B0',
+      main: '#222',
+      dark: '#21BF73',
+      contrastText: '#fff'
+    },
+    success: {
+      light: '#CBE2B0',
       main: '#9FE6A0',
       dark: '#21BF73',
       contrastText: '#222'
-    },
+    }
     // text: {
     //   primary: '#ffc739',
     //   secondary: '#fff8e1'
