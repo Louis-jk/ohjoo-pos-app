@@ -33,7 +33,11 @@ export const theme = createTheme({
       main: '#9FE6A0',
       dark: '#21BF73',
       contrastText: '#222'
-    }
+    },
+    // text: {
+    //   primary: '#ffc739',
+    //   secondary: '#fff8e1'
+    // }
   },
 }, koKR);
 
