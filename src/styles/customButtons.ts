@@ -18,6 +18,7 @@ export const ModalConfirmButton = styled(Button)({
   borderRadius: 3,
   color: theme.palette.primary.contrastText,
   width: 150,
+  height: 50,
   boxShadow: 'none',
   '&:hover': {
     boxShadow: 'none',
@@ -34,6 +35,7 @@ export const ModalCancelButton = styled(Button)({
   borderRadius: 3,
   color: '#222',
   width: 150,
+  height: 50,
   boxShadow: 'none',
 
   '&:hover': {
