@@ -44,9 +44,9 @@ export const theme = createTheme({
 export const MainBox = styled(Box)({
   padding: theme.spacing(3),
   marginTop: 35,
+  width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginTop: 65,
-    marginLeft: 200,
+    marginTop: 65
     // backgroundColor: theme.palette.primary.main,
   },
 });
@@ -114,6 +114,10 @@ export const ModalCancelButton = styled(Button)({
 
 export const baseStyles = makeStyles({
   root: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+
     '& a': {
       textDecoration: 'none'
     },
