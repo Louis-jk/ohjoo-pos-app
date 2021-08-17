@@ -2,7 +2,7 @@ body {
   -webkit-overflow-scrolling: touch !important;
 }
 .App {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .App-logo {
