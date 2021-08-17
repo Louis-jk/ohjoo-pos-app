@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 
@@ -13,6 +13,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import Pagination from '@material-ui/core/Pagination';
+import Stack from '@material-ui/core/Stack';
 
 // Material icons
 import IconButton from '@material-ui/core/IconButton';
@@ -56,8 +58,12 @@ export default function Tips(props: any) {
   const base = baseStyles();
   const coupon = CouponStyles();
 
-  const [isLoading, setLoading] = React.useState(false);
-  const [lists, setLists] = React.useState<ICoupon[]>([
+  const [isLoading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
+  const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
+  const [postPerPage, setPostPerPage] = useState(4); // 페이지 API 호출 Limit
+  const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
+  const [lists, setLists] = useState<ICoupon[]>([
     {
       cz_download: '',
       cz_end: '',
@@ -74,14 +80,14 @@ export default function Tips(props: any) {
       cz_type: '',
     }
   ]);
-  const [couponId, setCouponId] = React.useState('');
+  const [couponId, setCouponId] = useState('');
 
   // Toast(Alert) 설정 값
-  const [toastState, setToastState] = React.useState({
+  const [toastState, setToastState] = useState({
     msg: '',
     severity: ''
   });
-  const [openAlert, setOpenAlert] = React.useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
   };
@@ -89,7 +95,7 @@ export default function Tips(props: any) {
     setOpenAlert(false);
   };
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -105,6 +111,7 @@ export default function Tips(props: any) {
   }
   console.log("couponId :: ", couponId);
 
+  // 쿠폰 삭제 핸들러
   const deleteCouponHandler = () => {
     let param = {
       jumju_id: mt_id,
@@ -129,13 +136,14 @@ export default function Tips(props: any) {
     });
   }
 
+  // 등록된 쿠폰 가져오기 핸들러
   const getCouponListHandler = () => {
 
     setLoading(true);
 
     let param = {
-      item_count: 0,
-      limit_count: 10,
+      item_count: startOfIndex,
+      limit_count: postPerPage,
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
     };
@@ -144,8 +152,14 @@ export default function Tips(props: any) {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
+      let toTotalCount = Number(resultItem.total_cnt);
+      setTotalCount(toTotalCount);
+
+      let totalPage = Math.ceil(toTotalCount / postPerPage);
+
+      setTotalCount(totalPage);
+
       if (resultItem.result === 'Y') {
-        console.log('쿠폰 리스트 :: ', arrItems);
         setLists(arrItems);
         setLoading(false);
       } else {
@@ -155,9 +169,22 @@ export default function Tips(props: any) {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getCouponListHandler();
-  }, [mt_id, mt_jumju_code]);
+  }, [mt_id, mt_jumju_code, startOfIndex]);
+
+
+  // 페이지 전환 핸들러
+  const pageHandleChange = (event: any, value: any) => {
+
+    if (value === 1 || value < 1) {
+      setStartOfIndex(0);
+    } else {
+      let start = (value - 1) * postPerPage;
+      setStartOfIndex(start);
+    }
+    setCurrentPage(value);
+  }
 
 
   return (
@@ -240,6 +267,23 @@ export default function Tips(props: any) {
               <Typography style={{ fontSize: 15 }}>등록된 쿠폰이 없습니다.</Typography>
             </Box>
             : null}
+          <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
+            <Stack spacing={2}>
+              <Pagination
+                color="primary"
+                count={totalCount}
+                defaultPage={1}
+                showFirstButton
+                showLastButton
+                onChange={pageHandleChange}
+                page={currentPage}
+              />
+              {/* 
+                토탈 페이지수 = count
+                초기 페이지 번호 = defaultPage
+              */}
+            </Stack>
+          </Box>
         </MainBox>
       }
     </Box>

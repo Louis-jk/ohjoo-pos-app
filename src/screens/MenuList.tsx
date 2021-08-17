@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -7,6 +7,8 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Pagination from '@material-ui/core/Pagination';
+import Stack from '@material-ui/core/Stack';
 
 // Material icons
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -27,21 +29,45 @@ export default function MenuList(props: any) {
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const base = baseStyles();
   const menu = MenuStyles();
-  const [isLoading, setLoading] = React.useState(false);
-  const [lists, setLists] = React.useState<Props[]>([]);
+  const [isLoading, setLoading] = useState(false);
+  const [lists, setLists] = useState<Props[]>([]);
 
+  const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
+  const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
+  const [postPerPage, setPostPerPage] = useState(6); // 페이지 API 호출 Limit
+  const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
+
+  // 현재 메뉴 
+  const indexOfLastList = currentPage * postPerPage;
+  const indexOfFirstList = indexOfLastList - postPerPage;
+  const currentLists = lists.slice(indexOfFirstList, indexOfLastList);
+
+  // 메뉴 가져오기 핸들러
   const getMenusHandler = () => {
     setLoading(true);
 
     const param = {
-      item_count: 0,
-      limit_count: 10,
+      item_count: startOfIndex,
+      limit_count: postPerPage,
       jumju_id: mt_id,
       jumju_code: mt_jumju_code
     };
+
+    console.log("param ?", param);
+
     Api.send('store_item_list', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
+
+      let toTotalCount = Number(resultItem.total_cnt);
+      setTotalCount(toTotalCount);
+
+      let totalPage = Math.ceil(toTotalCount / postPerPage);
+
+      setTotalCount(totalPage);
+
+      console.log("args", args);
+      console.log("resultItem total_cnt", resultItem.total_cnt);
 
       if (resultItem.result === 'Y') {
         setLists(arrItems);
@@ -55,8 +81,23 @@ export default function MenuList(props: any) {
 
   React.useEffect(() => {
     getMenusHandler();
-  }, [mt_id, mt_jumju_code])
+  }, [mt_id, mt_jumju_code, startOfIndex])
 
+  console.log("currentPage", currentPage);
+  console.log("postPerPage", postPerPage);
+
+
+  // 페이지 전환 핸들러
+  const pageHandleChange = (event: any, value: any) => {
+
+    if (value === 1 || value < 1) {
+      setStartOfIndex(0);
+    } else {
+      let start = (value - 1) * postPerPage;
+      setStartOfIndex(start);
+    }
+    setCurrentPage(value);
+  }
 
   return (
     <Box component="div" className={base.root}>
@@ -98,6 +139,23 @@ export default function MenuList(props: any) {
               </Box>
               : null}
           </Grid>
+          <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
+            <Stack spacing={2}>
+              <Pagination
+                color="primary"
+                count={totalCount}
+                defaultPage={1}
+                showFirstButton
+                showLastButton
+                onChange={pageHandleChange}
+                page={currentPage}
+              />
+              {/* 
+                토탈 페이지수 = count
+                초기 페이지 번호 = defaultPage
+              */}
+            </Stack>
+          </Box>
         </MainBox>
       }
     </Box>

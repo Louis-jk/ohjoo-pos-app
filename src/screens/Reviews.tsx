@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -21,6 +21,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
 import Stack from '@material-ui/core/Stack';
 import Rating from '@material-ui/core/Rating';
+import Pagination from '@material-ui/core/Pagination';
 
 // Material icons
 import AddCommentOutlinedIcon from '@material-ui/icons/AddCommentOutlined';
@@ -56,15 +57,19 @@ export default function Reviews(props: any) {
   const base = baseStyles();
   const { mt_id, mt_jumju_code, mt_name } = useSelector((state: any) => state.login);
 
-  const [rate, setRate] = React.useState({}); // 별점
-  const [lists, setLists] = React.useState<IReview[]>([]); // 리뷰 리스트
+  const [rate, setRate] = useState({}); // 별점
+  const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
+  const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
+  const [postPerPage, setPostPerPage] = useState(3); // 페이지 API 호출 Limit
+  const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
+  const [lists, setLists] = useState<IReview[]>([]); // 리뷰 리스트
 
   const getReviewListHandler = () => {
 
     const param = {
       bo_table: 'review',
-      item_count: 0,
-      limit_count: 10,
+      item_count: startOfIndex,
+      limit_count: postPerPage,
       jumju_id: mt_id,
       jumju_code: mt_jumju_code
     };
@@ -72,6 +77,15 @@ export default function Reviews(props: any) {
     Api.send('store_review_list', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
+
+      let toTotalCount = Number(resultItem.total_cnt);
+      setTotalCount(toTotalCount);
+
+      let totalPage = Math.ceil(toTotalCount / postPerPage);
+
+      setTotalCount(totalPage);
+      console.log("reviews resultItem", resultItem);
+
       if (resultItem.result === 'Y') {
         setRate(arrItems.rate);
         setLists(arrItems.review);
@@ -82,11 +96,23 @@ export default function Reviews(props: any) {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getReviewListHandler();
-  }, [mt_id, mt_jumju_code])
+  }, [mt_id, mt_jumju_code, startOfIndex])
 
-  const [open, setOpen] = React.useState(false); // 코멘트 모달 
+  // 페이지 전환 핸들러
+  const pageHandleChange = (event: any, value: any) => {
+
+    if (value === 1 || value < 1) {
+      setStartOfIndex(0);
+    } else {
+      let start = (value - 1) * postPerPage;
+      setStartOfIndex(start);
+    }
+    setCurrentPage(value);
+  }
+
+  const [open, setOpen] = useState(false); // 코멘트 모달 
 
   const handleOpen = () => {
     setOpen(true);
@@ -96,7 +122,7 @@ export default function Reviews(props: any) {
     setOpen(false);
   };
 
-  const [openAlert, setOpenAlert] = React.useState(false); // Alert 모달 
+  const [openAlert, setOpenAlert] = useState(false); // Alert 모달 
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -106,15 +132,15 @@ export default function Reviews(props: any) {
     setOpenAlert(false);
   };
 
-  const [comment, setComment] = React.useState(''); // 리뷰 답글(업주 -> 고객)
-  const [reviewId, setReviewId] = React.useState(''); // 리뷰 아이디
-  const [reviewContent, setReviewContent] = React.useState(''); // 리뷰 컨텐츠(고객이 남긴 리뷰)
-  const [reviewItId, setReviewItId] = React.useState(''); // 리뷰 메뉴 아이디
-  const [reviewUserId, setReviewUserId] = React.useState(''); // 리뷰 유저 아이디
-  const [reviewProfile, setRevieProfile] = React.useState(''); // 리뷰 유저 프로필
-  const [reviewMenu, setRevieMenu] = React.useState(''); // 리뷰 선택 메뉴
-  const [reviewRating, setReRating] = React.useState(''); // 리뷰 평점
-  const [reviewDatetime, setRDatetime] = React.useState(''); // 리뷰 작성일자
+  const [comment, setComment] = useState(''); // 리뷰 답글(업주 -> 고객)
+  const [reviewId, setReviewId] = useState(''); // 리뷰 아이디
+  const [reviewContent, setReviewContent] = useState(''); // 리뷰 컨텐츠(고객이 남긴 리뷰)
+  const [reviewItId, setReviewItId] = useState(''); // 리뷰 메뉴 아이디
+  const [reviewUserId, setReviewUserId] = useState(''); // 리뷰 유저 아이디
+  const [reviewProfile, setRevieProfile] = useState(''); // 리뷰 유저 프로필
+  const [reviewMenu, setRevieMenu] = useState(''); // 리뷰 선택 메뉴
+  const [reviewRating, setReRating] = useState(''); // 리뷰 평점
+  const [reviewDatetime, setRDatetime] = useState(''); // 리뷰 작성일자
 
   const sendReply = () => {
     if (comment === '' || comment === null) {
@@ -294,6 +320,23 @@ export default function Reviews(props: any) {
             <Typography style={{ fontSize: 15 }}>등록된 리뷰가 없습니다.</Typography>
           </Box>
           : null}
+        <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
+          <Stack spacing={2}>
+            <Pagination
+              color="primary"
+              count={totalCount}
+              defaultPage={1}
+              showFirstButton
+              showLastButton
+              onChange={pageHandleChange}
+              page={currentPage}
+            />
+            {/* 
+                토탈 페이지수 = count
+                초기 페이지 번호 = defaultPage
+              */}
+          </Stack>
+        </Box>
       </MainBox>
     </Box>
   );

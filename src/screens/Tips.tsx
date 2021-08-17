@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
@@ -19,6 +19,8 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import Pagination from '@material-ui/core/Pagination';
+import Stack from '@material-ui/core/Stack';
 
 // Material icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
@@ -50,8 +52,12 @@ export default function Tips(props: any) {
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
 
   const base = baseStyles();
-  const [isLoading, setLoading] = React.useState(false);
-  const [lists, setLists] = React.useState<ITips[]>([
+  const [isLoading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
+  const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
+  const [postPerPage, setPostPerPage] = useState(3); // 페이지 API 호출 Limit
+  const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
+  const [lists, setLists] = useState<ITips[]>([
     {
       dd_id: '',
       dd_charge_start: '',
@@ -60,13 +66,13 @@ export default function Tips(props: any) {
     }
   ]);
 
-  const [tipId, setTipId] = React.useState(''); // 배달팁 아이디
-  const [minPrice, setMinPrice] = React.useState(''); // 최소금액 설정 
-  const [maxPrice, setMaxPrice] = React.useState(''); // 최대금액 설정 
-  const [tipPrice, setTipPrice] = React.useState(''); // 배달비 설정 
+  const [tipId, setTipId] = useState(''); // 배달팁 아이디
+  const [minPrice, setMinPrice] = useState(''); // 최소금액 설정 
+  const [maxPrice, setMaxPrice] = useState(''); // 최대금액 설정 
+  const [tipPrice, setTipPrice] = useState(''); // 배달비 설정 
 
   // 배달팁 작성 모달 관리
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -77,7 +83,7 @@ export default function Tips(props: any) {
   };
 
   // 배달팁 삭제 모달 관리
-  const [openTip, setOpenTip] = React.useState(false);
+  const [openTip, setOpenTip] = useState(false);
 
   const handleOpenTip = () => {
     setOpenTip(true);
@@ -88,11 +94,11 @@ export default function Tips(props: any) {
   };
 
   // Toast(Alert) 관리
-  const [toastState, setToastState] = React.useState({
+  const [toastState, setToastState] = useState({
     msg: '',
     severity: ''
   });
-  const [openAlert, setOpenAlert] = React.useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
   };
@@ -106,7 +112,8 @@ export default function Tips(props: any) {
     setLoading(true);
 
     const param = {
-      encodeJson: true,
+      item_count: startOfIndex,
+      limit_count: postPerPage,
       jumju_id: mt_id,
       jumju_code: mt_jumju_code
     };
@@ -114,6 +121,13 @@ export default function Tips(props: any) {
     Api.send('store_delivery', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
+
+      let toTotalCount = Number(resultItem.total_cnt);
+      setTotalCount(toTotalCount);
+
+      let totalPage = Math.ceil(toTotalCount / postPerPage);
+
+      setTotalCount(totalPage);
 
       if (resultItem.result === 'Y') {
         setLists(arrItems);
@@ -125,10 +139,22 @@ export default function Tips(props: any) {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getTipsHandler();
-  }, [mt_id, mt_jumju_code]);
+  }, [mt_id, mt_jumju_code, startOfIndex]);
 
+
+  // 페이지 전환 핸들러
+  const pageHandleChange = (event: any, value: any) => {
+
+    if (value === 1 || value < 1) {
+      setStartOfIndex(0);
+    } else {
+      let start = (value - 1) * postPerPage;
+      setStartOfIndex(start);
+    }
+    setCurrentPage(value);
+  }
 
   // 배달팁 설정 초기화
   const initializeState = () => {
@@ -424,6 +450,23 @@ export default function Tips(props: any) {
               <Typography style={{ fontSize: 15 }}>등록된 배달팁이 없습니다.</Typography>
             </Box>
             : null}
+          <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
+            <Stack spacing={2}>
+              <Pagination
+                color="primary"
+                count={totalCount}
+                defaultPage={1}
+                showFirstButton
+                showLastButton
+                onChange={pageHandleChange}
+                page={currentPage}
+              />
+              {/* 
+                토탈 페이지수 = count
+                초기 페이지 번호 = defaultPage
+              */}
+            </Stack>
+          </Box>
         </MainBox>
       }
     </Box>
