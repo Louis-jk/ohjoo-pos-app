@@ -38,12 +38,12 @@
 }
 
 .custom-calendar {
-  position: absolute;
-  top: 200px;
+  /* position: absolute;
+  top: 200px; */
   display: flex;
   border: 1px solid #ececec;
   box-shadow: none;
-  transform: scale(1.2);
+  /* transform: scale(1.2); */
   /* box-shadow: 0 1em 3em rgba(156, 136, 255,0.2); */
 }
 
