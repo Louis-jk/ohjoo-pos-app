@@ -92,12 +92,14 @@ class Api {
                 */
         let resultItem = decoded_jwt.resultItem.result;
         let message = decoded_jwt.resultItem.message;
+        let total_cnt = decoded_jwt.resultItem.total_cnt;
         let sql = decoded_jwt.resultItem.sql;
         let arrItems = decoded_jwt.arrItems;
 
         let returnJson = {
           resultItem: {
             result: resultItem === "false" ? "N" : "Y",
+            total_cnt: total_cnt,
             message: message,
             sql: sql,
           },
