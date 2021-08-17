@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { ToastContainer, toast, cssTransition } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
 import toast, { Toaster, ToastBar } from 'react-hot-toast';
 
+// Material UI Components
 import { ThemeProvider } from '@material-ui/core/styles';
+import { Box, Typography } from '@material-ui/core';
 
-import Routes from './routes';
+// Local Component
 import { getToken, onMessageListener } from './firebaseConfig';
 import { theme } from './styles/base';
 import './App.css';
-import { Box, Typography } from '@material-ui/core';
+import Routes from './routes';
 import Api from './Api';
 import orderAction from './redux/actions';
 
@@ -45,22 +45,6 @@ function App() {
       }
     });
   }
-
-  // toast(title + body, {
-  //   duration: 4000,
-  //   position: 'bottom-right',
-  //   style: { backgroundColor: theme.palette.primary.main, color: '#fff' },
-  //   className: '',
-  //   icon: '👏',
-  //   iconTheme: {
-  //     primary: '#000',
-  //     secondary: '#fff',
-  //   },
-  //   ariaProps: {
-  //     role: 'status',
-  //     'aria-live': 'polite',
-  //   },
-  // });
 
   const handleClick = (title: string, body: string) => {
     toast.custom(
@@ -110,23 +94,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Routes />
       </ThemeProvider>
-      {/* <ToastContainer closeOnClick /> */}
       <Toaster gutter={5} />
-      {/* <Toaster gutter={5}>
-        {(t) => (
-          <ToastBar toast={t}>
-            {({ icon, message }) => (
-              <>
-                {icon}
-                {`안녕? ${message}`}
-                {t.type !== 'loading' && (
-                  <button onClick={() => toast.dismiss(t.id)}>X</button>
-                )}
-              </>
-            )}
-          </ToastBar>
-        )}
-      </Toaster> */}
     </React.StrictMode>
   );
 }
