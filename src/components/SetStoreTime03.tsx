@@ -151,7 +151,7 @@ export default function StoreTimeTab03() {
 
 
   return (
-    <React.Fragment>
+    <>
       <Grid container spacing={3}>
         <Grid item md={6}>
           <Calendar
@@ -159,7 +159,7 @@ export default function StoreTimeTab03() {
             onChange={(day) => {
               setSelectedDayRange(day);
               dayFormatHandler(day);
-              console.log("보자 day", day);
+              // console.log("보자 day", day);
             }}
             shouldHighlightWeekends
             locale={myCustomLocale}
@@ -169,13 +169,13 @@ export default function StoreTimeTab03() {
           />
         </Grid>
         <Grid item md={6}>
-          <Stack direction="column" spacing={1}>
+          <Stack direction="row" flexWrap='wrap'>
             {dayFormatArray?.map((date, index) => (
-              <Chip key={date + index} label={date} variant="outlined" onDelete={() => handleDelete(date)} />
+              <Chip key={date + index} label={moment(date).format('YYYY-MM-DD')} variant="outlined" sx={{ m: 1 }} onDelete={() => handleDelete(date)} />
             ))}
           </Stack>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 }
