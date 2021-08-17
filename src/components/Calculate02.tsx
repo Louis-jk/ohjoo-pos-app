@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import addWeeks from 'date-fns/addWeeks';
+import clsx from 'clsx';
+// import { ko } from "date-fns/esm/locale";
+import moment from 'moment';
+import 'moment/locale/ko';
+import { ko } from 'date-fns/locale';
+
+// Material UI Components
 import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -9,32 +15,16 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateRangePicker, { DateRange } from '@material-ui/lab/DateRangePicker';
 import TextField from '@material-ui/core/TextField';
-import DatePicker from '@material-ui/lab/DatePicker';
-import Api from '../Api';
-import { ko } from "date-fns/esm/locale";
-import moment from 'moment';
-import { baseStyles } from '../styles/base';
-import clsx from 'clsx';
 
-function getWeeksAfter(date: Date | null, amount: number) {
-  return date ? addWeeks(date, amount) : undefined;
-}
+// Local Component
+import Api from '../Api';
+import { baseStyles } from '../styles/base';
+
 
 export default function CalculateTab02() {
 
   const base = baseStyles();
   const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date(),
-  );
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-
-  function ListItemLink(props: ListItemProps<'a', { button?: true }>) {
-    return <ListItem button component="a" {...props} />;
-  }
 
   const calculateData = [
     {
@@ -71,7 +61,7 @@ export default function CalculateTab02() {
 
   return (
     <section style={{ flex: 1 }}>
-      <Box mt={2} mb={3} display="flex" justifyContent="flex-start" alignItems="center">
+      <Box mt={2} mb={3} display='flex' justifyContent='flex-start' alignItems='center'>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ko}>
           <DateRangePicker
             calendars={3}
@@ -80,38 +70,38 @@ export default function CalculateTab02() {
               setValue(newValue);
             }}
             renderInput={(startProps, endProps) => (
-              <React.Fragment>
+              <>
                 <TextField
                   {...startProps}
-                  placeholder="시작날짜"
-                  label="시작날짜"
+                  placeholder='시작날짜'
+                  label='시작날짜'
                   InputLabelProps={{
-                    shrink: true,
+                    shrink: true
                   }}
                 />
                 <Box sx={{ mx: 2 }}> ~ </Box>
                 <TextField
                   {...endProps}
-                  placeholder="종료날짜"
-                  label="종료날짜"
+                  placeholder='종료날짜'
+                  label='종료날짜'
                   InputLabelProps={{
                     shrink: true
                   }}
                 />
-              </React.Fragment>
+              </>
             )}
           />
         </LocalizationProvider>
 
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           className={clsx(base.confirmBtn, base.ml20)}
           style={{ height: 55, minWidth: 100, fontSize: 16, fontWeight: 'bold', marginLeft: 20, boxShadow: 'none' }}>
           조회
         </Button>
       </Box>
-      <List component="nav" aria-label="secondary mailbox folders">
+      <List component='nav' aria-label='secondary mailbox folders'>
         {calculateData && calculateData.map((data, index) =>
           <ListItem key={index} button divider onClick={() => alert('클릭')}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

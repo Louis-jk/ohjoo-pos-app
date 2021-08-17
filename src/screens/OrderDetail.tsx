@@ -489,12 +489,6 @@ export default function OrdersDetail(od_id: string) {
                       <Typography variant="body1">옵션 - {menu.ct_option}</Typography>
                     </Box>
                   ))}
-                  {[{ it_name: '짬뽕 + 탕수육 세트', ct_option: '탕수육 사이즈 - 소' }, { it_name: '짬뽕 + 탕수육 세트', ct_option: '탕수육 사이즈 - 소' }].map((menu, index) => (
-                    <Box className={order.orderMenuBox} key={index}>
-                      <Typography variant="body1" style={{ marginRight: 10 }}>메뉴 : {menu.it_name}</Typography>
-                      <Typography variant="body1">옵션 - {menu.ct_option}</Typography>
-                    </Box>
-                  ))}
                 </Box>
               </Paper>
             </Grid>

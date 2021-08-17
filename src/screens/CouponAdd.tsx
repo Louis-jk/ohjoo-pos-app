@@ -358,7 +358,7 @@ export default function CouponAdd() {
                   setValue(newValue);
                 }}
                 renderInput={(startProps, endProps) => (
-                  <React.Fragment>
+                  <>
                     <TextField {...startProps}
                       id="date"
                       label="시작날짜"
@@ -376,7 +376,7 @@ export default function CouponAdd() {
                         shrink: true
                       }}
                     />
-                  </React.Fragment>
+                  </>
                 )}
               />
             </LocalizationProvider>
