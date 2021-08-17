@@ -5,6 +5,8 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import { faReplyAll, faReply } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // Material UI Components
 import Paper from '@material-ui/core/Paper';
@@ -57,7 +59,7 @@ interface IReview {
 export default function Reviews(props: any) {
 
   const base = baseStyles();
-  const { mt_id, mt_jumju_code, mt_name } = useSelector((state: any) => state.login);
+  const { mt_id, mt_jumju_code, mt_store } = useSelector((state: any) => state.login);
 
   const [rate, setRate] = useState({}); // 별점
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
@@ -69,7 +71,18 @@ export default function Reviews(props: any) {
   const [photoIndex, setPhotoIndex] = useState(0); // 이미지 LightBox 인덱스
   const [images, setImages] = useState<string[]>([]); // 리뷰 해당 이미지 저장소 (LightBox 사용때문) 
 
-  console.log("images", images);
+  // Toast(Alert) 관리
+  const [toastState, setToastState] = React.useState({
+    msg: '',
+    severity: ''
+  });
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  };
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
   const getReviewListHandler = () => {
 
@@ -129,16 +142,6 @@ export default function Reviews(props: any) {
     setOpen(false);
   };
 
-  const [openAlert, setOpenAlert] = useState(false); // Alert 모달 
-
-  const handleOpenAlert = () => {
-    setOpenAlert(true);
-  };
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
-
   const [comment, setComment] = useState(''); // 리뷰 답글(업주 -> 고객)
   const [reviewId, setReviewId] = useState(''); // 리뷰 아이디
   const [reviewContent, setReviewContent] = useState(''); // 리뷰 컨텐츠(고객이 남긴 리뷰)
@@ -149,10 +152,12 @@ export default function Reviews(props: any) {
   const [reviewRating, setReRating] = useState(''); // 리뷰 평점
   const [reviewDatetime, setRDatetime] = useState(''); // 리뷰 작성일자
 
+  console.log("reviewItId", reviewItId);
+  console.log("reviewItId type ?", typeof reviewItId);
+
   const sendReply = () => {
     if (comment === '' || comment === null) {
-      // handleClose();
-      // alert('답변을 작성해주세요.');
+      setToastState({ msg: '답변을 작성해주세요.', severity: 'error' });
       handleOpenAlert();
     } else {
       const param = {
@@ -160,11 +165,13 @@ export default function Reviews(props: any) {
         jumju_code: mt_jumju_code,
         bo_table: 'review',
         it_id: reviewItId,
-        wr_id: reviewUserId,
+        wr_id: reviewId,
         mode: 'comment',
         wr_content: comment,
-        wr_name: mt_name,
+        wr_name: mt_store,
       };
+
+      console.log("review param", param);
 
       Api.send('store_review_comment', param, (args: any) => {
         let resultItem = args.resultItem;
@@ -174,18 +181,23 @@ export default function Reviews(props: any) {
         console.log("리뷰 답변 arrItems ::", arrItems);
 
         if (resultItem.result === 'Y') {
-          handleClose();
-          alert('답변을 등록하였습니다.');
-          getReviewListHandler();
+          setToastState({ msg: '답변을 등록하였습니다.', severity: 'success' });
+          handleOpenAlert();
+          setTimeout(() => {
+            getReviewListHandler();
+            handleClose();
+          }, 700);
         } else {
+          setToastState({ msg: `답변을 등록하는데 문제가 생겼습니다.\n관리자에게 문의해주세요.`, severity: 'error' });
+          handleOpenAlert();
           handleClose();
-          alert('답변을 등록하지 못하였습니다.\n확인 후 다시 시도해주세요.');
         }
       });
     }
   }
 
   const sendReplyHandler = (id: string, content: string, itId: string, userId: string, profile: string, menu: string, rating: string, datetime: string) => {
+    console.log('itId 작동하는가?', itId);
     setReviewId(id);
     setReviewContent(content);
     setReviewItId(itId);
@@ -222,7 +234,7 @@ export default function Reviews(props: any) {
         />
       )}
       <Header type="review" />
-      <div className={base.alertStyle}>
+      <Box className={base.alertStyle}>
         <Snackbar
           anchorOrigin={{
             vertical: 'top',
@@ -232,11 +244,11 @@ export default function Reviews(props: any) {
           autoHideDuration={5000}
           onClose={handleCloseAlert}
         >
-          <Alert onClose={handleCloseAlert} severity="error">
-            코멘트를 입력해주세요.
+          <Alert onClose={handleCloseAlert} severity={toastState.severity === 'error' ? 'error' : 'success'}>
+            {toastState.msg}
           </Alert>
         </Snackbar>
-      </div>
+      </Box>
       {/* 리뷰 코멘트 입력 모달 */}
       <Modal
         aria-labelledby="transition-modal-title"
@@ -284,7 +296,7 @@ export default function Reviews(props: any) {
                 contentEditable='false'
                 focused={false}
                 spellCheck={false}
-                variant='filled'
+                variant='outlined'
               />
             </Box>
             <TextField
@@ -294,7 +306,7 @@ export default function Reviews(props: any) {
               id="outlined-multiline-static"
               label="답글입력"
               multiline
-              rows={10}
+              rows={6}
               variant="outlined"
               onChange={e => setComment(e.target.value as string)}
             />
@@ -357,6 +369,12 @@ export default function Reviews(props: any) {
               <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
                 <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
               </Grid>
+              {list.reply ?
+                <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ backgroundColor: theme.palette.secondary.main }}>
+                  <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
+                  <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
+                </Grid>
+                : null}
             </Paper>
           </Grid>
         )}
