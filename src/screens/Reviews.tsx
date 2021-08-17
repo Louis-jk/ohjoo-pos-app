@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/ko';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 
 // Material UI Components
 import Paper from '@material-ui/core/Paper';
@@ -63,6 +65,11 @@ export default function Reviews(props: any) {
   const [postPerPage, setPostPerPage] = useState(3); // 페이지 API 호출 Limit
   const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
   const [lists, setLists] = useState<IReview[]>([]); // 리뷰 리스트
+  const [isImageOpen, setImageOpen] = useState(false); // 이미지 LightBox 오픈상태
+  const [photoIndex, setPhotoIndex] = useState(0); // 이미지 LightBox 인덱스
+  const [images, setImages] = useState<string[]>([]); // 리뷰 해당 이미지 저장소 (LightBox 사용때문) 
+
+  console.log("images", images);
 
   const getReviewListHandler = () => {
 
@@ -196,6 +203,24 @@ export default function Reviews(props: any) {
 
   return (
     <Box component="div" className={base.root}>
+      {isImageOpen && (
+        <Lightbox
+          mainSrc={images[photoIndex]}
+          nextSrc={images[(photoIndex + 1) % images.length]}
+          prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+          onCloseRequest={() => setImageOpen(false)}
+          onMovePrevRequest={() => {
+            let filtered = (photoIndex + images.length - 1) % images.length;
+            setPhotoIndex(filtered);
+          }
+          }
+          onMoveNextRequest={() => {
+            let filtered = (photoIndex + 1) % images.length;
+            setPhotoIndex(filtered);
+          }
+          }
+        />
+      )}
       <Header type="review" />
       <div className={base.alertStyle}>
         <Snackbar
@@ -304,13 +329,20 @@ export default function Reviews(props: any) {
                 <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3}>
                   {list.pic.map((image, index) =>
                     <Box key={index}>
-                      <img src={image} style={{ width: 150, height: 150, borderRadius: 5, marginRight: 10 }} alt={image} />
+                      <Button onClick={() => {
+                        setImages(list.pic);
+                        setImageOpen(true);
+                      }
+                      }
+                      >
+                        <img src={image} style={{ width: 150, height: 150, borderRadius: 5, marginRight: 10, objectFit: 'cover' }} alt={image} />
+                      </Button>
                     </Box>
                   )}
                 </Grid>
                 : null}
               <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
-                <Typography variant="body1" component="b">{list.content}</Typography>
+                <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
               </Grid>
             </Paper>
           </Grid>
