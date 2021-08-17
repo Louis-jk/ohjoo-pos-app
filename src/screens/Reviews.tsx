@@ -31,6 +31,8 @@ import Pagination from '@material-ui/core/Pagination';
 import AddCommentOutlinedIcon from '@material-ui/icons/AddCommentOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
+import CloseIcon from '@material-ui/icons/Close';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 // Local Component
 import Header from '../components/Header';
@@ -70,6 +72,8 @@ export default function Reviews(props: any) {
   const [isImageOpen, setImageOpen] = useState(false); // 이미지 LightBox 오픈상태
   const [photoIndex, setPhotoIndex] = useState(0); // 이미지 LightBox 인덱스
   const [images, setImages] = useState<string[]>([]); // 리뷰 해당 이미지 저장소 (LightBox 사용때문) 
+  const [deleteItId, setDeleteItId] = useState(''); // 삭제시 리뷰 아이디
+  const [deleteWrId, setDeleteWrId] = useState(''); // 삭제시 리뷰어 아이디
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -120,6 +124,44 @@ export default function Reviews(props: any) {
     getReviewListHandler();
   }, [mt_id, mt_jumju_code, startOfIndex])
 
+
+  // 리뷰 삭제 핸들러
+  const deleteReviewHandler = (it_id: string, wr_id: string) => {
+    setDeleteItId(it_id);
+    setDeleteWrId(wr_id);
+    replyModalHandleOpen();
+  }
+
+  // 답글 삭제
+  const deleteReply = () => {
+    const param = {
+      bo_table: 'review',
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      mode: 'comment_delete',
+      it_id: deleteItId,
+      wr_id: deleteWrId
+    };
+
+    Api.send('store_review_comment', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        setToastState({ msg: '답글을 삭제하였습니다.', severity: 'success' });
+        handleOpenAlert();
+        setTimeout(() => {
+          getReviewListHandler();
+          replyModalHandleClose();
+        }, 700);
+      } else {
+        setToastState({ msg: `답글을 삭제하는데 문제가 생겼습니다.\n관리자에게 문의해주세요.`, severity: 'error' });
+        handleOpenAlert();
+        replyModalHandleClose();
+      }
+    });
+  }
+
   // 페이지 전환 핸들러
   const pageHandleChange = (event: any, value: any) => {
 
@@ -132,7 +174,18 @@ export default function Reviews(props: any) {
     setCurrentPage(value);
   }
 
-  const [open, setOpen] = useState(false); // 코멘트 모달 
+  // 답글 삭제 전 모달 
+  const [replyModalOpen, setReplyModalOpen] = useState(false);
+  const replyModalHandleOpen = () => {
+    setReplyModalOpen(true);
+  };
+
+  const replyModalHandleClose = () => {
+    setReplyModalOpen(false);
+  };
+
+  // 코멘트 모달 
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -152,12 +205,10 @@ export default function Reviews(props: any) {
   const [reviewRating, setReRating] = useState(''); // 리뷰 평점
   const [reviewDatetime, setRDatetime] = useState(''); // 리뷰 작성일자
 
-  console.log("reviewItId", reviewItId);
-  console.log("reviewItId type ?", typeof reviewItId);
 
   const sendReply = () => {
     if (comment === '' || comment === null) {
-      setToastState({ msg: '답변을 작성해주세요.', severity: 'error' });
+      setToastState({ msg: '답글을 작성해주세요.', severity: 'error' });
       handleOpenAlert();
     } else {
       const param = {
@@ -177,18 +228,16 @@ export default function Reviews(props: any) {
         let resultItem = args.resultItem;
         let arrItems = args.arrItems;
 
-        console.log("리뷰 답변 resultItem ::", resultItem);
-        console.log("리뷰 답변 arrItems ::", arrItems);
-
         if (resultItem.result === 'Y') {
-          setToastState({ msg: '답변을 등록하였습니다.', severity: 'success' });
+          setToastState({ msg: '답글을 등록하였습니다.', severity: 'success' });
           handleOpenAlert();
           setTimeout(() => {
             getReviewListHandler();
+            setComment('');
             handleClose();
           }, 700);
         } else {
-          setToastState({ msg: `답변을 등록하는데 문제가 생겼습니다.\n관리자에게 문의해주세요.`, severity: 'error' });
+          setToastState({ msg: `답글을 등록하는데 문제가 생겼습니다.\n관리자에게 문의해주세요.`, severity: 'error' });
           handleOpenAlert();
           handleClose();
         }
@@ -197,7 +246,6 @@ export default function Reviews(props: any) {
   }
 
   const sendReplyHandler = (id: string, content: string, itId: string, userId: string, profile: string, menu: string, rating: string, datetime: string) => {
-    console.log('itId 작동하는가?', itId);
     setReviewId(id);
     setReviewContent(content);
     setReviewItId(itId);
@@ -209,9 +257,6 @@ export default function Reviews(props: any) {
     handleOpen();
   }
 
-  console.log("rate", rate);
-  console.log("list", lists);
-  console.log("reviewId ?", reviewId);
 
   return (
     <Box component="div" className={base.root}>
@@ -318,6 +363,33 @@ export default function Reviews(props: any) {
         </Fade>
       </Modal>
       {/* // 리뷰 코멘트 입력 모달 */}
+
+      {/* 답글 삭제 모달 */}
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={base.modal}
+        open={replyModalOpen}
+        // onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={replyModalOpen}>
+          <Box className={clsx(base.modalInner, base.colCenter)}>
+            <h2 id="transition-modal-title" className={base.modalTitle}>답글 삭제</h2>
+            <p id="transition-modal-description" className={base.modalDescription}>해당 답글을 삭제하시겠습니까?</p>
+            <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={deleteReply}>삭제하기</ModalConfirmButton>
+              <ModalCancelButton fullWidth variant="outlined" onClick={replyModalHandleClose}>취소</ModalCancelButton>
+            </ButtonGroup>
+          </Box>
+        </Fade>
+      </Modal>
+      {/* // 답글 삭제 모달 */}
+
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         {lists && lists.length > 0 && lists.map((list, index) =>
           <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id}>
@@ -370,9 +442,16 @@ export default function Reviews(props: any) {
                 <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
               </Grid>
               {list.reply ?
-                <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ backgroundColor: theme.palette.secondary.main }}>
+                <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.secondary.main }}>
                   <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
                   <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
+                  <Box style={{ position: 'absolute', right: 10, top: 10 }}>
+                    <IconButton
+                      onClick={() => deleteReviewHandler(list.it_id, list.wr_id)}
+                    >
+                      <HighlightOffIcon color='primary' style={{ fontSize: 16 }} />
+                    </IconButton>
+                  </Box>
                 </Grid>
                 : null}
             </Paper>
