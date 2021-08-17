@@ -1,3 +1,6 @@
+body {
+  -webkit-overflow-scrolling: touch !important;
+}
 .App {
   text-align: center;
 }
@@ -78,9 +81,10 @@
   top: 64px !important;
 }
 
+
 .ril__image, .ril__imagePrev, .ril__imageNext {
   top: 64px !important;
   left: 180px !important;
-  max-width: 500px;
+  max-width: 500px !important;
   max-height: 100%;
 }
