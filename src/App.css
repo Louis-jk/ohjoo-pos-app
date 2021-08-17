@@ -68,3 +68,19 @@
 .Toastify__progress-bar {
   animation: Toastify__trackProgress linear 1;
 }
+
+/* 이미지 LightBox 커스텀 */
+.ril__navButtonPrev {
+  left: 180px !important;
+}
+
+.ril__toolbar {
+  top: 64px !important;
+}
+
+.ril__image, .ril__imagePrev, .ril__imageNext {
+  top: 64px !important;
+  left: 180px !important;
+  max-width: 500px;
+  max-height: 100%;
+}
