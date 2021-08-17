@@ -273,7 +273,20 @@ export default function Reviews(props: any) {
                 </Grid>
               </Box>
             </Box>
-            <p id="transition-modal-description" className={base.reviewContent}>{reviewContent}</p>
+            <Box mb={3}>
+              <TextField
+                value={reviewContent}
+                fullWidth
+                className={base.reviewMultiTxtField}
+                style={{ backgroundColor: '#f7f7f7' }}
+                multiline
+                rows={5}
+                contentEditable='false'
+                focused={false}
+                spellCheck={false}
+                variant='filled'
+              />
+            </Box>
             <TextField
               value={comment}
               fullWidth
@@ -297,17 +310,17 @@ export default function Reviews(props: any) {
         {lists && lists.length > 0 && lists.map((list, index) =>
           <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id}>
             <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
-              <Grid className={base.flexRow}>
+              <Grid className={base.flexRow} alignItems='center'>
                 <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
                 <Grid className={base.flexColumn}>
                   <Grid className={base.flexRow}>
-                    <Grid className={clsx(base.title, base.mb05)}>
+                    <Grid className={base.title}>
                       <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
                       <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
                       <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
                     </Grid>
                   </Grid>
-                  <Grid className={clsx(base.title, base.mb05)} style={{ display: 'flex', alignItems: 'center' }}>
+                  <Grid className={base.title} style={{ display: 'flex', alignItems: 'center' }}>
                     <Rating name="half-rating-read" size="small" value={Number(list.rating)} readOnly />
                     <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
                     <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
@@ -335,7 +348,7 @@ export default function Reviews(props: any) {
                       }
                       }
                       >
-                        <img src={image} style={{ width: 150, height: 150, borderRadius: 5, marginRight: 10, objectFit: 'cover' }} alt={image} />
+                        <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
                       </Button>
                     </Box>
                   )}
