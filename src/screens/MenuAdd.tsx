@@ -2,6 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom'
 import Draggable from 'react-draggable';
+import PropTypes from 'prop-types';
+import NumberFormat from 'react-number-format';
 
 // Material UI Components
 import Paper, { PaperProps } from '@material-ui/core/Paper';
@@ -53,6 +55,10 @@ interface IMenu {
   ca_name: string;
   ca_code: string;
 }
+interface CustomProps {
+  onChange: (event: { target: { name: string; value: string } }) => void;
+  name: string;
+}
 
 type OptionType = 'default' | 'add'; // 기본옵션 | 추가 옵션
 type OptionSize = 'option' | 'detail'; // 옵션 | 세부
@@ -89,6 +95,7 @@ export default function MenuAdd(props: any) {
   const [checked01, setChecked01] = React.useState<CheckedType>('0'); // 대표메뉴('1' : 지정 | '0': 지정안함)
   const [checked02, setChecked02] = React.useState<CheckedType>('1'); // 판매가능('1' : 가능 | '0': 불가)
   const [image, setImage] = React.useState(''); // 메뉴 이미지 URL
+
 
   // 이미지 업로드
   const [source, setSource] = React.useState({});
@@ -163,6 +170,7 @@ export default function MenuAdd(props: any) {
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
+
 
   const createOption = () => {
     return ({
@@ -250,7 +258,7 @@ export default function MenuAdd(props: any) {
     } else if (menuInfo === '') {
       setToastState({ msg: '기본설명을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else if (menuPrice === '') {
+    } else if (menuPrice === '' || menuPrice == '0') {
       setToastState({ msg: '판매가격을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
     } else if (menuDescription === '') {
@@ -443,11 +451,17 @@ export default function MenuAdd(props: any) {
               />
               <div className={base.mb30}></div>
               <TextField
-                value={menuPrice}
                 label="판매가격"
+                value={menuPrice}
+                onChange={e => {
+                  const re = /^[0-9\b]+$/;
+                  if (e.target.value === '' || re.test(e.target.value)) {
+                    let changed = e.target.value.replace(/(^0+)/, '');
+                    setMenuPrice(changed);
+                  }
+                }}
                 variant="outlined"
                 required
-                onChange={e => setMenuPrice(e.target.value as string)}
               />
               <div className={base.mb30}></div>
               <TextField

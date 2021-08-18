@@ -503,14 +503,20 @@ export default function MenuEdit(props: IProps) {
                 />
                 <div className={base.mb30}></div>
                 <TextField
-                  value={details.menuPrice === null || details.menuPrice === undefined ? '' : Api.comma(details.menuPrice)}
+                  value={details.menuPrice === null || details.menuPrice === undefined ? '0' : details.menuPrice}
                   id="outlined-basic"
                   label="판매가격"
                   variant="outlined"
-                  onChange={e => setDetails({
-                    ...details,
-                    menuPrice: e.target.value as string
-                  })}
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setDetails({
+                        ...details,
+                        menuPrice: changed
+                      })
+                    }
+                  }}
                   InputProps={{
                     endAdornment: <p>원</p>,
                     inputMode: 'numeric',
