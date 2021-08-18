@@ -63,21 +63,20 @@ export default function Login() {
         userPwd: values.password
       })
       await localStorage.setItem('userAccount', jsonValue);
-      alert('로컬스토리지 저장');
     } catch (e) {
       alert(`${e} :: 관리자에게 문의하세요.`);
     }
   }
 
   //  자동 토큰 저장
-  // const storeAddToken = async () => {
-  //   try {
-  //     const jsonValue = JSON.stringify({ token: temFcmToken });
-  //     await localStorage.setItem('ohjooStoreToken', jsonValue);
-  //   } catch (e) {
-  //     alert(`${e} :: 관리자에게 문의하세요.`);
-  //   }
-  // };
+  const storeAddToken = async (token: string) => {
+    try {
+      const jsonValue = JSON.stringify({ token: token });
+      await localStorage.setItem('ohjooStoreToken', jsonValue);
+    } catch (e) {
+      alert(`${e} :: 관리자에게 문의하세요.`);
+    }
+  };
 
   const onLoginHandler = () => {
     // setLoading(true);
@@ -88,6 +87,8 @@ export default function Login() {
       mt_app_token: token
     };
 
+    console.log("로그인 params", param);
+
     Api.send('store_login', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
@@ -96,7 +97,7 @@ export default function Login() {
         if (values.isAutoLogin) {
           storeData();
         }
-        // storeAddToken();
+        storeAddToken(token);
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
         history.replace('/main');
         setValues({
