@@ -73,6 +73,21 @@ export default function CouponAdd() {
     }
   };
 
+  // 할인금액, 할인율 change 핸들러
+  const onDiscountHandler = (type: string) => {
+    if (type === 'currency') {
+      setDiscountType('currency');
+    } else {
+      let toNumber = Number(discountPrice);
+      if (toNumber > 100) {
+        setToastState({ msg: '할인율을 올바르게 입력해주세요.', severity: 'info' });
+        handleOpenAlert();
+      } else {
+        setDiscountType('ratio');
+      }
+    }
+  }
+
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
     msg: '',
@@ -140,7 +155,7 @@ export default function CouponAdd() {
     } else if (maxPrice === null || maxPrice === '') {
       setToastState({ msg: '최대주문금액을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else if (discountPrice === null || discountPrice === '') {
+    } else if (discountPrice === null || discountPrice === '' || discountPrice === '0') {
       if (discountType === 'currency') {
         setToastState({ msg: '할인금액 입력해주세요.', severity: 'error' });
         handleOpenAlert();
@@ -270,11 +285,16 @@ export default function CouponAdd() {
             <TextField
               value={minPrice}
               fullWidth
-              id="outlined-basic"
               label="최소주문금액"
               variant="outlined"
               required
-              onChange={e => setMinPrice(e.target.value)}
+              onChange={e => {
+                const re = /^[0-9\b]+$/;
+                if (e.target.value === '' || re.test(e.target.value)) {
+                  let changed = e.target.value.replace(/(^0+)/, '');
+                  setMinPrice(changed);
+                }
+              }}
               InputProps={{
                 endAdornment: <InputAdornment position="end">원</InputAdornment>,
               }}
@@ -284,11 +304,16 @@ export default function CouponAdd() {
             <TextField
               value={maxPrice}
               fullWidth
-              id="outlined-basic"
               label="최대주문금액"
               variant="outlined"
               required
-              onChange={e => setMaxPrice(e.target.value)}
+              onChange={e => {
+                const re = /^[0-9\b]+$/;
+                if (e.target.value === '' || re.test(e.target.value)) {
+                  let changed = e.target.value.replace(/(^0+)/, '');
+                  setMaxPrice(changed);
+                }
+              }}
               InputProps={{
                 endAdornment: <InputAdornment position="end">원</InputAdornment>,
               }}
@@ -317,7 +342,7 @@ export default function CouponAdd() {
                   color: discountType === 'currency' ? '#fff' : theme.palette.primary.main,
                   backgroundColor: discountType === 'currency' ? theme.palette.primary.main : '#fff',
                 }}
-                onClick={() => setDiscountType('currency')}>
+                onClick={() => onDiscountHandler('currency')}>
                 원
               </Button>
               <Button
@@ -329,21 +354,13 @@ export default function CouponAdd() {
                   color: discountType === 'ratio' ? '#fff' : theme.palette.primary.main,
                   backgroundColor: discountType === 'ratio' ? theme.palette.primary.main : '#fff',
                 }}
-                onClick={() => setDiscountType('ratio')}>
+                onClick={() => onDiscountHandler('ratio')}>
                 %
               </Button>
             </ButtonGroup>
           </Grid>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={12} mb={3}>
             <p className={base.mb20}>다운로드 유효기간</p>
-            {/* <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <p>시작날짜</p>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <p>종료날짜</p>
-              </Grid>
-            </Grid> */}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DateRangePicker
                 okText="확인"
@@ -390,13 +407,21 @@ export default function CouponAdd() {
               label="쿠폰사용기한"
               variant="outlined"
               required
-              onChange={e => setDuration(e.target.value)}
+              onChange={e => {
+                const re = /^[0-9\b]+$/;
+                if (e.target.value === '' || re.test(e.target.value)) {
+                  let changed = e.target.value.replace(/(^0+)/, '');
+                  setDuration(changed);
+                }
+              }}
               InputProps={{
                 endAdornment: <InputAdornment position="end">일</InputAdornment>,
                 // inputComponent: NumberFormatCustom as any,
               }}
             />
-            <FormHelperText id="outlined-weight-helper-text">쿠폰사용 가능한 일자를 입력해주세요.</FormHelperText>
+            <FormHelperText id="outlined-weight-helper-text">쿠폰사용 가능한 기간을 입력해주세요.</FormHelperText>
+            <FormHelperText id="outlined-weight-helper-text">{`예:) 15일일 경우 -> 15`}</FormHelperText>
+            <FormHelperText id="outlined-weight-helper-text">{`예:) 30일일 경우 -> 30`}</FormHelperText>
           </Grid>
         </Grid>
 
