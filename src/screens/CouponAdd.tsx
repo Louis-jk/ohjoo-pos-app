@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import MomentUtils from '@date-io/moment';
 import moment from "moment";
 import "moment/locale/ko";
+import { ko } from "date-fns/esm/locale";
 import clsx from 'clsx';
 
 // Material UI Components
@@ -29,6 +30,7 @@ import Stack from '@material-ui/core/Stack';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateRangePicker, { DateRange } from '@material-ui/lab/DateRangePicker';
+import { koKR } from '@material-ui/core/locale';
 
 // Local Component
 import Header from '../components/Header';
@@ -43,45 +45,43 @@ export default function CouponAdd() {
   const base = baseStyles();
   const history = useHistory();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
-  const [type, setType] = React.useState(''); // 쿠폰 구분
-  const [name, setName] = React.useState(''); // 쿠폰명
-  const [minPrice, setMinPrice] = React.useState(''); // 최소주문금액
-  const [maxPrice, setMaxPrice] = React.useState(''); // 최대주문금액
-  const [discountPrice, setDiscountPrice] = React.useState(''); // 할인금액 or 비율 값
-  const [discountType, setDiscountType] = React.useState<DiscountType>('currency'); // 할인금액 or 비율 선택
-  const [duration, setDuration] = React.useState(''); // 쿠폰사용기한
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]); // 쿠폰 다운로드 유효기간
-
-  const [selectedDate01, setSelectedDate01] = React.useState<Date | null>(
-    new Date(),
-  ); // 쿠폰 다운로드 유효기간 시작날짜
-  const [selectedDate02, setSelectedDate02] = React.useState<Date | null>(
-    new Date(),
-  ); // 쿠폰 다운로드 유효기간 종료날짜
+  const [type, setType] = useState(''); // 쿠폰 구분
+  const [name, setName] = useState(''); // 쿠폰명
+  const [minPrice, setMinPrice] = useState(''); // 최소주문금액
+  const [maxPrice, setMaxPrice] = useState(''); // 최대주문금액
+  const [discountPrice, setDiscountPrice] = useState(''); // 할인금액 or 비율 값
+  const [discountType, setDiscountType] = useState<DiscountType>('currency'); // 할인금액 or 비율 선택
+  const [duration, setDuration] = useState(''); // 쿠폰사용기한
+  const [value, setValue] = useState<DateRange<Date>>([null, null]); // 쿠폰 다운로드 유효기간
+  const discountRef = useRef<HTMLDivElement | null>(null); //
 
   // 쿠폰 구분 셀렉트 핸들러
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
   };
 
-  // 데이트픽커 핸들러
-  const handleDateChange = (date: Date | null, type: string) => {
-    if (type === 'start') {
-      setSelectedDate01(date);
-    } else {
-      setSelectedDate02(date);
-    }
-  };
 
   // 할인금액, 할인율 change 핸들러
   const onDiscountHandler = (type: string) => {
     if (type === 'currency') {
-      setDiscountType('currency');
+      const re = /^0.+$/;
+      if (re.test(discountPrice)) {
+        setToastState({ msg: '할인금액을 올바르게 입력해주세요.', severity: 'info' });
+        handleOpenAlert();
+        setDiscountPrice('');
+        setDiscountType('currency');
+        discountRef.current?.focus();
+      } else {
+        setDiscountType('currency');
+      }
     } else {
       let toNumber = Number(discountPrice);
       if (toNumber > 100) {
         setToastState({ msg: '할인율을 올바르게 입력해주세요.', severity: 'info' });
         handleOpenAlert();
+        setDiscountPrice('');
+        setDiscountType('ratio');
+        discountRef.current?.focus();
       } else {
         setDiscountType('ratio');
       }
@@ -89,11 +89,11 @@ export default function CouponAdd() {
   }
 
   // Toast(Alert) 관리
-  const [toastState, setToastState] = React.useState({
+  const [toastState, setToastState] = useState({
     msg: '',
     severity: ''
   });
-  const [openAlert, setOpenAlert] = React.useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
   };
@@ -103,8 +103,11 @@ export default function CouponAdd() {
 
   // 쿠폰 등록하기
   const addCouponHandler = () => {
-    let startDateFormat = moment(selectedDate01).format('YYYY-MM-DD');
-    let endDateFormat = moment(selectedDate02).format('YYYY-MM-DD');
+    let startDateFormat = moment(value[0]).format('YYYY-MM-DD');
+    let endDateFormat = moment(value[1]).format('YYYY-MM-DD');
+
+    // let startDateFormat = moment(selectedDate01).format('YYYY-MM-DD');
+    // let endDateFormat = moment(selectedDate02).format('YYYY-MM-DD');
     // let toIntDiscountPrice = parseInt(discountPrice);
     let discountTypeFormat;
     if (discountType === 'currency') {
@@ -163,6 +166,12 @@ export default function CouponAdd() {
         setToastState({ msg: '할인율을 입력해주세요.', severity: 'error' });
         handleOpenAlert();
       }
+    } else if (value[0] === null) {
+      setToastState({ msg: '다운로드 유효기간 시작날짜를 지정해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (value[1] === null) {
+      setToastState({ msg: '다운로드 유효기간 종료날짜를 지정해주세요.', severity: 'error' });
+      handleOpenAlert();
     } else if (duration === null || duration === '') {
       setToastState({ msg: '쿠폰사용기한을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
@@ -171,7 +180,7 @@ export default function CouponAdd() {
     }
   }
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -189,8 +198,7 @@ export default function CouponAdd() {
     setDiscountPrice('');
     setDiscountType('currency');
     setDuration('');
-    setSelectedDate01(new Date());
-    setSelectedDate02(new Date());
+    setValue([null, null]);
   }
 
   const reAddHandler = () => {
@@ -203,6 +211,8 @@ export default function CouponAdd() {
     history.push('/coupons');
     handleClose();
   }
+
+  console.log("setValue", value);
 
   return (
     <Box component="div" className={base.root}>
@@ -321,13 +331,30 @@ export default function CouponAdd() {
           </Grid>
           <Grid item xs={12} md={12}>
             <TextField
+              inputRef={discountRef}
               value={discountPrice}
               id="outlined-basic"
               label={discountType === 'currency' ? '할인금액' : '할인율'}
               variant="outlined"
               required
               style={{ width: '33%', marginRight: 10 }}
-              onChange={e => setDiscountPrice(e.target.value)}
+              onChange={e => {
+                if (discountType === 'currency') {
+                  const re = /^[0-9\b]+$/;
+                  if (e.target.value === '' || re.test(e.target.value)) {
+                    let changed = e.target.value.replace(/(^0+)/, '');
+                    setDiscountPrice(changed);
+                  }
+                } else {
+                  const re = /^[0-9.\b]+$/;
+                  if (e.target.value === '' || re.test(e.target.value)) {
+                    // let filtered = e.target.value.replace(/(^.\d)+$/, '0.');
+                    let changed = e.target.value.replace(/(^\d*[.]\d{3}$) | ([^0-9.]) |(^\d*[.]{2})/, '');
+                    // let changed = e.target.value.replace(/(^\d*[.]\d{3}$) | ([^0-9.]) |(^\d*[.]{2})/, '');
+                    setDiscountPrice(changed);
+                  }
+                }
+              }}
               InputProps={{
                 endAdornment: <InputAdornment position="end">{discountType === 'currency' ? '원' : '%'}</InputAdornment>,
               }}
@@ -361,7 +388,7 @@ export default function CouponAdd() {
           </Grid>
           <Grid item xs={12} md={12} mb={3}>
             <p className={base.mb20}>다운로드 유효기간</p>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} locale={ko}>
               <DateRangePicker
                 okText="확인"
                 cancelText="취소"
@@ -370,6 +397,8 @@ export default function CouponAdd() {
                 endText="종료날짜"
                 calendars={2}
                 value={value}
+                inputFormat='yyyy.MM.dd'
+                minDate={new Date()}
                 onChange={(newValue) => {
                   console.log("newValue", newValue);
                   setValue(newValue);
