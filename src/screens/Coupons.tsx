@@ -61,7 +61,7 @@ export default function Tips(props: any) {
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
-  const [postPerPage, setPostPerPage] = useState(4); // 페이지 API 호출 Limit
+  const [postPerPage, setPostPerPage] = useState(6); // 페이지 API 호출 Limit
   const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
   const [lists, setLists] = useState<ICoupon[]>([
     {
@@ -238,11 +238,11 @@ export default function Tips(props: any) {
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) => (
-              <Grid key={list.cz_no} item xs={12} md={6} style={{ position: 'relative' }}>
+              <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }}>
                 <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => deleteCouponConfirmHandler(list.cz_no)} style={{ position: 'absolute', top: 10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: theme.palette.primary.main }}>
                   <CloseRoundedIcon />
                 </IconButton>
-                <Paper className={clsx(base.paper, coupon.gradient)}>
+                <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left' }}>
                   <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
                   <Box component="article" className={coupon.couponBox}>
                     <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: theme.palette.primary.contrastText }}>✂</Typography>
@@ -252,9 +252,10 @@ export default function Tips(props: any) {
                       <Typography variant="h5" component="em" className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
                     }
                   </Box>
-
-                  <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최소주문금액 ${Api.comma(list.cz_minimum)}원 - 최대주문금액 ${Api.comma(list.cz_maximum)}원`}</Typography>
-
+                  <Box mb={2}>
+                    <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최소주문금액 ${Api.comma(list.cz_minimum)}원`}</Typography>
+                    <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최대주문금액 ${Api.comma(list.cz_maximum)}원`}</Typography>
+                  </Box>
                   <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간</Typography>
                   <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
                 </Paper>
