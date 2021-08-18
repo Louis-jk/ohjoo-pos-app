@@ -114,9 +114,15 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   // 로그아웃
   const logout = async () => {
-    await dispatch(storeAction.closedStore([]));
-    await localStorage.removeItem('userAccount');
-    await history.push('/login');
+    try {
+      await dispatch(storeAction.closedStore([]));
+      localStorage.removeItem('userAccount');
+      localStorage.removeItem('ohjooStoreToken');
+      await history.push('/login');
+    } catch (err) {
+      console.log('로그아웃 중 에러발생', err);
+    }
+
   }
 
   // 프린트 출력 부분
