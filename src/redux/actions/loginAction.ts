@@ -29,10 +29,9 @@ export function updateLogin(data: string) {
 }
 
 export function updateToken(data: string) {
-  const args = JSON.parse(data);
   
   return {
     type: types.UPDATE_FCM_TOKEN,
-    mt_app_token: args
+    mt_app_token: data
   };
 }
