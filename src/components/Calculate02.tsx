@@ -64,8 +64,14 @@ export default function CalculateTab02() {
       <Box mt={2} mb={3} display='flex' justifyContent='flex-start' alignItems='center'>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ko}>
           <DateRangePicker
-            calendars={3}
+            okText='확인'
+            cancelText='취소'
+            clearText='클리어'
+            startText='시작날짜'
+            endText='종료날짜'
+            calendars={2}
             value={value}
+            inputFormat='yyyy.MM.dd'
             onChange={(newValue) => {
               setValue(newValue);
             }}
@@ -75,6 +81,7 @@ export default function CalculateTab02() {
                   {...startProps}
                   placeholder='시작날짜'
                   label='시작날짜'
+                  type='date'
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -84,6 +91,7 @@ export default function CalculateTab02() {
                   {...endProps}
                   placeholder='종료날짜'
                   label='종료날짜'
+                  type='date'
                   InputLabelProps={{
                     shrink: true
                   }}
