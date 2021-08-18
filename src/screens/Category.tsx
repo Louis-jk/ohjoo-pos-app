@@ -266,6 +266,7 @@ export default function SetCategory(props: any) {
         </div>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box mt={3} />
           {/* 신규 카테고리 추가 모달 */}
           <Modal
             aria-labelledby="transition-modal-title"

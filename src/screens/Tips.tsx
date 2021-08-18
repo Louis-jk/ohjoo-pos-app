@@ -374,6 +374,7 @@ export default function Tips(props: any) {
         </Box>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box mt={3} />
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) =>
               <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }}>

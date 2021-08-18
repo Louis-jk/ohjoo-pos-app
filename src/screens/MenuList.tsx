@@ -108,6 +108,7 @@ export default function MenuList(props: any) {
         </Box>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box mt={3} />
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) => (
               <Grid key={list.it_id} item xs={12} md={6}>
