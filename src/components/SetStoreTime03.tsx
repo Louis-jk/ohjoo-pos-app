@@ -4,6 +4,7 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import DatePicker, { Calendar, DayValue, DayRange, Day } from 'react-modern-calendar-datepicker'
+import { ko } from "date-fns/esm/locale";
 
 // Material UI Components
 import Chip from '@material-ui/core/Chip';
