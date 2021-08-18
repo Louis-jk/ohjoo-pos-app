@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 // Material UI Components
@@ -12,15 +12,15 @@ import Api from '../Api';
 import loginAction from '../redux/actions';
 import { baseStyles, theme } from '../styles/base';
 
+
 export default function Check() {
 
   const base = baseStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const [token, setToken] = React.useState('');
 
-  const onLoginHandler = (id: string, pwd: string) => {
-    // setLoading(true);
+
+  const onLoginHandler = (id: string, pwd: string, token: string) => {
 
     const param = {
       mt_id: id,
@@ -34,46 +34,37 @@ export default function Check() {
 
       if (resultItem.result === 'Y') {
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
+        dispatch(loginAction.updateToken(arrItems.mt_app_token));
         history.replace('/main');
-        // setLoading(false);
       } else {
-        // setLoading(false);
-        alert('회원정보가 일치하지 않습니다.');
+        // alert('회원정보가 일치하지 않습니다.');
+        history.replace('/login');
       }
     });
   };
 
-  // 토큰 정보 가져오기
-  const getStorageToken = async () => {
-    try {
-      const jsonValue = await localStorage.getItem('ohjooStoreToken');
-      console.log('유저 토큰 ?', jsonValue);
-      if (jsonValue !== null) {
-        const UserToken = JSON.parse(jsonValue);
-        const result = UserToken.token;
-        setToken(result);
-      }
-    } catch (e) {
-      console.log('토큰을 가져오지 못했습니다.');
-      history.push('/login');
-    }
-  }
-
   // 유저 정보 가져오기(자동로그인?)
-  const getStorage = async () => {
+  const getStorage = () => {
     try {
-      const jsonValue = await localStorage.getItem('userAccount');
-      if (jsonValue !== null) {
-        console.log('유저 정보 가져오기 :: ', JSON.parse(jsonValue));
+      const getUser = localStorage.getItem('userAccount');
+      const getToken = localStorage.getItem('ohjooStoreToken');
+      if (getUser !== null && getToken !== null) {
+        console.log('유저 정보 가져오기 :: ', JSON.parse(getUser));
 
-        const UserInfo = JSON.parse(jsonValue);
+        const UserInfo = JSON.parse(getUser);
         const userId = UserInfo.userId;
         const userPwd = UserInfo.userPwd;
 
-        console.log('userId ::', userId);
-        console.log('userPwd ::', userPwd);
-        onLoginHandler(userId, userPwd);
+        const jsonToken = JSON.parse(getToken);
+        const storageToken = jsonToken.token;
+
+        console.log('userId :', userId);
+        console.log('userPwd :', userPwd);
+        console.log('storageToken :', storageToken);
+
+        onLoginHandler(userId, userPwd, storageToken);
       } else {
+        console.log("유저 정보 못가져옴");
         history.push('/login');
       }
     } catch (err) {
@@ -82,12 +73,10 @@ export default function Check() {
     }
   }
 
-  React.useEffect(() => {
-    getStorageToken();
+  useEffect(() => {
     getStorage();
   }, [])
 
-  console.log("토큰은?????", token);
 
   return (
     <Box className={base.loadingWrap} style={{ flexDirection: 'column', backgroundColor: theme.palette.primary.main }}>
