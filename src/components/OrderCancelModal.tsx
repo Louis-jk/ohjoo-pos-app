@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -34,17 +34,17 @@ export default function OrderCancelModal(props: IProps) {
   const history = useHistory();
   const base = baseStyles();
   const dispatch = useDispatch();
-  const [openCancel, setOpenCancel] = React.useState(false); // 접수 완료 -> 주문 취소
-  const [cancelValue, setCancelValue] = React.useState(''); // 접수 완료 -> 주문 취소 사유 선택
-  const [cancelEtc, setCancelEtc] = React.useState(''); // 접수 완료 -> 주문 취소 사유 '기타' 직접 입력 값
-  const cancelRef = React.useRef<HTMLDivElement | null>(null); // 접수 완료 -> 주문 취소 textField Reference
+  const [openCancel, setOpenCancel] = useState(false); // 접수 완료 -> 주문 취소
+  const [cancelValue, setCancelValue] = useState(''); // 접수 완료 -> 주문 취소 사유 선택
+  const [cancelEtc, setCancelEtc] = useState(''); // 접수 완료 -> 주문 취소 사유 '기타' 직접 입력 값
+  const cancelRef = useRef<HTMLDivElement | null>(null); // 접수 완료 -> 주문 취소 textField Reference
 
   // Toast(Alert) 관리
-  const [toastState, setToastState] = React.useState({
+  const [toastState, setToastState] = useState({
     msg: '',
     severity: ''
   });
-  const [openAlert, setOpenAlert] = React.useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
   };
