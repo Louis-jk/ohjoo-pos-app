@@ -442,14 +442,14 @@ export default function Reviews(props: any) {
                 <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
               </Grid>
               {list.reply ?
-                <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.secondary.main }}>
+                <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }}>
                   <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
                   <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
                   <Box style={{ position: 'absolute', right: 10, top: 10 }}>
                     <IconButton
                       onClick={() => deleteReviewHandler(list.it_id, list.wr_id)}
                     >
-                      <HighlightOffIcon color='primary' style={{ fontSize: 16 }} />
+                      <HighlightOffIcon color='secondary' style={{ fontSize: 16 }} />
                     </IconButton>
                   </Box>
                 </Grid>

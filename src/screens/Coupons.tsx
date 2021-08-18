@@ -240,17 +240,30 @@ export default function Tips(props: any) {
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) => (
               <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }}>
-                <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => deleteCouponConfirmHandler(list.cz_no)} style={{ position: 'absolute', top: 10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: theme.palette.primary.main }}>
+                <IconButton
+                  color="primary"
+                  component="span"
+                  onClick={() => deleteCouponConfirmHandler(list.cz_no)}
+                  style={{
+                    position: 'absolute',
+                    top: 15,
+                    right: -10,
+                    width: 25,
+                    height: 25,
+                    color: '#fff',
+                    backgroundColor: theme.palette.primary.main
+                  }}
+                >
                   <CloseRoundedIcon />
                 </IconButton>
-                <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left' }}>
+                <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left', borderWidth: 1, borderStyle: 'dotted', borderColor: theme.palette.primary.main }}>
                   <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
                   <Box component="article" className={coupon.couponBox}>
                     <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: theme.palette.primary.contrastText }}>✂</Typography>
                     {list.cz_price_type === '1' ?
-                      <Typography variant="h5" component="em" className={coupon.couponPrice}>{list.cz_price}%</Typography>
+                      <Typography variant="h6" component="em" className={coupon.couponPrice}>{list.cz_price}%</Typography>
                       :
-                      <Typography variant="h5" component="em" className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
+                      <Typography variant="h6" component="em" className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
                     }
                   </Box>
                   <Box mb={2}>

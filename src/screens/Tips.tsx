@@ -272,7 +272,6 @@ export default function Tips(props: any) {
             <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>배달팁 입력</Typography>
             <IconButton
               color="primary"
-              aria-label="upload picture"
               component="span"
               onClick={handleClose}
               style={{
@@ -395,7 +394,7 @@ export default function Tips(props: any) {
                 >
                   <CloseRoundedIcon />
                 </IconButton>
-                <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #FFF6da, #FFF5DA)" }}>
+                <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>
                   <Box className={base.txtRoot}>
                     <TextField
                       value={Api.comma(list.dd_charge_start)}

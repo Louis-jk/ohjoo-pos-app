@@ -53,7 +53,7 @@ import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
 import { theme, baseStyles } from '../styles/base';
 import { MaterialUISwitch } from './MaterialUISwitch';
-import Logo from '../assets/images/logo_bk.png';
+import Logo from '../assets/images/logo.png';
 import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
 
 const drawerWidth = 180;
@@ -172,7 +172,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   // 메뉴 드로어
   const drawer = (
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
-      <Toolbar style={{ backgroundColor: theme.palette.primary.main }}>
+      <Toolbar style={{ backgroundColor: theme.palette.secondary.main }} sx={{ marginBottom: 3 }}>
         <img src={Logo} alt="오늘의주문" style={{ width: 130 }} />
       </Toolbar>
       <List sx={{ padding: 0 }}>
@@ -267,7 +267,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const storeListDrawer = (
     <Box style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
       {/* <div className={classes.toolbar} /> */}
-      <Box display="flex" justifyContent="flex-start" alignItems="center" py={0.5} px={1} style={{ backgroundColor: theme.palette.primary.main, color: '#fff' }}>
+      <Box display="flex" justifyContent="flex-start" alignItems="center" py={0.5} px={1} style={{ backgroundColor: theme.palette.secondary.main, color: '#fff' }}>
         <Typography variant="h5" component="h5" style={{ fontWeight: 500, color: theme.palette.secondary.contrastText, margin: '12px 20px' }}>매장선택</Typography>
       </Box>
       <Divider />
@@ -315,7 +315,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
           boxShadow: 'none',
-          flex: 1
+          flex: 1,
+          backgroundColor: '#fff'
         }}
       >
         <Toolbar style={{

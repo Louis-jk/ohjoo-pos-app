@@ -99,7 +99,7 @@ export default function OrderCard(props: OrderProps) {
     return orders.map((order, index) =>
       <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} p={0} >
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.secondary.main }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.primary.main }}>
           <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
           <Typography style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD / a h:mm')}</Typography>
         </Box>

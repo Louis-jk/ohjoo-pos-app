@@ -64,7 +64,7 @@ export const CouponStyles = makeStyles({
     padding: 10,
     borderWidth: 2,
     borderStyle: 'dotted',
-    borderColor: theme.palette.text.secondary,
+    borderColor: theme.palette.primary.main,
     borderRadius: 5,
     backgroundColor: theme.palette.primary.light,
     textAlign: 'center',
@@ -76,7 +76,7 @@ export const CouponStyles = makeStyles({
     color: theme.palette.primary.contrastText
   },
   gradient: {
-    background: "linear-gradient(45deg, #FFF6da, #FFF5DA)"
+    background: "linear-gradient(45deg, #f9f9f9, #fff9ea)"
   },
 })
 

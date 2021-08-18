@@ -24,9 +24,9 @@ export const theme = createTheme({
     },
     secondary: {
       light: '#ffffff',
-      main: '#fff8e1',
+      main: '#11052C',
       dark: '#ccc5af',
-      contrastText: '#222',
+      contrastText: '#fff',
     },
     info: {
       light: '#CBE2B0',
@@ -315,7 +315,7 @@ export const baseStyles = makeStyles({
   },
   gradient: {
     // background: "linear-gradient(45deg, #D5ECC2, #EDF6E5, #FFF5DA)"
-    background: "linear-gradient(45deg, #FFF6da, #FFF5DA)"
+    background: "linear-gradient(45deg, #f9f9f9, #fff9ea)"
   },
   border: {
     borderWidth: 1,

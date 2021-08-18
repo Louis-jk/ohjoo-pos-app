@@ -207,6 +207,7 @@ export default function StoreInfo(props: IProps) {
         </Box>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box mt={3} />
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <TextField
