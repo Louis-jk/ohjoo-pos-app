@@ -330,7 +330,7 @@ export default function Tips(props: any) {
                   required
                   onChange={e => setTipPrice(e.target.value as string)}
                   InputProps={{
-                    endAdornment: <InputAdornment position="end">원</InputAdornment>,
+                    endAdornment: <InputAdornment position="end">원 적용</InputAdornment>,
                   }}
                 />
               </Box>
@@ -397,25 +397,27 @@ export default function Tips(props: any) {
                 <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #FFF6da, #FFF5DA)" }}>
                   <Box className={base.txtRoot}>
                     <TextField
-                      value={list.dd_charge_start}
+                      value={Api.comma(list.dd_charge_start)}
                       variant="outlined"
                       label="최소금액"
                       style={{ backgroundColor: '#fff' }}
+                      focused={false}
+                      contentEditable={false}
                       InputLabelProps={{
                         shrink: true
                       }}
                       InputProps={{
                         endAdornment: <InputAdornment position="start">원 이상</InputAdornment>
                       }}
-                      contentEditable={false}
                     />
                   </Box>
                   <Box className={base.txtRoot}>
                     <TextField
-                      value={list.dd_charge_end}
+                      value={Api.comma(list.dd_charge_end)}
                       variant="outlined"
                       label="최대금액"
                       style={{ backgroundColor: '#fff' }}
+                      focused={false}
                       InputLabelProps={{
                         shrink: true
                       }}
@@ -428,15 +430,16 @@ export default function Tips(props: any) {
                   <Typography mb={3}>위 금액일 경우, 아래 배달비 적용</Typography>
                   <Box className={base.txtRoot}>
                     <TextField
-                      value={list.dd_charge_price}
+                      value={Api.comma(list.dd_charge_price)}
                       variant="outlined"
                       label="배달비"
                       style={{ backgroundColor: '#fff' }}
+                      focused={false}
                       InputLabelProps={{
                         shrink: true
                       }}
                       InputProps={{
-                        endAdornment: <InputAdornment position="start">원</InputAdornment>
+                        endAdornment: <InputAdornment position="start">원 적용</InputAdornment>
                       }}
                       contentEditable={false}
                     />
