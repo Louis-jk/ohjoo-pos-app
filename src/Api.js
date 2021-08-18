@@ -124,7 +124,13 @@ class Api {
         }
       })
       .catch(function (error) {
-        console.log("Axios catch!!!>>", method, error);
+        console.log(
+          "Axios catch!!!>>",
+          "method ::",
+          method,
+          ", error ::",
+          error
+        );
       });
   }
 
