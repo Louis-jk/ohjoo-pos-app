@@ -15,17 +15,19 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
-  //  자동 토큰 저장
-  const storeAddToken = async (token: string) => {
-    try {
-      const jsonValue = JSON.stringify({ token: token });
-      await localStorage.setItem('ohjooStoreToken', jsonValue);
-    } catch (e) {
-      alert(`${e} :: 관리자에게 문의하세요.`);
-    }
-  };
+
+//  자동 토큰 저장
+const storeAddToken = async (token: string) => {
+  try {
+    const jsonValue = JSON.stringify({ token: token });
+    await localStorage.setItem('ohjooStoreToken', jsonValue);
+  } catch (e) {
+    alert(`${e} :: 관리자에게 문의하세요.`);
+  }
+};
 
 export const getToken = (setTokenFound: any) => {
+
   return messaging
     .getToken({
       vapidKey:
@@ -34,7 +36,7 @@ export const getToken = (setTokenFound: any) => {
     .then((currentToken) => {
       if (currentToken) {
         console.log("current token for client: ", currentToken);
-        setTokenFound(true);
+        setTokenFound(currentToken);
         storeAddToken(currentToken);
         // Track the token -> client mapping, by sending to backend server
         // show on the UI that permission is secured
@@ -42,7 +44,7 @@ export const getToken = (setTokenFound: any) => {
         console.log(
           "No registration token available. Request permission to generate one."
         );
-        setTokenFound(false);
+        setTokenFound('');
         // shows on the UI that permission is required
       }
     })
