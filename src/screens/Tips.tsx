@@ -374,9 +374,9 @@ export default function Tips(props: any) {
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
-          <Grid container spacing={3}>
+          <Grid container spacing={3} style={{ minHeight: 550 }}>
             {lists && lists.length > 0 && lists.map((list, index) =>
-              <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }}>
+              <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }} alignContent='baseline'>
                 <IconButton
                   color="primary"
                   aria-label="delete"
@@ -449,11 +449,11 @@ export default function Tips(props: any) {
             )}
           </Grid>
           {lists.length === 0 || lists === null ?
-            <Box style={{ display: 'flex', flex: 1, height: '80vh', justifyContent: 'center', alignItems: 'center' }}>
+            <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 배달팁이 없습니다.</Typography>
             </Box>
             : null}
-          <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
+          <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
             <Stack spacing={2}>
               <Pagination
                 color="primary"

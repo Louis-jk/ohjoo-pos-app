@@ -109,9 +109,9 @@ export default function MenuList(props: any) {
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
-          <Grid container spacing={3}>
+          <Grid container spacing={3} style={{ minHeight: 550 }}>
             {lists && lists.length > 0 && lists.map((list, index) => (
-              <Grid key={list.it_id} item xs={12} md={6}>
+              <Grid key={list.it_id} item xs={12} md={6} alignContent='baseline'>
                 <Link to={`/menu_edit/${list.it_id}`}>
                   <Paper className={menu.menuListPaper}>
                     <Box className={menu.menuListWrap}>
@@ -135,7 +135,7 @@ export default function MenuList(props: any) {
               </Grid>
             ))}
             {lists.length === 0 || lists === null ?
-              <Box style={{ display: 'flex', flex: 1, height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+              <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
                 <Typography style={{ fontSize: 15 }}>등록된 메뉴가 없습니다.</Typography>
               </Box>
               : null}
