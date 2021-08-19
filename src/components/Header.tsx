@@ -271,7 +271,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         <img src={Logo} alt="오늘의주문" style={{ width: 130 }} />
       </Toolbar>
       <List sx={{ padding: 0 }}>
-        <ListItem button component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <Badge badgeContent={newOrder.length} color="primary" >
               <ListAltOutlinedIcon />
@@ -279,7 +279,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="신규주문" />
         </ListItem>
-        <ListItem button component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <Badge badgeContent={checkOrder.length} color="primary">
               <PlaylistAddCheckOutlinedIcon />
@@ -287,7 +287,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="접수완료" />
         </ListItem>
-        <ListItem button component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <Badge badgeContent={deliveryOrder.length} color="primary">
               <DeliveryDiningOutlinedIcon />
@@ -295,7 +295,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </ListItemIcon>
           <ListItemText primary="배달중" />
         </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <Badge badgeContent={doneOrder.length} color="primary">
               <FileDownloadDoneOutlinedIcon />
@@ -306,49 +306,49 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       </List>
       <Divider />
       <List sx={{ padding: 0 }}>
-        <ListItem button component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <AccessTimeOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="영업일 및 휴무일" />
         </ListItem>
-        <ListItem button component={Link} to='/caculate' style={{ color: curPathName === 'caculate' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'caculate' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/caculate' style={{ color: curPathName === 'caculate' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'caculate' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'caculate' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <CalculateOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="정산내역" />
         </ListItem>
-        <ListItem button component={Link} to='/category' style={{ color: curPathName === 'category' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'category' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/category' style={{ color: curPathName === 'category' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'category' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'category' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <MenuOpenOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="카테고리" />
         </ListItem>
-        <ListItem button component={Link} to='/menu' style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/menu' style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <RestaurantMenuOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="메뉴관리" />
         </ListItem>
-        <ListItem button component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <ConfirmationNumberOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="쿠폰관리" />
         </ListItem>
-        <ListItem button component={Link} to='/tips' style={{ color: curPathName === 'tips' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'tips' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/tips' style={{ color: curPathName === 'tips' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'tips' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'tips' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <InfoOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="배달팁" />
         </ListItem>
-        <ListItem button component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <StorefrontOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="매장소개" />
         </ListItem>
-        <ListItem button component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? theme.palette.primary.dark : 'transparent' }}>
+        <ListItem button component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? '#fff' : 'transparent' }}>
           <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
             <RateReviewOutlinedIcon />
           </ListItemIcon>
@@ -382,7 +382,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <Divider />
               </Box>
             )) :
-              <Typography style={{ fontWeight: 500, margin: 20 }}>등록된 매장이 없습니다.</Typography>
+              <Typography color='secondary' style={{ fontWeight: 500, margin: 20 }}>등록된 매장이 없습니다.</Typography>
             }
           </RadioGroup>
         </FormControl>
@@ -459,14 +459,14 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               : null}
             {props.detail === 'order_new' ?
               <Box>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
+                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={props.action}>
                   접수처리
                 </Button>
                 <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action02}>
                   거부처리
                 </Button>
                 <IconButton
-                  color="info"
+                  color="secondary"
                   aria-label="list"
                   component="span"
                   onClick={handlePrint02}
@@ -479,14 +479,14 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               </Box>
               : props.detail === 'order_check' ?
                 <Box>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} startIcon={<DoneIcon />} onClick={props.action}>
+                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} startIcon={<DoneIcon />} onClick={props.action}>
                     배달처리
                   </Button>
                   <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} startIcon={<CloseIcon />} onClick={props.action02}>
                     취소처리
                   </Button>
                   <IconButton
-                    color="info"
+                    color="secondary"
                     aria-label="list"
                     component="span"
                     onClick={handlePrint02}
@@ -500,7 +500,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 : props.detail === 'order_delivery' ?
                   <Box>
                     <IconButton
-                      color="info"
+                      color="secondary"
                       aria-label="list"
                       component="span"
                       onClick={handlePrint02}
@@ -514,7 +514,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   : props.detail === 'order_done' ?
                     <Box>
                       <IconButton
-                        color="info"
+                        color="secondary"
                         aria-label="list"
                         component="span"
                         onClick={handlePrint02}
