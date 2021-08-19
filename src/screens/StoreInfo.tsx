@@ -217,9 +217,12 @@ export default function StoreInfo(props: IProps) {
                 id="outlined-multiline-static"
                 label="매장소개"
                 multiline
-                rows={10}
-                defaultValue="메뉴 상세설명을 작성해주세요."
+                rows={5}
+                defaultValue="매장소개를 작성해주세요."
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setInfo({
                   ...info,
                   do_jumju_introduction: e.target.value as string
@@ -234,9 +237,12 @@ export default function StoreInfo(props: IProps) {
                 id="outlined-multiline-static"
                 label="배달팁 안내"
                 multiline
-                rows={10}
-                defaultValue="메뉴 상세설명을 작성해주세요."
+                rows={5}
+                defaultValue="배달팁 안내를 작성해주세요."
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setInfo({
                   ...info,
                   do_delivery_guide: e.target.value as string
@@ -251,9 +257,12 @@ export default function StoreInfo(props: IProps) {
                 id="outlined-multiline-static"
                 label="메뉴소개"
                 multiline
-                rows={10}
+                rows={9}
                 defaultValue="메뉴소개를 작성해주세요."
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setInfo({
                   ...info,
                   do_jumju_menu_info: e.target.value as string
@@ -269,7 +278,11 @@ export default function StoreInfo(props: IProps) {
                 label="대표메뉴"
                 multiline
                 rows={2}
+                defaultValue="대표메뉴를 작성해주세요."
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setInfo({
                   ...info,
                   do_major_menu: e.target.value as string
@@ -287,6 +300,9 @@ export default function StoreInfo(props: IProps) {
                 rows={4}
                 defaultValue="원산지 안내를 작성해주세요."
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setInfo({
                   ...info,
                   do_jumju_origin: e.target.value as string
@@ -300,6 +316,10 @@ export default function StoreInfo(props: IProps) {
                 id="outlined-basic"
                 label="평균 배달시간"
                 variant="outlined"
+                defaultValue="평균 배달시간을 입력해주세요."
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setInfo({
                   ...info,
                   do_delivery_time: e.target.value as string
