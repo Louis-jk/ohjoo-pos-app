@@ -452,7 +452,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               ?
               <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
                 <Badge badgeContent={closedStore ? closedStore.length : 0} color="secondary">
-                  <StopCircleOutlinedIcon style={{ color: closedStore ? '#F8485E' : '#222' }} />
+                  <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#222' }} />
                 </Badge>
                 <Typography ml={1}>영업일시정지</Typography>
               </Button>
