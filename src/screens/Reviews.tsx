@@ -392,7 +392,7 @@ export default function Reviews(props: any) {
 
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         {lists && lists.length > 0 && lists.map((list, index) =>
-          <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id}>
+          <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} style={{ minHeight: 550 }}>
             <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
               <Grid className={base.flexRow} alignItems='center'>
                 <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
@@ -469,27 +469,29 @@ export default function Reviews(props: any) {
           </Grid>
         )}
         {lists.length === 0 || lists === null ?
-          <Box style={{ display: 'flex', flex: 1, height: '80vh', justifyContent: 'center', alignItems: 'center' }}>
+          <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
             <Typography style={{ fontSize: 15 }}>등록된 리뷰가 없습니다.</Typography>
           </Box>
           : null}
-        <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
-          <Stack spacing={2}>
-            <Pagination
-              color="primary"
-              count={totalCount}
-              defaultPage={1}
-              showFirstButton
-              showLastButton
-              onChange={pageHandleChange}
-              page={currentPage}
-            />
-            {/* 
+        {totalCount ?
+          <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+            <Stack spacing={2}>
+              <Pagination
+                color="primary"
+                count={totalCount}
+                defaultPage={1}
+                showFirstButton
+                showLastButton
+                onChange={pageHandleChange}
+                page={currentPage}
+              />
+              {/* 
                 토탈 페이지수 = count
                 초기 페이지 번호 = defaultPage
               */}
-          </Stack>
-        </Box>
+            </Stack>
+          </Box>
+          : null}
       </MainBox>
     </Box>
   );
