@@ -237,68 +237,72 @@ export default function Tips(props: any) {
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
-          <Grid container spacing={3} style={{ minHeight: 550 }}>
-            {lists && lists.length > 0 && lists.map((list, index) => (
-              <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }} alignContent='baseline'>
-                <IconButton
-                  color="primary"
-                  component="span"
-                  onClick={() => deleteCouponConfirmHandler(list.cz_no)}
-                  style={{
-                    position: 'absolute',
-                    top: 15,
-                    right: -10,
-                    width: 25,
-                    height: 25,
-                    color: '#fff',
-                    backgroundColor: theme.palette.primary.main
-                  }}
-                >
-                  <CloseRoundedIcon />
-                </IconButton>
-                <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left', borderWidth: 1, borderStyle: 'dotted', borderColor: theme.palette.primary.main }}>
-                  <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
-                  <Box component="article" className={coupon.couponBox}>
-                    <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: theme.palette.primary.contrastText }}>✂</Typography>
-                    {list.cz_price_type === '1' ?
-                      <Typography variant="h6" component="em" className={coupon.couponPrice}>{list.cz_price}%</Typography>
-                      :
-                      <Typography variant="h6" component="em" className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
-                    }
-                  </Box>
-                  <Box mb={2}>
-                    <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최소주문금액 ${Api.comma(list.cz_minimum)}원`}</Typography>
-                    <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최대주문금액 ${Api.comma(list.cz_maximum)}원`}</Typography>
-                  </Box>
-                  <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간</Typography>
-                  <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
-                </Paper>
-              </Grid>
-            )
-            )}
-          </Grid>
+          {lists && lists.length > 0 &&
+            <Grid container spacing={3} style={{ minHeight: 550 }}>
+              {lists.map((list, index) => (
+                <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }} alignContent='baseline'>
+                  <IconButton
+                    color="primary"
+                    component="span"
+                    onClick={() => deleteCouponConfirmHandler(list.cz_no)}
+                    style={{
+                      position: 'absolute',
+                      top: 15,
+                      right: -10,
+                      width: 25,
+                      height: 25,
+                      color: '#fff',
+                      backgroundColor: theme.palette.primary.main
+                    }}
+                  >
+                    <CloseRoundedIcon />
+                  </IconButton>
+                  <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left', borderWidth: 1, borderStyle: 'dotted', borderColor: theme.palette.primary.main }}>
+                    <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
+                    <Box component="article" className={coupon.couponBox}>
+                      <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: theme.palette.primary.contrastText }}>✂</Typography>
+                      {list.cz_price_type === '1' ?
+                        <Typography variant="h6" component="em" className={coupon.couponPrice}>{list.cz_price}%</Typography>
+                        :
+                        <Typography variant="h6" component="em" className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
+                      }
+                    </Box>
+                    <Box mb={2}>
+                      <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최소주문금액 ${Api.comma(list.cz_minimum)}원`}</Typography>
+                      <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최대주문금액 ${Api.comma(list.cz_maximum)}원`}</Typography>
+                    </Box>
+                    <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간</Typography>
+                    <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
+                  </Paper>
+                </Grid>
+              )
+              )}
+            </Grid>
+          }
           {lists.length === 0 || lists === null ?
             <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 쿠폰이 없습니다.</Typography>
             </Box>
             : null}
-          <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
-            <Stack spacing={2}>
-              <Pagination
-                color="primary"
-                count={totalCount}
-                defaultPage={1}
-                showFirstButton
-                showLastButton
-                onChange={pageHandleChange}
-                page={currentPage}
-              />
-              {/* 
+          {totalCount ?
+            <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+              <Stack spacing={2}>
+                <Pagination
+                  color="primary"
+                  count={totalCount}
+                  defaultPage={1}
+                  showFirstButton
+                  showLastButton
+                  onChange={pageHandleChange}
+                  page={currentPage}
+                />
+                {/* 
                 토탈 페이지수 = count
                 초기 페이지 번호 = defaultPage
               */}
-            </Stack>
-          </Box>
+              </Stack>
+            </Box>
+            : null}
         </MainBox>
       }
     </Box>
