@@ -1,4 +1,4 @@
-import { app, BrowserWindow, BrowserView, ipcMain, Notification, shell } from 'electron';
+import { app, BrowserWindow, Menu ,BrowserView, ipcMain, Notification, shell } from 'electron';
 import * as path from 'path';
 
 let mainWindow: Electron.BrowserWindow | null;
@@ -7,6 +7,7 @@ let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
+        autoHideMenuBar: true,
         width: 1024,
         height: 768,
         backgroundColor: 'white',
@@ -22,7 +23,8 @@ function createWindow() {
 
     // index.html 파일 로드
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
+    mainWindow.setMenuBarVisibility(false);
+    
     // mainWindow.loadURL('https://localhost:3000/')
 
     // 개발자 툴 오픈
@@ -33,6 +35,8 @@ function createWindow() {
     });
 }
 
+// 브라우저 메뉴창 없애기
+Menu.setApplicationMenu(null);
 
 // Notification
 // const NOTIFICATION_TITLE = 'Title-Inner';
