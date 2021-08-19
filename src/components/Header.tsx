@@ -51,10 +51,12 @@ import PrintModal from './PrintModal';
 // import OrderPrint from '../components/ComponentToPrint';
 import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
+import orderAction from '../redux/actions';
 import { theme, baseStyles } from '../styles/base';
 import { MaterialUISwitch } from './MaterialUISwitch';
 import Logo from '../assets/images/logo.png';
 import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
+import Api from '../Api';
 
 const drawerWidth = 180;
 interface OptionalProps {
@@ -73,7 +75,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const location = useLocation();
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
-  const { mt_store } = useSelector((state: any) => state.login);
+  const { mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
   const { allStore, closedStore } = useSelector((state: any) => state.store);
   const { newOrder, checkOrder, deliveryOrder, doneOrder } = useSelector((state: any) => state.order);
 
@@ -140,33 +142,126 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     setMobileOpen(!mobileOpen);
   };
 
+  // 현재 신규주문 건수 가져오기
+  const getNewOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '신규주문'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("신규주문 success?", arrItems);
+        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        getCheckOrderHandler();
+      } else {
+        console.log("신규주문 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        getCheckOrderHandler();
+      }
+    });
+  }
+
+  // 현재 접수완료 주문 가져오기
+  const getCheckOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '접수완료'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("접수완료 success?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        getDeliveryOrderHandler();
+      } else {
+        console.log("접수완료 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        getDeliveryOrderHandler();
+      }
+    });
+  }
+
+  // 현재 배달중 주문 가져오기
+  const getDeliveryOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '배달중'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("배달중 success?", arrItems);
+        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+        getDoneOrderHandler();
+      } else {
+        console.log("배달중 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+        getDoneOrderHandler();
+      }
+    });
+  }
+
+  // 현재 배달완료 주문 가져오기
+  const getDoneOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '배달완료'
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("배달완료 success?", arrItems);
+        dispatch(dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems))));
+      } else {
+        console.log("배달완료 faild?", arrItems);
+        dispatch(dispatch(orderAction.updateDoneOrder(null)));
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    getNewOrderHandler();
+  }, [mt_id, mt_jumju_code])
+
   // 매장 선택 드로어 핸들러
   const handleStoreDrawerToggle = () => {
     setStoreListOpen(!storeListOpen);
   };
 
   // 매장 선택 핸들러
-  const setStoreHandler = (store: any, id: string, jumju_id: string, jumju_code: string, storeName: string, addr: string) => {
-    dispatch(storeAction.selectStore(id, jumju_id, jumju_code, storeName, addr));
-    dispatch(loginAction.updateLogin(JSON.stringify(store)));
-    // dispatch(loginAction.updateToken(JSON.stringify(mt_app_token)));
-
-    // let param = {
-    //   mt_id: jumju_id,
-    //   mt_app_token: mt_app_token
-    // };
-
-    // Api.send('store_login_token', param, (args)=>{
-    //   let resultItem = args.resultItem;
-    //   let arrItems = args.arrItems;
-    //   console.log('토큰 업데이트 실행시 resultItem::: ', resultItem);
-    //   console.log('토큰 업데이트 실행시  arrItems::: ', arrItems);
-    //   if (resultItem.result === 'Y') {
-    //     console.log('토큰 업데이트 실행 결과값 ::: ', arrItems);
-    //   } else {
-    //     console.log('토큰 업데이트 실패');
-    //   }
-    // });
+  const setStoreHandler = async (store: any, id: string, jumju_id: string, jumju_code: string, storeName: string, addr: string) => {
+    try {
+      await dispatch(storeAction.selectStore(id, jumju_id, jumju_code, storeName, addr));
+      await dispatch(loginAction.updateLogin(JSON.stringify(store)));
+      await dispatch(loginAction.updateToken(mt_app_token));
+    } catch (err) {
+      console.log('에러 발생 ::', err);
+    }
   };
 
   // 메뉴 드로어
@@ -356,8 +451,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
               ?
               <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
-                <Badge badgeContent={closedStore.length} color="secondary">
-                  <StopCircleOutlinedIcon style={{ color: closedStore.length > 0 ? '#F8485E' : '#222' }} />
+                <Badge badgeContent={closedStore ? closedStore.length : 0} color="secondary">
+                  <StopCircleOutlinedIcon style={{ color: closedStore ? '#F8485E' : '#222' }} />
                 </Badge>
                 <Typography ml={1}>영업일시정지</Typography>
               </Button>
