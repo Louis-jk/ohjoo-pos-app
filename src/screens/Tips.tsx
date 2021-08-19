@@ -197,6 +197,9 @@ export default function Tips(props: any) {
     if (minPrice === null || minPrice === '') {
       setToastState({ msg: '최소주문금액을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
+    } else if (maxPrice === null || maxPrice === '') {
+      setToastState({ msg: '최대주문금액을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
     } else if (tipPrice === null || tipPrice === '') {
       setToastState({ msg: '배달비를 입력해주세요.', severity: 'error' });
       handleOpenAlert();
@@ -296,7 +299,13 @@ export default function Tips(props: any) {
                   label="최소주문금액"
                   variant="outlined"
                   required
-                  onChange={e => setMinPrice(e.target.value as string)}
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setMinPrice(changed);
+                    }
+                  }}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">원 이상</InputAdornment>,
                   }}
@@ -311,7 +320,13 @@ export default function Tips(props: any) {
                   label="최대주문금액"
                   variant="outlined"
                   required
-                  onChange={e => setMaxPrice(e.target.value as string)}
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setMaxPrice(changed);
+                    }
+                  }}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">원 미만</InputAdornment>,
                   }}
@@ -327,7 +342,13 @@ export default function Tips(props: any) {
                   label="배달비"
                   variant="outlined"
                   required
-                  onChange={e => setTipPrice(e.target.value as string)}
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setTipPrice(changed);
+                    }
+                  }}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">원 적용</InputAdornment>,
                   }}
@@ -374,102 +395,106 @@ export default function Tips(props: any) {
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
-          <Grid container spacing={3} style={{ minHeight: 550 }}>
-            {lists && lists.length > 0 && lists.map((list, index) =>
-              <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }} alignContent='baseline'>
-                <IconButton
-                  color="primary"
-                  aria-label="delete"
-                  component="span"
-                  onClick={() => deleteTipConfirmHandler(list.dd_id)}
-                  style={{
-                    position: 'absolute',
-                    top: 15,
-                    right: -7,
-                    width: 25,
-                    height: 25,
-                    color: '#fff',
-                    backgroundColor: theme.palette.primary.main
-                  }}
-                >
-                  <CloseRoundedIcon />
-                </IconButton>
-                <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>
-                  <Box className={base.txtRoot}>
-                    <TextField
-                      value={Api.comma(list.dd_charge_start)}
-                      variant="outlined"
-                      label="최소금액"
-                      style={{ backgroundColor: '#fff' }}
-                      focused={false}
-                      contentEditable={false}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="start">원 이상</InputAdornment>
-                      }}
-                    />
-                  </Box>
-                  <Box className={base.txtRoot}>
-                    <TextField
-                      value={Api.comma(list.dd_charge_end)}
-                      variant="outlined"
-                      label="최대금액"
-                      style={{ backgroundColor: '#fff' }}
-                      focused={false}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="start">원 미만</InputAdornment>
-                      }}
-                      contentEditable={false}
-                    />
-                  </Box>
-                  <Typography mb={3}>위 금액일 경우, 아래 배달비 적용</Typography>
-                  <Box className={base.txtRoot}>
-                    <TextField
-                      value={Api.comma(list.dd_charge_price)}
-                      variant="outlined"
-                      label="배달비"
-                      style={{ backgroundColor: '#fff' }}
-                      focused={false}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="start">원 적용</InputAdornment>
-                      }}
-                      contentEditable={false}
-                    />
-                  </Box>
-                </Paper>
-              </Grid>
-            )}
-          </Grid>
+          {lists && lists.length > 0 &&
+            <Grid container spacing={3} style={{ minHeight: 550 }}>
+              {lists.map((list, index) =>
+                <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }} alignContent='baseline'>
+                  <IconButton
+                    color="primary"
+                    aria-label="delete"
+                    component="span"
+                    onClick={() => deleteTipConfirmHandler(list.dd_id)}
+                    style={{
+                      position: 'absolute',
+                      top: 15,
+                      right: -7,
+                      width: 25,
+                      height: 25,
+                      color: '#fff',
+                      backgroundColor: theme.palette.primary.main
+                    }}
+                  >
+                    <CloseRoundedIcon />
+                  </IconButton>
+                  <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>
+                    <Box className={base.txtRoot}>
+                      <TextField
+                        value={Api.comma(list.dd_charge_start)}
+                        variant="outlined"
+                        label="최소금액"
+                        style={{ backgroundColor: '#fff' }}
+                        focused={false}
+                        contentEditable={false}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="start">원 이상</InputAdornment>
+                        }}
+                      />
+                    </Box>
+                    <Box className={base.txtRoot}>
+                      <TextField
+                        value={Api.comma(list.dd_charge_end)}
+                        variant="outlined"
+                        label="최대금액"
+                        style={{ backgroundColor: '#fff' }}
+                        focused={false}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="start">원 미만</InputAdornment>
+                        }}
+                        contentEditable={false}
+                      />
+                    </Box>
+                    <Typography mb={3}>위 금액일 경우, 아래 배달비 적용</Typography>
+                    <Box className={base.txtRoot}>
+                      <TextField
+                        value={Api.comma(list.dd_charge_price)}
+                        variant="outlined"
+                        label="배달비"
+                        style={{ backgroundColor: '#fff' }}
+                        focused={false}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="start">원 적용</InputAdornment>
+                        }}
+                        contentEditable={false}
+                      />
+                    </Box>
+                  </Paper>
+                </Grid>
+              )}
+            </Grid>
+          }
           {lists.length === 0 || lists === null ?
             <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 배달팁이 없습니다.</Typography>
             </Box>
             : null}
-          <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
-            <Stack spacing={2}>
-              <Pagination
-                color="primary"
-                count={totalCount}
-                defaultPage={1}
-                showFirstButton
-                showLastButton
-                onChange={pageHandleChange}
-                page={currentPage}
-              />
-              {/* 
+          {totalCount ?
+            <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+              <Stack spacing={2}>
+                <Pagination
+                  color="primary"
+                  count={totalCount}
+                  defaultPage={1}
+                  showFirstButton
+                  showLastButton
+                  onChange={pageHandleChange}
+                  page={currentPage}
+                />
+                {/* 
                 토탈 페이지수 = count
                 초기 페이지 번호 = defaultPage
               */}
-            </Stack>
-          </Box>
+              </Stack>
+            </Box>
+            : null}
         </MainBox>
       }
     </Box>
