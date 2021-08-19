@@ -391,83 +391,87 @@ export default function Reviews(props: any) {
       {/* // 답글 삭제 모달 */}
 
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
-        {lists && lists.length > 0 && lists.map((list, index) =>
-          <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} style={{ minHeight: 550 }}>
-            <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
-              <Grid className={base.flexRow} alignItems='center'>
-                <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
-                <Grid className={base.flexColumn}>
-                  <Grid className={base.flexRow}>
-                    <Grid className={base.title}>
-                      <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
-                      <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
-                      <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
+        {lists && lists.length > 0 &&
+          <Grid container spacing={3} style={{ minHeight: 550 }}>
+            {lists.map((list, index) =>
+              <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} alignContent='baseline'>
+                <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
+                  <Grid className={base.flexRow} alignItems='center'>
+                    <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
+                    <Grid className={base.flexColumn}>
+                      <Grid className={base.flexRow}>
+                        <Grid className={base.title}>
+                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
+                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
+                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid className={base.title} style={{ display: 'flex', alignItems: 'center' }}>
+                        <Rating name="half-rating-read" size="small" value={Number(list.rating)} readOnly />
+                        <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
+                        <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
+                        <Box style={{ position: 'absolute', right: 10, top: 10 }}>
+                          {list.reply ?
+                            <Button
+                              color="primary"
+                              disabled
+                              aria-label="button"
+                              startIcon={<AddCommentOutlinedIcon />}
+                            >
+                              답글달기
+                            </Button>
+                            :
+                            <Button
+                              color="primary"
+                              aria-label="button"
+                              startIcon={<AddCommentOutlinedIcon />}
+                              // style={{ color: theme.palette.primary.dark }}
+                              onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
+                            >
+                              답글달기
+                            </Button>
+                          }
+                        </Box>
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid className={base.title} style={{ display: 'flex', alignItems: 'center' }}>
-                    <Rating name="half-rating-read" size="small" value={Number(list.rating)} readOnly />
-                    <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
-                    <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
-                    <Box style={{ position: 'absolute', right: 10, top: 10 }}>
-                      {list.reply ?
-                        <Button
-                          color="primary"
-                          disabled
-                          aria-label="button"
-                          startIcon={<AddCommentOutlinedIcon />}
-                        >
-                          답글달기
-                        </Button>
-                        :
-                        <Button
-                          color="primary"
-                          aria-label="button"
-                          startIcon={<AddCommentOutlinedIcon />}
-                          // style={{ color: theme.palette.primary.dark }}
-                          onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
-                        >
-                          답글달기
-                        </Button>
-                      }
-                    </Box>
+                  {list.pic.length > 0 ?
+                    <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3}>
+                      {list.pic.map((image, index) =>
+                        <Box key={index}>
+                          <Button onClick={() => {
+                            setImages(list.pic);
+                            setImageOpen(true);
+                          }
+                          }
+                          >
+                            <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
+                          </Button>
+                        </Box>
+                      )}
+                    </Grid>
+                    : null}
+                  <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
+                    <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
                   </Grid>
-                </Grid>
+                  {list.reply ?
+                    <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }}>
+                      <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
+                      <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
+                      <Box style={{ position: 'absolute', right: 10, top: 10 }}>
+                        <IconButton
+                          onClick={() => deleteReviewHandler(list.it_id, list.wr_id)}
+                        >
+                          <HighlightOffIcon color='secondary' style={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Box>
+                    </Grid>
+                    : null}
+                </Paper>
               </Grid>
-              {list.pic.length > 0 ?
-                <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3}>
-                  {list.pic.map((image, index) =>
-                    <Box key={index}>
-                      <Button onClick={() => {
-                        setImages(list.pic);
-                        setImageOpen(true);
-                      }
-                      }
-                      >
-                        <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
-                      </Button>
-                    </Box>
-                  )}
-                </Grid>
-                : null}
-              <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
-                <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
-              </Grid>
-              {list.reply ?
-                <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }}>
-                  <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
-                  <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
-                  <Box style={{ position: 'absolute', right: 10, top: 10 }}>
-                    <IconButton
-                      onClick={() => deleteReviewHandler(list.it_id, list.wr_id)}
-                    >
-                      <HighlightOffIcon color='secondary' style={{ fontSize: 16 }} />
-                    </IconButton>
-                  </Box>
-                </Grid>
-                : null}
-            </Paper>
+            )}
           </Grid>
-        )}
+        }
         {lists.length === 0 || lists === null ?
           <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
             <Typography style={{ fontSize: 15 }}>등록된 리뷰가 없습니다.</Typography>
