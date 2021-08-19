@@ -6,6 +6,18 @@ import { koKR } from '@material-ui/core/locale';
 // import { ko } from 'date-fns/locale';
 
 export const theme = createTheme({
+  typography: {
+    fontFamily: [
+      'Noto Sans KR',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+    ].join(','),
+    h5: {
+      fontWeight: 'bold'
+    }
+  },
   breakpoints: {
     values: {
       xs: 0,
@@ -23,15 +35,15 @@ export const theme = createTheme({
       contrastText: '#222',
     },
     secondary: {
-      light: '#ffffff',
-      main: '#11052C',
-      dark: '#ccc5af',
+      light: '#444259',
+      main: '#1c1b30',
+      dark: '#000008',
       contrastText: '#fff',
     },
     info: {
-      light: '#CBE2B0',
-      main: '#222',
-      dark: '#21BF73',
+      light: '#66caa4',
+      main: '#309975',
+      dark: '#006a49',
       contrastText: '#fff'
     },
     success: {
@@ -39,11 +51,23 @@ export const theme = createTheme({
       main: '#9FE6A0',
       dark: '#21BF73',
       contrastText: '#222'
-    }
-    // text: {
-    //   primary: '#ffc739',
-    //   secondary: '#fff8e1'
-    // }
+    },
+    error: {
+      light: '#d04f3d',
+      main: '#991b15',
+      dark: '#640000',
+      contrastText: '#fff'
+    },
+    warning: {
+      light: '#586cca',
+      main: '#1c4299',
+      dark: '#001d6a',
+      contrastText: '#fff'
+    },
+    text: {
+      primary: '#222',
+      secondary: '#333',
+    },
   },
 }, koKR);
 
@@ -133,6 +157,9 @@ export const baseStyles = makeStyles({
     '& li': {
       padding: 0
     }
+  },
+  whiteBg: {
+    backgroundColor: '#fff'
   },
   loginInput: {
     width: '100%',
@@ -339,7 +366,6 @@ export const baseStyles = makeStyles({
     padding: theme.spacing(3),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-    marginBottom: 30,
     backgroundColor: '#fff',
     boxShadow: '0px 0px 10px 2px #f1f1f1 !important'
   },
