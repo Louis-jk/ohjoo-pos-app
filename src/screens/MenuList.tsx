@@ -140,7 +140,7 @@ export default function MenuList(props: any) {
               </Box>
               : null}
           </Grid>
-          <Box mt={10} display='flex' justifyContent='center' alignSelf="center">
+          <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
             <Stack spacing={2}>
               <Pagination
                 color="primary"
