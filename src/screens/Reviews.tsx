@@ -409,15 +409,26 @@ export default function Reviews(props: any) {
                     <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
                     <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
                     <Box style={{ position: 'absolute', right: 10, top: 10 }}>
-                      <Button
-                        color="primary"
-                        aria-label="button"
-                        startIcon={<AddCommentOutlinedIcon />}
-                        // style={{ color: theme.palette.primary.dark }}
-                        onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
-                      >
-                        답글달기
-                      </Button>
+                      {list.reply ?
+                        <Button
+                          color="primary"
+                          disabled
+                          aria-label="button"
+                          startIcon={<AddCommentOutlinedIcon />}
+                        >
+                          답글달기
+                        </Button>
+                        :
+                        <Button
+                          color="primary"
+                          aria-label="button"
+                          startIcon={<AddCommentOutlinedIcon />}
+                          // style={{ color: theme.palette.primary.dark }}
+                          onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
+                        >
+                          답글달기
+                        </Button>
+                      }
                     </Box>
                   </Grid>
                 </Grid>
