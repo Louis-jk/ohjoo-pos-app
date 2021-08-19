@@ -182,7 +182,13 @@ export default function OrderCheckModal(props: IProps) {
               InputProps={{
                 endAdornment: <InputAdornment position="end">분</InputAdornment>,
               }}
-              onChange={e => setDeliveryTime(e.target.value as string)}
+              onChange={e => {
+                const re = /^[0-9\b]+$/;
+                if (e.target.value === '' || re.test(e.target.value)) {
+                  let changed = e.target.value.replace(/(^0+)/, '');
+                  setDeliveryTime(changed);
+                }
+              }}
             />
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
               <ModalConfirmButton variant="contained" color="primary" style={{ boxShadow: 'none' }} onClick={checkOrderHandler}>보내기</ModalConfirmButton>
