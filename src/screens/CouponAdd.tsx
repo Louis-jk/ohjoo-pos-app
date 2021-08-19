@@ -348,10 +348,16 @@ export default function CouponAdd() {
                 } else {
                   const re = /^[0-9.\b]+$/;
                   if (e.target.value === '' || re.test(e.target.value)) {
-                    // let filtered = e.target.value.replace(/(^.\d)+$/, '0.');
-                    let changed = e.target.value.replace(/(^\d*[.]\d{3}$) | ([^0-9.]) |(^\d*[.]{2})/, '');
-                    // let changed = e.target.value.replace(/(^\d*[.]\d{3}$) | ([^0-9.]) |(^\d*[.]{2})/, '');
-                    setDiscountPrice(changed);
+                    let changed = e.target.value.replace(/(^0+)/, '');
+                    console.log(changed);
+                    console.log("changed type", typeof changed);
+                    let toNumValue = Number(changed);
+                    if (toNumValue > 99) {
+                      setToastState({ msg: '할인율은 100%이상 될 수 없습니다.', severity: 'error' });
+                      handleOpenAlert();
+                    } else {
+                      setDiscountPrice(changed);
+                    }
                   }
                 }
               }}
