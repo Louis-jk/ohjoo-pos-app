@@ -411,7 +411,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           ml: { sm: `${drawerWidth}px` },
           boxShadow: 'none',
           flex: 1,
-          backgroundColor: '#fff'
+          backgroundColor: '#fff',
+          borderBottom: '1px solid #ececec'
         }}
       >
         <Toolbar style={{

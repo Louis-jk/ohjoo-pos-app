@@ -238,7 +238,7 @@ export default function Tips(props: any) {
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
           {lists && lists.length > 0 &&
-            <Grid container spacing={3} style={{ minHeight: 550 }}>
+            <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) => (
                 <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }} alignContent='baseline'>
                   <IconButton
@@ -280,7 +280,7 @@ export default function Tips(props: any) {
             </Grid>
           }
           {lists.length === 0 || lists === null ?
-            <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
+            <Box style={{ display: 'flex', flex: 1, minHeight: 520, justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 쿠폰이 없습니다.</Typography>
             </Box>
             : null}

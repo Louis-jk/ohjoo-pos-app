@@ -392,7 +392,7 @@ export default function Reviews(props: any) {
 
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         {lists && lists.length > 0 &&
-          <Grid container spacing={3} style={{ minHeight: 550 }}>
+          <Grid container spacing={3} style={{ minHeight: 520 }}>
             {lists.map((list, index) =>
               <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} alignContent='baseline'>
                 <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
@@ -473,7 +473,7 @@ export default function Reviews(props: any) {
           </Grid>
         }
         {lists.length === 0 || lists === null ?
-          <Box style={{ display: 'flex', flex: 1, minHeight: 550, justifyContent: 'center', alignItems: 'center' }}>
+          <Box style={{ display: 'flex', flex: 1, minHeight: 520, justifyContent: 'center', alignItems: 'center' }}>
             <Typography style={{ fontSize: 15 }}>등록된 리뷰가 없습니다.</Typography>
           </Box>
           : null}
