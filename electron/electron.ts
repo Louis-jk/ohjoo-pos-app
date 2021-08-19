@@ -10,6 +10,7 @@ function createWindow() {
         width: 1024,
         height: 768,
         backgroundColor: 'white',
+        icon: path.join(app.getAppPath(), '/build/assets/icons/png/64x64.png'),
         webPreferences: {
             nodeIntegration: false,
             worldSafeExecuteJavaScript: true,
@@ -25,12 +26,11 @@ function createWindow() {
     // mainWindow.loadURL('https://localhost:3000/')
 
     // 개발자 툴 오픈
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-    shell.beep();
 }
 
 
