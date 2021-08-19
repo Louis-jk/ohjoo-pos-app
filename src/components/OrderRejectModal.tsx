@@ -200,12 +200,12 @@ export default function OrderRejectModal(props: IProps) {
       >
         <Fade in={props.isOpen}>
           <Box className={clsx(base.modalInner, base.colCenter)}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" className={base.modalTitle}>주문 거부 사유 등록</Typography>
+            <Typography id="transition-modal-title" component="h5" variant="h5" mb={1} className={base.modalTitle}>주문 거부 사유 등록</Typography>
             <Typography id="transition-modal-description">주문 거부 사유를 선택 또는 입력해주세요.</Typography>
             <Grid container spacing={1} style={{ margin: 20 }}>
               {rejectInitState.map((item, index) => (
                 <Grid key={index + item.label} item xs={6} md={4}>
-                  <Button variant="outlined" style={{ width: '100%', padding: 10, backgroundColor: rejectValue === item.value ? '#FCDD00' : '#fff', color: '#222', borderColor: rejectValue === item.value ? '#FCDD00' : '#e6e6e6' }} onClick={() => rejectHandler(item.value)}>{item.label}</Button>
+                  <Button variant="outlined" style={{ width: '100%', padding: 10, backgroundColor: rejectValue === item.value ? theme.palette.primary.main : '#fff', color: '#222', borderColor: rejectValue === item.value ? '#FCDD00' : '#e6e6e6' }} onClick={() => rejectHandler(item.value)}>{item.label}</Button>
                 </Grid>
               ))}
             </Grid>
