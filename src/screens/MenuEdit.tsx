@@ -533,6 +533,9 @@ export default function MenuEdit(props: IProps) {
                   multiline
                   rows={10}
                   defaultValue="메뉴 상세설명을 작성해주세요."
+                  InputLabelProps={{
+                    shrink: true
+                  }}
                   variant="outlined"
                   onChange={e => setDetails({
                     ...details,
@@ -635,11 +638,14 @@ export default function MenuEdit(props: IProps) {
                         label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
                         variant="outlined"
                         onChange={e => {
-                          setOptions(options => {
-                            const result = [...options];
-                            result[index].select[selectIndex].price = e.target.value as string;
-                            return result;
-                          })
+                          const re = /^[0-9\b]+$/;
+                          if (e.target.value === '' || re.test(e.target.value)) {
+                            setOptions(options => {
+                              const result = [...options];
+                              result[index].select[selectIndex].price = e.target.value;
+                              return result;
+                            })
+                          }
                         }}
                       />
                       <Button
@@ -749,11 +755,14 @@ export default function MenuEdit(props: IProps) {
                         label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
                         variant="outlined"
                         onChange={e => {
-                          setAddOptions(options => {
-                            const result = [...options];
-                            result[index].select[selectIndex].price = e.target.value as string;
-                            return result;
-                          })
+                          const re = /^[0-9\b]+$/;
+                          if (e.target.value === '' || re.test(e.target.value)) {
+                            setAddOptions(options => {
+                              const result = [...options];
+                              result[index].select[selectIndex].price = e.target.value;
+                              return result;
+                            })
+                          }
                         }}
                       />
                       <Button

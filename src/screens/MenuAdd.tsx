@@ -27,6 +27,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -418,7 +419,7 @@ export default function MenuAdd(props: any) {
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined" className={base.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">카테고리</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">카테고리 선택</InputLabel>
               <Select
                 value={category}
                 onChange={e => setCategory(e.target.value as string)}
@@ -439,6 +440,10 @@ export default function MenuAdd(props: any) {
                 label="메뉴명"
                 variant="outlined"
                 required
+                placeholder="메뉴명을 입력해주세요."
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setMenuName(e.target.value as string)}
               />
               <div className={base.mb30}></div>
@@ -447,12 +452,25 @@ export default function MenuAdd(props: any) {
                 label="기본설명"
                 variant="outlined"
                 required
+                placeholder="기본설명을 입력해주세요."
+                InputLabelProps={{
+                  shrink: true
+                }}
                 onChange={e => setMenuInfo(e.target.value as string)}
               />
               <div className={base.mb30}></div>
               <TextField
                 label="판매가격"
                 value={menuPrice}
+                variant="outlined"
+                required
+                placeholder="0"
+                InputLabelProps={{
+                  shrink: true
+                }}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">원</InputAdornment>,
+                }}
                 onChange={e => {
                   const re = /^[0-9\b]+$/;
                   if (e.target.value === '' || re.test(e.target.value)) {
@@ -460,8 +478,6 @@ export default function MenuAdd(props: any) {
                     setMenuPrice(changed);
                   }
                 }}
-                variant="outlined"
-                required
               />
               <div className={base.mb30}></div>
               <TextField
@@ -473,6 +489,9 @@ export default function MenuAdd(props: any) {
                 multiline
                 rows={10}
                 placeholder="메뉴 상세설명을 작성해주세요."
+                InputLabelProps={{
+                  shrink: true
+                }}
                 variant="outlined"
                 onChange={e => setMenuDescription(e.target.value as string)}
               />
@@ -572,11 +591,14 @@ export default function MenuAdd(props: any) {
                       label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
                       variant="outlined"
                       onChange={e => {
-                        setOptions(options => {
-                          const result = [...options];
-                          result[index].select[selectIndex].price = e.target.value as string;
-                          return result;
-                        })
+                        const re = /^[0-9\b]+$/;
+                        if (e.target.value === '' || re.test(e.target.value)) {
+                          setOptions(options => {
+                            const result = [...options];
+                            result[index].select[selectIndex].price = e.target.value;
+                            return result;
+                          })
+                        }
                       }}
                     />
                     <Button
@@ -687,11 +709,14 @@ export default function MenuAdd(props: any) {
                       label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
                       variant="outlined"
                       onChange={e => {
-                        setAddOptions(options => {
-                          const result = [...options];
-                          result[index].select[selectIndex].price = e.target.value as string;
-                          return result;
-                        })
+                        const re = /^[0-9\b]+$/;
+                        if (e.target.value === '' || re.test(e.target.value)) {
+                          setAddOptions(options => {
+                            const result = [...options];
+                            result[index].select[selectIndex].price = e.target.value;
+                            return result;
+                          })
+                        }
                       }}
                     />
                     <Button
