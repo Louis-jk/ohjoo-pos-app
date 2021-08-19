@@ -119,6 +119,7 @@ export default function StoreTimeTab01() {
           let flatArrSort = flatArr.sort();
           // console.log("flatArrSort", flatArrSort);
           setGetDays(flatArrSort);
+
           let stringifyValue = JSON.stringify(flatArrSort);
           setStringValue(stringifyValue);
 
@@ -236,10 +237,10 @@ export default function StoreTimeTab01() {
     getStoreTime();
   }, [mt_id, mt_jumju_code])
 
-  // console.log('====================================');
-  // console.log("strValue === ", strValue);
-  // console.log("checkArr === ", checkArr);
-  // console.log('====================================');
+  console.log('====================================');
+  console.log("strValue === ", strValue);
+  console.log("checkArr === ", checkArr);
+  console.log('====================================');
 
   return (
     isLoading ?
@@ -247,8 +248,8 @@ export default function StoreTimeTab01() {
         <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
       </Box>
       :
-      <section style={{ height: '100vh' }}>
-        <Box className={base.alert}>
+      <Box component='section'>
+        <Box className={base.alertStyle}>
           <Snackbar
             anchorOrigin={{
               vertical: 'top',
@@ -382,15 +383,19 @@ export default function StoreTimeTab01() {
 
         {
           strValue === checkArr ?
-            <Button disabled className={classes.button} style={{ height: 50 }} variant="contained" disableElevation>
-              저장하기
-            </Button>
+            (
+              <Button className={classes.button} variant="contained" style={{ height: 50 }} disableElevation disabled>
+                저장하기
+              </Button>
+            )
             :
-            <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={addStoreTime}>
-              저장하기
-            </Button>
+            (
+              <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={addStoreTime}>
+                저장하기
+              </Button>
+            )
         }
-      </section >
+      </Box>
 
   );
 }

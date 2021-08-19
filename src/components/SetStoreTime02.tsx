@@ -223,8 +223,8 @@ export default function StoreTimeTab01() {
         <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
       </Box>
       :
-      <section style={{ height: '100vh' }}>
-        <Box className={base.alert}>
+      <Box component='section'>
+        <Box className={base.alertStyle}>
           <Snackbar
             anchorOrigin={{
               vertical: 'top',
@@ -342,6 +342,6 @@ export default function StoreTimeTab01() {
           </Button>
         }
 
-      </section>
+      </Box>
   );
 }
