@@ -7,6 +7,12 @@ import OrderCard from '../components/OrderCard';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import orderAction from '../redux/actions';
+import appRuntime from '../appRuntime';
+
+// const { ipcRenderer } = window.require('electron');
+// const electron = window.require('electron');
+// const { ipcRenderer, remote } = require('electron');
+
 
 export default function OrderNew() {
 
@@ -16,6 +22,7 @@ export default function OrderNew() {
   const { newOrder } = useSelector((state: any) => state.order);
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
+
 
   const getOrderListHandler = () => {
 
@@ -51,6 +58,12 @@ export default function OrderNew() {
   }, [mt_id, mt_jumju_code, newOrder]);
 
 
+  const onClick = () => {
+    // ipcRenderer.send('print', 'hello');
+    appRuntime.send('print', 'hello');
+  }
+
+
   return (
 
     <Box component="div" className={base.root}>
@@ -58,6 +71,7 @@ export default function OrderNew() {
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <OrderCard orders={list} type="new" />
 
+        <button onClick={onClick}>ㅌㅔ스트</button>
       </MainBox>
     </Box>
 

@@ -1,21 +1,18 @@
-// import { ipcRenderer, contextBridge } from 'electron';
+const { contextBridge, ipcRenderer } = require("electron");
 
-// contextBridge.exposeInMainWorld('electron', {
-//     notificationApi: {
-//       sendNotification(message) {
-//         ipcRenderer.send('notify', message);
-//       }
-//     },
-//     batteryApi: {
-  
-//     },
-//     filesApi: {
-  
-//     }
-//   })
+contextBridge.exposeInMainWorld("appRuntime", {
+  send: (channel: string, data: any) => {
+    ipcRenderer.send(channel, data);
+  },
+  on: (channel: string, data: any) => {
+    ipcRenderer.on(channel, data);
+  },
+  subscribe: (channel: string, listener: any) => {
+    const subscription = (event: any, ...args: any) => listener(...args);
+    ipcRenderer.on(channel, subscription);
 
-window.addEventListener('DOMContentLoaded', () => {
-
-})
-
-export {}
+    return () => {
+      ipcRenderer.removeListener(channel, subscription);
+    };
+  },
+});

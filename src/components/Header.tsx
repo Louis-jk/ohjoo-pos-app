@@ -57,6 +57,7 @@ import { MaterialUISwitch } from './MaterialUISwitch';
 import Logo from '../assets/images/logo.png';
 import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
 import Api from '../Api';
+import appRuntime from '../appRuntime';
 
 const drawerWidth = 180;
 interface OptionalProps {
@@ -264,6 +265,14 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     }
   };
 
+  // 프린트 정보
+  const openPrint = () => {
+    appRuntime.send('openPrint', 'print info?');
+    appRuntime.on('printInfo', (event: any, data: any) => {
+      console.log("print info data ::", data);
+    })
+  }
+
   // 메뉴 드로어
   const drawer = (
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
@@ -451,12 +460,17 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
               ?
-              <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
-                <Badge badgeContent={closedStore ? closedStore.length : 0} color="secondary">
-                  <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#222' }} />
-                </Badge>
-                <Typography ml={1}>영업일시정지</Typography>
-              </Button>
+              <>
+                <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openPrint}>
+                  <Typography ml={1}>프린터 설정</Typography>
+                </Button>
+                <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
+                  <Badge badgeContent={closedStore ? closedStore.length : 0} color="secondary">
+                    <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#222' }} />
+                  </Badge>
+                  <Typography ml={1}>영업일시정지</Typography>
+                </Button>
+              </>
               : null}
             {props.detail === 'order_new' ?
               <Box>
