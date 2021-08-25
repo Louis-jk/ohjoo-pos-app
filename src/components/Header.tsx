@@ -101,7 +101,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     setCurPathName(slice);
   }, [location])
 
-
+  // 프린트 모달
   const [printOpen, setPrintOpen] = React.useState(false);
   const openPrintModal = () => {
     setPrintOpen(true);
@@ -409,7 +409,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   return (
     <Box>
-      <PrintModal isOpen={printOpen} isClose={closePrintModal} />
+      <PrintModal type='print' isOpen={printOpen} isClose={closePrintModal} />
       <CloseStoreModal isOpen={closeStoreModalOpen} isClose={closeCloseStoreModal} />
 
       {/* 상단 매장명, 각종 버튼 헤더 */}

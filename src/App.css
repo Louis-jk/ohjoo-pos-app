@@ -109,3 +109,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #ffa000; 
 }
+
+@media print {
+  .print_no_area {display: none;}
+}
