@@ -27,7 +27,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 
 import OrderPrint from './ComponentToPrint';
-
+import appRuntime from "../appRuntime";
+import { PosPrinter, PosPrintData, PosPrintOptions } from "electron-pos-printer";
 
 const PrintModal = (props: any) => {
   const { mt_store } = useSelector((state: any) => state.login);
@@ -37,9 +38,26 @@ const PrintModal = (props: any) => {
 
   // 프린트 출력 부분
   const componentRef = React.useRef(null);
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current
-  });
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current
+  // });
+
+  const data: PosPrintData[] = [
+    {
+      type: 'text',
+      value: 'SAMPLE HEADING',
+      style: `text-align:center;`,
+      css: { "font-weight": "700", "font-size": "18px" }
+    }
+  ]
+
+  const handlePrint = () => {
+    console.log("OrderPrint", componentRef.current);
+    // appRuntime.send('printTest', JSON.stringify(data));
+    // appRuntime.send('printTest', JSON.stringify(data));
+    appRuntime.send('printFin', 'test');
+  }
+
 
   return mt_store && order && product && store && (
     <>

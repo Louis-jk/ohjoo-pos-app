@@ -20,7 +20,7 @@ const OrderPrint = React.forwardRef<HTMLDivElement>((props, ref) => {
   const { order, product, store } = useSelector((state: any) => state.orderDetail);
 
   return mt_store && order && product && store && (
-    <Box ref={ref} display="block" width="80mm" height="100%" overflow="auto" zIndex={99999} p={3} style={{ backgroundColor: '#fff' }}>
+    <Box id="print_box" ref={ref} display="block" width="80mm" height="100%" overflow="auto" zIndex={99999} p={3} style={{ backgroundColor: '#fff' }}>
       <Box>
       </Box>
       <Typography textAlign="center" fontWeight="bold" component="h5" variant="h5" mb={2}>오늘의 주문</Typography>

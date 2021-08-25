@@ -1,5 +1,6 @@
-import { app, BrowserWindow, Menu, ipcMain, ipcRenderer, MessageChannelMain, BrowserView, Notification, shell } from 'electron';
+import { app, BrowserWindow, Menu, clipboard, ipcMain, ipcRenderer } from 'electron';
 import * as path from 'path';
+import { PosPrinter, PosPrintData, PosPrintOptions } from "electron-pos-printer";
 
 let mainWindow: Electron.BrowserWindow | null;
 // declare global {
@@ -40,15 +41,25 @@ function createWindow() {
         mainWindow = null;
     });
 
-    const contents = mainWindow.webContents;
-    console.log("electron contents ::", contents);
-    const printer = contents.getPrinters();
-    console.log("electron printer ::", printer);
+    // const contents = mainWindow.webContents;
+    // console.log("electron contents ::", contents);
+    // const printer = contents.getPrinters();
+    // console.log("electron printer ::", printer);
 
 }
 
 // 브라우저 메뉴창 없애기
 Menu.setApplicationMenu(null);
+
+// const contents = mainWindow.webContents;
+// contents.on('did-finish-load', () => {
+//   let code = `var promise = Promise.resolve(document.getElementById('print_box').innerHTML);
+//               promise.then(data => data).catch(err => console.error('promise error:', err))`;
+//     contents.executeJavaScript(code, true)
+//     .then((result) => {
+//       console.log('innerHtml result ::', result);
+//     }).catch(err => console.error('result error : ', err));
+// })
 
 // 프린트 정보 보내기
 // ipcRenderer.send('test', 'ping');
@@ -82,6 +93,39 @@ ipcMain.on('print', (event, data) => {
     }
     )
 });
+
+// 프린트 테스트
+const options: PosPrintOptions = {
+  preview: true,
+  silent: false,
+  width: '170px',       
+  margin: '0 0 0 0',    
+  copies: 1,
+  printerName: 'EPSON_L6190_Series',
+  timeOutPerLine: 2000,
+  pageSize: { height: 301000, width: 71000 } // page size
+}
+
+
+ipcMain.on('printTest', (event, arg) => {
+  // mainWindow.webContents.print({})
+  // console.log('printTest Data::', data);
+  // mainWindow.webContents.print(data);
+  // let html = mainWindow.loadURL(data);
+  // console.log("data ::", JSON.parse(arg));
+
+  let data = JSON.parse(arg);
+
+  PosPrinter.print(data, options).then(() => {}).catch((error: any) => console.error('print error :: ', error));
+})
+
+ipcMain.on('printFin', (event, arg) => {
+  // console.log("arg ?", arg);
+  clipboard.writeHTML('<b>Test</b>');
+  const html = clipboard.readHTML();
+  console.log("html ?", html);
+  mainWindow.webContents.print(html);
+})
 
 ipcMain.handle('quit-app', () => {
   app.quit();
