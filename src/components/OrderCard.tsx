@@ -100,12 +100,12 @@ export default function OrderCard(props: OrderProps) {
       <Grid xs={12} key={order.od_id + index}>
         {/* <Link to={`/details/${order.od_id}`}> */}
         <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1}>
-          <Box flex={1} display="flex" flexDirection="column" justifyContent="center" alignItems="center" mr={1}>
+          <Box flex={1} style={{ minWidth: 155 }} display="flex" flexDirection="column" justifyContent="center" alignItems="center" mr={1}>
             <Typography mb={0.3}>주문일시</Typography>
             <Typography style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD(dd)')}</Typography>
             <Typography fontSize={34} fontWeight='bold' style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('HH:mm')}</Typography>
           </Box>
-          <Box flex={3} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center">
+          <Box flex={7} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center">
             <Box>
               <Typography fontSize={18} fontWeight="bold" mb={1}>[메뉴] {order.od_good_name}</Typography>
               <Box display="flex" flexDirection="row" mb={1}>
@@ -116,24 +116,24 @@ export default function OrderCard(props: OrderProps) {
               <Typography style={{ margin: 0 }}>{order.od_addr3}</Typography>
             </Box>
           </Box>
-          <Divider />
-
-          {/* <ButtonGroup variant="text" color="info" style={{ color: theme.palette.info.contrastText }} aria-label="text primary button group">
-            <Button variant='contained' style={{ color: theme.palette.info.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
-            {
-              type === 'new' ?
-                <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
-                : type === 'check' ?
-                  <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id)}>배달처리</Button>
-                  : null
-            }
-            {
-              type === 'new' ?
-                <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
-                : type === 'check' ?
-                  <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
-                  : null}
-          </ButtonGroup> */}
+          <Box flex={type === 'new' || type === 'check' ? 3 : 1}>
+            <ButtonGroup variant="text" color="primary" style={{ color: theme.palette.info.contrastText }} aria-label="text primary button group">
+              <Button variant='contained' style={{ backgroundColor: '#edecf3', color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
+              {
+                type === 'new' ?
+                  <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
+                  : type === 'check' ?
+                    <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id)}>배달처리</Button>
+                    : null
+              }
+              {
+                type === 'new' ?
+                  <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
+                  : type === 'check' ?
+                    <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
+                    : null}
+            </ButtonGroup>
+          </Box>
         </Box>
         <Divider style={{ marginTop: 20 }} />
       </Grid >
@@ -152,7 +152,7 @@ export default function OrderCard(props: OrderProps) {
         </Box>
       </>
       :
-      <Box style={{ display: 'flex', flex: 1, height: '80vh', justifyContent: 'center', alignItems: 'center' }}>
+      <Box style={{ display: 'flex', flex: 1, height: 'calc(100vh - 112px)', justifyContent: 'center', alignItems: 'center' }}>
         <Typography>{type === 'new' ? '신규 ' : type === 'check' ? '접수완료된 ' : type === 'delivery' ? '배달중인 ' : type === 'done' ? '배달완료된 ' : null}주문이 없습니다.</Typography>
       </Box>
   )

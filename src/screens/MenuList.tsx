@@ -103,9 +103,11 @@ export default function MenuList(props: any) {
     <Box component="div" className={base.root}>
       <Header type="menu" />
       {isLoading ?
-        <Box className={base.loadingWrap}>
-          <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
-        </Box>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box className={base.loadingWrap}>
+            <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
+          </Box>
+        </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
@@ -138,7 +140,7 @@ export default function MenuList(props: any) {
             </Grid>
           }
           {lists.length === 0 || lists === null ?
-            <Box style={{ display: 'flex', flex: 1, minHeight: 520, justifyContent: 'center', alignItems: 'center' }}>
+            <Box style={{ display: 'flex', flex: 1, height: 'calc(100vh - 160px)', justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 메뉴가 없습니다.</Typography>
             </Box>
             : null}

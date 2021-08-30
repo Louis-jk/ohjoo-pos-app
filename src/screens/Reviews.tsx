@@ -26,6 +26,7 @@ import Alert from '@material-ui/core/Alert';
 import Stack from '@material-ui/core/Stack';
 import Rating from '@material-ui/core/Rating';
 import Pagination from '@material-ui/core/Pagination';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Material icons
 import AddCommentOutlinedIcon from '@material-ui/icons/AddCommentOutlined';
@@ -63,6 +64,7 @@ export default function Reviews(props: any) {
   const base = baseStyles();
   const { mt_id, mt_jumju_code, mt_store } = useSelector((state: any) => state.login);
 
+  const [isLoading, setLoading] = React.useState(false);
   const [rate, setRate] = useState({}); // 별점
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
@@ -88,7 +90,10 @@ export default function Reviews(props: any) {
     setOpenAlert(false);
   };
 
+  //  리뷰 가져오기
   const getReviewListHandler = () => {
+
+    setLoading(true);
 
     const param = {
       bo_table: 'review',
@@ -113,9 +118,11 @@ export default function Reviews(props: any) {
       if (resultItem.result === 'Y') {
         setRate(arrItems.rate);
         setLists(arrItems.review);
+        setLoading(false);
       } else {
         setRate({});
         setLists([]);
+        setLoading(false);
       }
     });
   };
@@ -389,114 +396,121 @@ export default function Reviews(props: any) {
         </Fade>
       </Modal>
       {/* // 답글 삭제 모달 */}
-
-      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
-        {lists && lists.length > 0 &&
-          <Grid container spacing={3} style={{ minHeight: 520 }}>
-            {lists.map((list, index) =>
-              <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} alignContent='baseline'>
-                <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
-                  <Grid className={base.flexRow} alignItems='center'>
-                    <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
-                    <Grid className={base.flexColumn}>
-                      <Grid className={base.flexRow}>
-                        <Grid className={base.title}>
-                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
-                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
-                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
+      {isLoading ?
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box className={base.loadingWrap}>
+            <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
+          </Box>
+        </MainBox>
+        :
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          {lists && lists.length > 0 &&
+            <Grid container spacing={3} style={{ minHeight: 520 }}>
+              {lists.map((list, index) =>
+                <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} alignContent='baseline'>
+                  <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
+                    <Grid className={base.flexRow} alignItems='center'>
+                      <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
+                      <Grid className={base.flexColumn}>
+                        <Grid className={base.flexRow}>
+                          <Grid className={base.title}>
+                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
+                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
+                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid className={base.title} style={{ display: 'flex', alignItems: 'center' }}>
+                          <Rating name="half-rating-read" size="small" value={Number(list.rating)} readOnly />
+                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
+                          <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
+                          <Box style={{ position: 'absolute', right: 10, top: 10 }}>
+                            {list.reply ?
+                              <Button
+                                color="primary"
+                                disabled
+                                aria-label="button"
+                                startIcon={<AddCommentOutlinedIcon />}
+                              >
+                                답글달기
+                              </Button>
+                              :
+                              <Button
+                                color="primary"
+                                aria-label="button"
+                                startIcon={<AddCommentOutlinedIcon />}
+                                // style={{ color: theme.palette.primary.dark }}
+                                onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
+                              >
+                                답글달기
+                              </Button>
+                            }
+                          </Box>
                         </Grid>
                       </Grid>
-                      <Grid className={base.title} style={{ display: 'flex', alignItems: 'center' }}>
-                        <Rating name="half-rating-read" size="small" value={Number(list.rating)} readOnly />
-                        <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
-                        <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
+                    </Grid>
+                    {list.pic.length > 0 ?
+                      <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3}>
+                        {list.pic.map((image, index) =>
+                          <Box key={index}>
+                            <Button onClick={() => {
+                              setImages(list.pic);
+                              setImageOpen(true);
+                            }
+                            }
+                            >
+                              <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
+                            </Button>
+                          </Box>
+                        )}
+                      </Grid>
+                      : null}
+                    <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
+                      <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
+                    </Grid>
+                    {list.reply ?
+                      <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }}>
+                        <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
+                        <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
                         <Box style={{ position: 'absolute', right: 10, top: 10 }}>
-                          {list.reply ?
-                            <Button
-                              color="primary"
-                              disabled
-                              aria-label="button"
-                              startIcon={<AddCommentOutlinedIcon />}
-                            >
-                              답글달기
-                            </Button>
-                            :
-                            <Button
-                              color="primary"
-                              aria-label="button"
-                              startIcon={<AddCommentOutlinedIcon />}
-                              // style={{ color: theme.palette.primary.dark }}
-                              onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
-                            >
-                              답글달기
-                            </Button>
-                          }
+                          <IconButton
+                            onClick={() => deleteReviewHandler(list.it_id, list.wr_id)}
+                          >
+                            <HighlightOffIcon color='secondary' style={{ fontSize: 16 }} />
+                          </IconButton>
                         </Box>
                       </Grid>
-                    </Grid>
-                  </Grid>
-                  {list.pic.length > 0 ?
-                    <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3}>
-                      {list.pic.map((image, index) =>
-                        <Box key={index}>
-                          <Button onClick={() => {
-                            setImages(list.pic);
-                            setImageOpen(true);
-                          }
-                          }
-                          >
-                            <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
-                          </Button>
-                        </Box>
-                      )}
-                    </Grid>
-                    : null}
-                  <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
-                    <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
-                  </Grid>
-                  {list.reply ?
-                    <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }}>
-                      <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
-                      <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
-                      <Box style={{ position: 'absolute', right: 10, top: 10 }}>
-                        <IconButton
-                          onClick={() => deleteReviewHandler(list.it_id, list.wr_id)}
-                        >
-                          <HighlightOffIcon color='secondary' style={{ fontSize: 16 }} />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                    : null}
-                </Paper>
-              </Grid>
-            )}
-          </Grid>
-        }
-        {lists.length === 0 || lists === null ?
-          <Box style={{ display: 'flex', flex: 1, minHeight: 520, justifyContent: 'center', alignItems: 'center' }}>
-            <Typography style={{ fontSize: 15 }}>등록된 리뷰가 없습니다.</Typography>
-          </Box>
-          : null}
-        {totalCount ?
-          <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
-            <Stack spacing={2}>
-              <Pagination
-                color="primary"
-                count={totalCount}
-                defaultPage={1}
-                showFirstButton
-                showLastButton
-                onChange={pageHandleChange}
-                page={currentPage}
-              />
-              {/* 
+                      : null}
+                  </Paper>
+                </Grid>
+              )}
+            </Grid>
+          }
+          {lists.length === 0 || lists === null ?
+            <Box style={{ display: 'flex', flex: 1, height: 'calc(100vh - 160px)', justifyContent: 'center', alignItems: 'center' }}>
+              <Typography style={{ fontSize: 15 }}>등록된 리뷰가 없습니다.</Typography>
+            </Box>
+            : null}
+          {totalCount ?
+            <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+              <Stack spacing={2}>
+                <Pagination
+                  color="primary"
+                  count={totalCount}
+                  defaultPage={1}
+                  showFirstButton
+                  showLastButton
+                  onChange={pageHandleChange}
+                  page={currentPage}
+                />
+                {/* 
                 토탈 페이지수 = count
                 초기 페이지 번호 = defaultPage
               */}
-            </Stack>
-          </Box>
-          : null}
-      </MainBox>
+              </Stack>
+            </Box>
+            : null}
+        </MainBox>
+      }
     </Box>
   );
 }

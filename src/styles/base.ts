@@ -32,7 +32,7 @@ export const theme = createTheme({
       light: '#ffe082',
       main: '#ffc739',
       dark: '#ffa000',
-      contrastText: '#222',
+      contrastText: '#1c1b30',
     },
     secondary: {
       light: '#444259',
@@ -76,7 +76,12 @@ export const MainBox = styled(Box)({
   marginTop: 35,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginTop: 65
+    marginTop: 64,
+    minHeight: 'calc(100vh - 112px)',
+    height: 'calc(100% - 112px)',
+    backgroundColor: '#fff',
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15
     // backgroundColor: theme.palette.primary.main,
   },
 });
@@ -170,7 +175,7 @@ export const baseStyles = makeStyles({
   loadingWrap: {
     display: 'flex', 
     flex: 1, 
-    height: '100vh', 
+    height: 'calc(100vh - 160px)',
     justifyContent: 'center', 
     alignItems: 'center'
   },

@@ -1,5 +1,6 @@
 body {
   -webkit-overflow-scrolling: touch !important;
+  background-color: #1c1b30;
 }
 .App {
   /* text-align: center; */

@@ -389,9 +389,11 @@ export default function Tips(props: any) {
       </Modal>
       {/* 배달팁 삭제 모달 */}
       {isLoading ?
-        <Box className={base.loadingWrap}>
-          <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
-        </Box>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box className={base.loadingWrap}>
+            <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
+          </Box>
+        </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
@@ -472,7 +474,7 @@ export default function Tips(props: any) {
             </Grid>
           }
           {lists.length === 0 || lists === null ?
-            <Box style={{ display: 'flex', flex: 1, minHeight: 520, justifyContent: 'center', alignItems: 'center' }}>
+            <Box style={{ display: 'flex', flex: 1, height: 'calc(100vh - 160px)', justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 배달팁이 없습니다.</Typography>
             </Box>
             : null}

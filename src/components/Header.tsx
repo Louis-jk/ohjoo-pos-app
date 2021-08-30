@@ -78,7 +78,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const location = useLocation();
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
-  const { mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
+  const { id: mt_store_id, mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
   const { allStore, closedStore } = useSelector((state: any) => state.store);
   const { newOrder, checkOrder, deliveryOrder, doneOrder } = useSelector((state: any) => state.order);
   const { selectType } = useSelector((state: any) => state.menuContr);
@@ -430,8 +430,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           ml: { sm: `${drawerWidth}px` },
           boxShadow: 'none',
           flex: 1,
-          backgroundColor: '#fff',
-          borderBottom: '1px solid #ececec'
+          backgroundColor: theme.palette.secondary.main
         }}
       >
         <Toolbar style={{
@@ -453,7 +452,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               || props.detail === 'order_new' || props.detail === 'order_check' || props.detail === 'order_delivery' || props.detail === 'order_done'
               ?
               <IconButton
-                color="inherit"
+                style={{ color: '#fff' }}
                 aria-label="open drawer"
                 edge="start"
                 onClick={() => history.goBack()}
@@ -462,9 +461,14 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <ArrowBackIcon />
               </IconButton>
               : null}
-            <Typography noWrap fontSize='1.3rem' fontWeight="bold">
-              {mt_store}
-            </Typography>
+            <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='baseline'>
+              <Typography noWrap fontSize='1.3rem' fontWeight="bold" style={{ color: '#fff' }} mr={0.3}>
+                {mt_store}
+              </Typography>
+              <Typography fontSize={13} style={{ color: '#fff' }}>
+                {closedStore.find((store: any) => store === mt_store_id) ? '(일시정지중)' : null}
+              </Typography>
+            </Box>
           </Box>
           <Box className={base.flexRowStartCenter}>
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
@@ -474,24 +478,24 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 {/* <Button variant='outlined' color='secondary' style={{ borderWidth: 2 }}>
                   <Typography>매장설정</Typography>
                 </Button> */}
-                <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
-                  <Badge badgeContent={closedStore ? closedStore.length : 0} color="secondary">
-                    <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#222' }} />
+                <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
+                  <Badge badgeContent={closedStore ? closedStore.length : 0} color="primary">
+                    <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#fff' }} />
                   </Badge>
                   <Typography ml={1}>영업일시정지</Typography>
                 </Button>
               </>
               : null}
             {props.detail === 'order_new' ?
-              <Box>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={props.action}>
-                  접수처리
+              <Box style={{ marginRight: 20 }}>
+                <Button variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                  <Typography color='secondary'>접수처리</Typography>
                 </Button>
-                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action02}>
-                  거부처리
+                <Button variant='outlined' style={{ borderWidth: 2, marginRight: 20 }} onClick={props.action02}>
+                  <Typography color='primary'>거부처리</Typography>
                 </Button>
                 <IconButton
-                  color="secondary"
+                  color="primary"
                   aria-label="list"
                   component="span"
                   onClick={handlePrint02}
@@ -504,14 +508,14 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               </Box>
               : props.detail === 'order_check' ?
                 <Box>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} startIcon={<DoneIcon />} onClick={props.action}>
-                    배달처리
+                  <Button variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                    <Typography color='secondary'>배달처리</Typography>
                   </Button>
-                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} startIcon={<CloseIcon />} onClick={props.action02}>
-                    취소처리
+                  <Button variant='outlined' style={{ borderWidth: 2, marginRight: 20 }} onClick={props.action02}>
+                    <Typography color='primary'>취소처리</Typography>
                   </Button>
                   <IconButton
-                    color="secondary"
+                    color="primary"
                     aria-label="list"
                     component="span"
                     onClick={handlePrint02}
@@ -522,10 +526,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                     <OrderPrint ref={componentRef} />
                   </Box> */}
                 </Box>
-                : props.detail === 'order_delivery' ?
-                  <Box>
+                : props.detail === 'order_delivery' || props.detail === 'order_done' ?
+                  <Box style={{ marginRight: 20 }}>
                     <IconButton
-                      color="secondary"
+                      color="primary"
                       aria-label="list"
                       component="span"
                       onClick={handlePrint02}
@@ -536,53 +540,39 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                       <OrderPrint ref={componentRef} />
                     </Box> */}
                   </Box>
-                  : props.detail === 'order_done' ?
-                    <Box>
-                      <IconButton
-                        color="secondary"
-                        aria-label="list"
-                        component="span"
-                        onClick={handlePrint02}
-                      >
-                        <PrintIcon />
-                      </IconButton>
-                      {/* <Box style={{ display: 'none' }}>
-                        <OrderPrint ref={componentRef} />
-                      </Box> */}
-                    </Box>
-                    : props.type === 'menu' ?
-                      <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={() => history.push('/menu_add')}>
-                        메뉴 추가하기
+                  : props.type === 'menu' ?
+                    <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={() => history.push('/menu_add')}>
+                      <Typography variant='body1' fontSize={16} fontWeight='bold'>메뉴 추가하기</Typography>
+                    </Button>
+                    : props.type === 'menuAdd' ?
+                      <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                        <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                       </Button>
-                      : props.type === 'menuAdd' ?
-                        <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
-                          등록하기
+                      : props.type === 'menuEdit' ?
+                        <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                          <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                         </Button>
-                        : props.type === 'menuEdit' ?
-                          <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
-                            수정하기
+                        : props.type === 'category' ?
+                          <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                            <Typography variant='body1' fontSize={16} fontWeight='bold'>카테고리 추가하기</Typography>
                           </Button>
-                          : props.type === 'category' ?
-                            <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
-                              카테고리 추가하기
+                          : props.type === 'coupon' ?
+                            <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={() => history.push('/coupon_add')}>
+                              <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                             </Button>
-                            : props.type === 'coupon' ?
-                              <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={() => history.push('/coupon_add')}>
-                                등록하기
+                            : props.type === 'couponAdd' ?
+                              <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                                <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
                               </Button>
-                              : props.type === 'couponAdd' ?
-                                <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
-                                  저장하기
+                              : props.type === 'tips' ?
+                                <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                                  <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                                 </Button>
-                                : props.type === 'tips' ?
-                                  <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
-                                    등록하기
+                                : props.type === 'storeInfo' ?
+                                  <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                                    <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
                                   </Button>
-                                  : props.type === 'storeInfo' ?
-                                    <Button style={{ padding: '10px 20px', marginRight: 10, backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={props.action}>
-                                      저장하기
-                                    </Button>
-                                    : null}
+                                  : null}
             {/* <IconButton
               color="info"
               aria-label="list"
@@ -591,8 +581,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             >
               <AppsIcon />
             </IconButton> */}
-            <Button variant='outlined' color='secondary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
-              <Typography>매장선택</Typography>
+            <Button variant='outlined' color='primary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
+              <Typography color='primary'>매장선택</Typography>
             </Button>
           </Box>
         </Toolbar>

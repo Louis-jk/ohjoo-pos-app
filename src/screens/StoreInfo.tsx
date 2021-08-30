@@ -202,9 +202,11 @@ export default function StoreInfo(props: IProps) {
         </Snackbar>
       </Box>
       {isLoading ?
-        <Box className={base.loadingWrap}>
-          <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
-        </Box>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box className={base.loadingWrap}>
+            <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
+          </Box>
+        </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Box mt={3} />
