@@ -1,4 +1,5 @@
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer, remote } = require("electron");
+const { PosPrinter } = remote.require("electron-pos-printer");
 
 contextBridge.exposeInMainWorld("appRuntime", {
   send: (channel: string, data: any) => {
@@ -15,4 +16,10 @@ contextBridge.exposeInMainWorld("appRuntime", {
       ipcRenderer.removeListener(channel, subscription);
     };
   },
+  printer: (channel: string, data: any) => {
+    ipcRenderer.send(channel, data);
+  },
+  printer01: (data: any[], options: any) => new Promise((res: Function, fail: Function) => {
+    PosPrinter.print(data, options);
+  }).then(() => {}).catch(err => console.log(err))
 });
