@@ -8,26 +8,26 @@ let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-      // titleBarStyle: 'hidden',
-      // frame: false,
+      titleBarStyle: 'hidden',
+      frame: false,
       resizable: false,
-      // autoHideMenuBar: true,
+      autoHideMenuBar: true,
       width: 1024,
       height: 768,
       backgroundColor: 'white',
-      icon: path.join(app.getAppPath(), '/build/assets/icons/png/64x64.png'),
+      icon: path.join(app.getAppPath(), '/build/icons/png/64x64.png'),
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true, 
         enableRemoteModule: true, 
-        preload: path.resolve(__dirname, 'preload.js'),
+        preload: path.join(app.getAppPath(), '/build/preload.js'),
       }
     });
 
-    mainWindow.loadFile(path.join(app.getAppPath(), 'index.html'));
+    mainWindow.loadFile(path.join(app.getAppPath(), '/build/index.html'));
     
     // 기본 메뉴 숨기기
-    // mainWindow.setMenuBarVisibility(false);
+    mainWindow.setMenuBarVisibility(false);
     
     // mainWindow.loadURL('https://localhost:3000/')
 
@@ -37,13 +37,6 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-
-    // 프린터 가져오기
-    // const contents = mainWindow.webContents;
-    // // console.log("electron contents ::", contents);
-    // const printer = contents.getPrinters();
-    // console.log("electron printer ::", printer);
-
 }
 
 // 브라우저 메뉴창 없애기
