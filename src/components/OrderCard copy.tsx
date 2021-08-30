@@ -97,15 +97,15 @@ export default function OrderCard(props: OrderProps) {
 
   const renderList = (): JSX.Element[] => {
     return orders.map((order, index) =>
-      <Grid xs={12} key={order.od_id + index}>
+      <Grid xs={12} key={order.od_id + index} border={1} borderColor="#ececec" m={1} p={0} >
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1}>
-          <Box flex={1} display="flex" flexDirection="column" justifyContent="center" alignItems="center" mr={1}>
-            <Typography mb={0.3}>주문일시</Typography>
-            <Typography style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD(dd)')}</Typography>
-            <Typography fontSize={34} fontWeight='bold' style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('HH:mm')}</Typography>
-          </Box>
-          <Box flex={3} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center">
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2} style={{ background: theme.palette.primary.main }}>
+          <Typography style={{ margin: 0, fontWeight: 'bold' }}>{order.mb_company}</Typography>
+          <Typography style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD / a h:mm')}</Typography>
+        </Box>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1} px={2}>
+          <Box display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center" px={1}>
+            <img src={order.store_logo} style={{ width: 80, height: 80, marginRight: 20 }} alt="오늘의 주문 로고" />
             <Box>
               <Typography fontSize={18} fontWeight="bold" mb={1}>[메뉴] {order.od_good_name}</Typography>
               <Box display="flex" flexDirection="row" mb={1}>
@@ -118,7 +118,7 @@ export default function OrderCard(props: OrderProps) {
           </Box>
           <Divider />
 
-          {/* <ButtonGroup variant="text" color="info" style={{ color: theme.palette.info.contrastText }} aria-label="text primary button group">
+          <ButtonGroup variant="text" color="info" style={{ color: theme.palette.info.contrastText }} aria-label="text primary button group">
             <Button variant='contained' style={{ color: theme.palette.info.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
             {
               type === 'new' ?
@@ -133,9 +133,10 @@ export default function OrderCard(props: OrderProps) {
                 : type === 'check' ?
                   <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
                   : null}
-          </ButtonGroup> */}
+          </ButtonGroup>
+
         </Box>
-        <Divider style={{ marginTop: 20 }} />
+        {/* </Link> */}
       </Grid >
     )
   }

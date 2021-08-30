@@ -2,6 +2,7 @@ import * as loginAction from './loginAction';
 import * as orderAction from './orderAction';
 import * as orderDetailAction from './orderDetailAction';
 import * as storeAction from './storeAction';
+import * as menuControlAction from './menuControlAction';
 // import * as idxAction from './idxAction';
 // import * as gpsAction from './gpsAction';
 // import * as sconfAction from './sconfAction';
@@ -16,6 +17,7 @@ const ActionCreators = Object.assign(
   orderAction,
   orderDetailAction,
   storeAction,
+  menuControlAction
   // idxAction,
   // gpsAction,
   // sconfAction,

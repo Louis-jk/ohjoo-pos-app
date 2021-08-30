@@ -58,22 +58,12 @@ export default function OrderNew() {
   }, [mt_id, mt_jumju_code, newOrder]);
 
 
-  const onClick = () => {
-    // ipcRenderer.send('print', 'hello');
-    appRuntime.send('print', 'hello');
-  }
-
-
   return (
-
     <Box component="div" className={base.root}>
       <Header />
       <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
         <OrderCard orders={list} type="new" />
-
-        <button onClick={onClick}>ㅌㅔ스트</button>
       </MainBox>
     </Box>
-
   );
 }

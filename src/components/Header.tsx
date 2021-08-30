@@ -8,6 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
@@ -28,6 +29,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import FormGroup from '@material-ui/core/FormGroup';
 import Badge from '@material-ui/core/Badge';
+import Fade from '@material-ui/core/Fade';
 
 // Material icons
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
@@ -52,8 +54,8 @@ import PrintModal from './PrintModal';
 import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
 import orderAction from '../redux/actions';
+import menuControlAction from '../redux/actions';
 import { theme, baseStyles } from '../styles/base';
-import { MaterialUISwitch } from './MaterialUISwitch';
 import Logo from '../assets/images/logo.png';
 import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
 import Api from '../Api';
@@ -79,6 +81,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const { mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
   const { allStore, closedStore } = useSelector((state: any) => state.store);
   const { newOrder, checkOrder, deliveryOrder, doneOrder } = useSelector((state: any) => state.order);
+  const { selectType } = useSelector((state: any) => state.menuContr);
 
   const [storeListOpen, setStoreListOpen] = React.useState(false); // 매장 선택 드로어  
   const [value, setValue] = React.useState(''); // 매장 선택 값
@@ -119,8 +122,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const logout = async () => {
     try {
       await dispatch(storeAction.closedStore([]));
-      localStorage.removeItem('userAccount');
-      localStorage.removeItem('ohjooStoreToken');
+      await localStorage.removeItem('userAccount');
+      await localStorage.removeItem('ohjooStoreToken');
+      await dispatch(menuControlAction.updateMenuSelect('order'));
+      await history.push('/order_new');
       await history.push('/login');
     } catch (err) {
       console.log('로그아웃 중 에러발생', err);
@@ -273,98 +278,103 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     })
   }
 
+  const menuControlHandler = (payload: string) => {
+    dispatch(menuControlAction.updateMenuSelect(payload));
+    if (payload === 'order') {
+      history.push('order_new');
+    } else {
+      history.push('set_storetime');
+    }
+  }
+
   // 메뉴 드로어
   const drawer = (
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
-      <Toolbar style={{ backgroundColor: theme.palette.secondary.main }} sx={{ marginBottom: 3 }}>
-        <img src={Logo} alt="오늘의주문" style={{ width: 130 }} />
+      <Toolbar style={{ backgroundColor: theme.palette.secondary.main }}>
+        {/* <img src={Logo} alt="오늘의주문" style={{ width: 130 }} /> */}
+        <ButtonGroup variant="contained" color="primary" style={{ width: '100%' }} aria-label="text primary button group">
+          <Button onClick={() => menuControlHandler('order')} style={{ background: selectType === 'order' ? '#ffc739' : '#444259' }}>
+            <Typography style={{ color: selectType === 'order' ? '#1c1b30' : '#ffc739' }}>주문</Typography>
+          </Button>
+          <Button onClick={() => menuControlHandler('store')} style={{ background: selectType === 'store' ? '#ffc739' : '#444259' }}>
+            <Typography style={{ color: selectType === 'store' ? '#1c1b30' : '#ffc739' }}>매장</Typography>
+          </Button>
+        </ButtonGroup>
       </Toolbar>
-      <List sx={{ padding: 0 }}>
-        <ListItem button component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <Badge badgeContent={newOrder.length} color="primary" >
-              <ListAltOutlinedIcon />
-            </Badge>
-          </ListItemIcon>
-          <ListItemText primary="신규주문" />
-        </ListItem>
-        <ListItem button component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <Badge badgeContent={checkOrder.length} color="primary">
-              <PlaylistAddCheckOutlinedIcon />
-            </Badge>
-          </ListItemIcon>
-          <ListItemText primary="접수완료" />
-        </ListItem>
-        <ListItem button component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <Badge badgeContent={deliveryOrder.length} color="primary">
-              <DeliveryDiningOutlinedIcon />
-            </Badge>
-          </ListItemIcon>
-          <ListItemText primary="배달중" />
-        </ListItem>
-        <ListItem button component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <Badge badgeContent={doneOrder.length} color="primary">
-              <FileDownloadDoneOutlinedIcon />
-            </Badge>
-          </ListItemIcon>
-          <ListItemText primary="배달완료" />
-        </ListItem>
-      </List>
-      <Divider />
-      <List sx={{ padding: 0 }}>
-        <ListItem button component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <AccessTimeOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="영업일 및 휴무일" />
-        </ListItem>
-        <ListItem button component={Link} to='/caculate' style={{ color: curPathName === 'caculate' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'caculate' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'caculate' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <CalculateOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="정산내역" />
-        </ListItem>
-        <ListItem button component={Link} to='/category' style={{ color: curPathName === 'category' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'category' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'category' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <MenuOpenOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="카테고리" />
-        </ListItem>
-        <ListItem button component={Link} to='/menu' style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <RestaurantMenuOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="메뉴관리" />
-        </ListItem>
-        <ListItem button component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <ConfirmationNumberOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="쿠폰관리" />
-        </ListItem>
-        <ListItem button component={Link} to='/tips' style={{ color: curPathName === 'tips' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'tips' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'tips' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <InfoOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="배달팁" />
-        </ListItem>
-        <ListItem button component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <StorefrontOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="매장소개" />
-        </ListItem>
-        <ListItem button component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? '#fff' : 'transparent' }}>
-          <ListItemIcon sx={{ minWidth: 35 }} style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText }}>
-            <RateReviewOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="리뷰관리" />
-        </ListItem>
-      </List>
-    </div>
+      {selectType === 'order' ?
+        <List className={base.orderMenuWrap} sx={{ padding: 0 }}>
+          <ListItem className={base.orderMenu} component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? '#fff' : 'transparent' }}>
+            <Typography component='label' variant='body1' style={{ color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' : (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : '#fff' }}>신규주문</Typography>
+            <Typography className='count' component='h3' variant='h4' style={{ color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' : (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : '#fff' }}>{newOrder.length > 99 ? '99+' : newOrder.length}</Typography>
+          </ListItem>
+          <ListItem className={base.orderMenu} component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? '#fff' : 'transparent' }}>
+            <Typography component='label' variant='body1' style={{ color: (checkOrder.length > 0 && curPathName !== 'order_check' && props.detail !== 'order_check') ? '#ffc739' : (checkOrder.length > 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : (checkOrder.length == 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : '#fff' }}>접수완료</Typography>
+            <Typography className='count' component='h3' variant='h4' style={{ color: (checkOrder.length > 0 && curPathName !== 'order_check' && props.detail !== 'order_check') ? '#ffc739' : (checkOrder.length > 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : (checkOrder.length == 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : '#fff' }}>{checkOrder.length > 99 ? '99+' : checkOrder.length}</Typography>
+          </ListItem>
+          <ListItem className={base.orderMenu} component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? '#fff' : 'transparent' }}>
+            <Typography component='label' variant='body1' style={{ color: (deliveryOrder.length > 0 && curPathName !== 'order_delivery' && props.detail !== 'order_delivery') ? '#ffc739' : (deliveryOrder.length > 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : (deliveryOrder.length == 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : '#fff' }}>배달중</Typography>
+            <Typography className='count' component='h3' variant='h4' style={{ color: (deliveryOrder.length > 0 && curPathName !== 'order_delivery' && props.detail !== 'order_delivery') ? '#ffc739' : (deliveryOrder.length > 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : (deliveryOrder.length == 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : '#fff' }}>{deliveryOrder.length > 99 ? '99+' : deliveryOrder.length}</Typography>
+          </ListItem>
+          <ListItem className={base.orderMenu} component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? '#fff' : 'transparent' }}>
+            <Typography component='label' variant='body1' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>배달완료</Typography>
+            <Typography className='count' component='h3' variant='h4' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>{doneOrder.length > 99 ? '99+' : doneOrder.length}</Typography>
+          </ListItem>
+        </List>
+        :
+        selectType === 'store' ?
+          <List className={base.orderMenuWrap02} sx={{ padding: 0 }}>
+            <ListItem className={base.orderMenu02} component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <AccessTimeOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>영업일 및 휴무일</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/caculate' style={{ color: curPathName === 'caculate' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'caculate' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <CalculateOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>정산내역</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/category' style={{ color: curPathName === 'category' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'category' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <MenuOpenOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>카테고리</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/menu' style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <RestaurantMenuOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>메뉴관리</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <ConfirmationNumberOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>쿠폰관리</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/tips' style={{ color: curPathName === 'tips' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'tips' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <InfoOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>배달팁</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <StorefrontOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>매장소개</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <RateReviewOutlinedIcon />
+                <Typography component='label' variant='body1' ml={1}>리뷰관리</Typography>
+              </Box>
+            </ListItem>
+          </List>
+          : null
+      }
+    </div >
   );
 
   // 매장 선택 드로어
@@ -461,9 +471,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
               ?
               <>
-                <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openPrint}>
-                  <Typography ml={1}>프린터 설정</Typography>
-                </Button>
+                {/* <Button variant='outlined' color='secondary' style={{ borderWidth: 2 }}>
+                  <Typography>매장설정</Typography>
+                </Button> */}
                 <Button color="primary" style={{ color: theme.palette.primary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
                   <Badge badgeContent={closedStore ? closedStore.length : 0} color="secondary">
                     <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#222' }} />
@@ -573,14 +583,17 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                                       저장하기
                                     </Button>
                                     : null}
-            <IconButton
+            {/* <IconButton
               color="info"
               aria-label="list"
               component="span"
               onClick={handleStoreDrawerToggle}
             >
               <AppsIcon />
-            </IconButton>
+            </IconButton> */}
+            <Button variant='outlined' color='secondary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
+              <Typography>매장선택</Typography>
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

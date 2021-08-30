@@ -6,6 +6,7 @@ import loginReducer from './loginReducer';
 import OrderDetailReducer from './OrderDetailReducer';
 import allStoreReducer from './allStoreReducer';
 import orderReducer from './orderReducer';
+import menuControl from './menuControl';
 // import indexReducer from './indexReducer';
 // import gpsReducer from './gpsReducer';
 // import sconfReducer from './sconfReducer';
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   orderDetail: OrderDetailReducer,
   store: allStoreReducer,
   order: orderReducer,
+  menuContr: menuControl
   // index: indexReducer,
   // gps: gpsReducer,
   

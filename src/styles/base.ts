@@ -174,6 +174,40 @@ export const baseStyles = makeStyles({
     justifyContent: 'center', 
     alignItems: 'center'
   },
+  orderMenuWrap: {
+    display: 'grid',
+    gridTemplateRows: '1fr 1fr 1fr 1fr',
+    height: 'calc(100vh - 64px)',
+    // paddingLeft: '15px !important'
+  },
+  orderMenu: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center !important',
+    alignItems: 'center',
+    width: '80%',
+    borderTopLeftRadius: '15px !important',
+    borderBottomLeftRadius: '15px !important',
+  },
+  count: {
+   
+  },
+  orderMenuWrap02: {
+    display: 'grid',
+    gridTemplateRows: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+    height: 'calc(100vh - 64px)',
+    // paddingLeft: '15px !important'
+  },
+  orderMenu02: {
+    textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center !important',
+    alignItems: 'flex-start !important',
+    width: '80%',
+    borderTopLeftRadius: '15px !important',
+    borderBottomLeftRadius: '15px !important',
+  },
   flexRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -421,4 +455,13 @@ export const baseStyles = makeStyles({
       marginTop: theme.spacing(2),
     },
   },
+  printModal: {
+    display: 'block',
+    width: '80mm',
+    height: '160mm',
+    overflow: 'auto',
+    padding: 30,
+    zIndex: 99999,
+    backgroundColor: '#fff'
+  }
 });
