@@ -78,17 +78,17 @@
       "target": [
         "default"
       ],
-      "icon": "build/assets/icons/mac/icon.icns"
+      "icon": "build/icons/mac/icon.icns"
     },
     "dmg": {
       "title": "오늘의주문-점주용",
-      "icon": "build/assets/icons/mac/icon.icns"
+      "icon": "build/icons/mac/icon.icns"
     },
     "win": {
       "target": [
         "nsis"
       ],
-      "icon": "build/assets/icons/win/icon.ico"
+      "icon": "build/icons/win/icon.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -96,7 +96,7 @@
       "createDesktopShortcut": true,
       "perMachine": true,
       "language": 1042,
-      "installerIcon": "build/assets/icons/win/icon.ico",
+      "installerIcon": "build/icons/win/icon.ico",
       "shortcutName": "오늘의주문-점주용",
       "artifactName": "오늘의주문-점주용-${version}.${ext}",
       "uninstallDisplayName": "오늘의주문-점주용"
