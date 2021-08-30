@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
+import clsx from 'clsx';
 
 // Material UI Components
 import AppBar from '@material-ui/core/AppBar';
@@ -30,12 +31,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import FormGroup from '@material-ui/core/FormGroup';
 import Badge from '@material-ui/core/Badge';
 import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+
 
 // Material icons
-import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
-import PlaylistAddCheckOutlinedIcon from '@material-ui/icons/PlaylistAddCheckOutlined';
-import DeliveryDiningOutlinedIcon from '@material-ui/icons/DeliveryDiningOutlined';
-import FileDownloadDoneOutlinedIcon from '@material-ui/icons/FileDownloadDoneOutlined';
 import AccessTimeOutlinedIcon from '@material-ui/icons/AccessTimeOutlined';
 import CalculateOutlinedIcon from '@material-ui/icons/CalculateOutlined';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
@@ -55,7 +55,7 @@ import storeAction from '../redux/actions';
 import loginAction from '../redux/actions';
 import orderAction from '../redux/actions';
 import menuControlAction from '../redux/actions';
-import { theme, baseStyles } from '../styles/base';
+import { theme, baseStyles, ModalConfirmButton, ModalCancelButton } from '../styles/base';
 import Logo from '../assets/images/logo.png';
 import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
 import Api from '../Api';
@@ -287,6 +287,19 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     }
   }
 
+  // 윈도우 닫기 핸들러
+  const [winCloseModalOpen, setWinCloseModalOpen] = React.useState(false);
+  const windowCloseHandler = () => {
+    setWinCloseModalOpen(true);
+
+  }
+  const cancelWinCloseHandler = () => {
+    setWinCloseModalOpen(false);
+  }
+  const onCloseWinCloseHandler = () => {
+    appRuntime.send('window-close', 'close');
+  }
+
   // 메뉴 드로어
   const drawer = (
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
@@ -422,6 +435,32 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       <PrintModal type='print' isOpen={printOpen} isClose={closePrintModal} />
       <CloseStoreModal isOpen={closeStoreModalOpen} isClose={closeCloseStoreModal} />
 
+      {/* 윈도우 닫기 컨펌 모달 */}
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={base.modal}
+        open={winCloseModalOpen}
+        // onClose={props.isClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={winCloseModalOpen}>
+          <Box className={clsx(base.modalInner, base.colCenter)}>
+            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>프로그램 종료</Typography>
+            <Typography id="transition-modal-description" mb={2}>프로그램을 종료하시겠습니까?</Typography>
+            <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={onCloseWinCloseHandler}>네, 종료하기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={cancelWinCloseHandler}>아니요</ModalCancelButton>
+            </ButtonGroup>
+          </Box>
+        </Fade>
+      </Modal>
+      {/* // 윈도우 닫기 컨펌 모달 */}
+
       {/* 상단 매장명, 각종 버튼 헤더 */}
       <AppBar
         position="fixed"
@@ -436,7 +475,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         <Toolbar style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          paddingRight: 0
         }}>
           <IconButton
             color="inherit"
@@ -584,6 +624,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Button variant='outlined' color='primary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
               <Typography color='primary'>매장선택</Typography>
             </Button>
+            <IconButton onClick={windowCloseHandler} style={{ marginLeft: 20 }}>
+              <CloseIcon style={{ color: '#fff' }} />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>

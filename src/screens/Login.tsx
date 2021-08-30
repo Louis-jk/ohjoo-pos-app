@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 // Material UI Components
-import { Box, Typography, TextField, FormControlLabel, Checkbox, IconButton } from '@material-ui/core';
+import { Box, Typography, TextField, FormControlLabel, Checkbox, IconButton, Button } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+
+// Material UI Icons
+import CloseIcon from '@material-ui/icons/Close';
 
 // Local Component
 import Logo from '../assets/images/logo_bk.png';
@@ -13,6 +16,7 @@ import Api from '../Api';
 import loginAction from '../redux/actions';
 import { getToken, onMessageListener } from '../firebaseConfig';
 import { LoginContainer, baseStyles, LoginButton } from '../styles/base';
+import appRuntime from '../appRuntime';
 
 interface State {
   email: string;
@@ -117,64 +121,73 @@ export default function Login() {
     getToken(setToken);
   }, [])
 
-  console.log('token', token);
-  console.log('values', values);
+  // 윈도우 닫기 핸들러
+  const windowCloseHandler = () => {
+    appRuntime.send('window-close', 'close');
+  }
 
   return (
-    <LoginContainer component="section">
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 20, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
-        <img src={Logo} alt="오늘의 주문 로고" style={{ width: 150, marginBottom: 30 }} />
-        {/* <Typography variant="h6">로그인</Typography> */}
-        <Box mb={2} style={{ minWidth: 300 }}>
-          <TextField
-            value={values.email}
-            label="아이디"
-            variant="outlined"
-            className={base.loginInput}
-            onChange={handleChange('email')}
-          />
-        </Box>
-
-        <Box mb={2} style={{ minWidth: 300 }}>
-          <TextField
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            label="패스워드"
-            variant="outlined"
-            className={base.loginInput}
-            onChange={handleChange('password')}
-            InputProps={{
-              endAdornment: <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {values.showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            }}
-          />
-        </Box>
-
-        <LoginButton
-          variant="contained"
-          className={base.w100}
-          onClick={onLoginHandler}
-        >
-          로그인
-        </LoginButton>
-
-        <FormControlLabel
-          value="end"
-          style={{ marginTop: 20 }}
-          control={<Checkbox color="primary" />}
-          checked={values.isAutoLogin ? true : false}
-          label="자동로그인"
-          labelPlacement="end"
-          onClick={handleClickAutoLogin}
-        />
+    <>
+      <Box style={{ position: 'absolute', top: 0, right: 0 }}>
+        <IconButton onClick={windowCloseHandler}>
+          <CloseIcon />
+        </IconButton>
       </Box>
-    </LoginContainer>
 
+      <LoginContainer component="section">
+        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 20, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
+          <img src={Logo} alt="오늘의 주문 로고" style={{ width: 150, marginBottom: 30 }} />
+          {/* <Typography variant="h6">로그인</Typography> */}
+          <Box mb={2} style={{ minWidth: 300 }}>
+            <TextField
+              value={values.email}
+              label="아이디"
+              variant="outlined"
+              className={base.loginInput}
+              onChange={handleChange('email')}
+            />
+          </Box>
+
+          <Box mb={2} style={{ minWidth: 300 }}>
+            <TextField
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password}
+              label="패스워드"
+              variant="outlined"
+              className={base.loginInput}
+              onChange={handleChange('password')}
+              InputProps={{
+                endAdornment: <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              }}
+            />
+          </Box>
+
+          <LoginButton
+            variant="contained"
+            className={base.w100}
+            onClick={onLoginHandler}
+          >
+            로그인
+          </LoginButton>
+
+          <FormControlLabel
+            value="end"
+            style={{ marginTop: 20 }}
+            control={<Checkbox color="primary" />}
+            checked={values.isAutoLogin ? true : false}
+            label="자동로그인"
+            labelPlacement="end"
+            onClick={handleClickAutoLogin}
+          />
+        </Box>
+      </LoginContainer>
+    </>
   )
 }

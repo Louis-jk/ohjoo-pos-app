@@ -8,9 +8,10 @@ let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-      titleBarStyle: 'hidden',
-      frame: false,
-      autoHideMenuBar: true,
+      // titleBarStyle: 'hidden',
+      // frame: false,
+      resizable: false,
+      // autoHideMenuBar: true,
       width: 1024,
       height: 768,
       backgroundColor: 'white',
@@ -26,12 +27,12 @@ function createWindow() {
     mainWindow.loadFile(path.join(app.getAppPath(), 'index.html'));
     
     // 기본 메뉴 숨기기
-    mainWindow.setMenuBarVisibility(false);
+    // mainWindow.setMenuBarVisibility(false);
     
     // mainWindow.loadURL('https://localhost:3000/')
 
     // 개발자 툴 오픈
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -47,6 +48,10 @@ function createWindow() {
 
 // 브라우저 메뉴창 없애기
 Menu.setApplicationMenu(null);
+
+ipcMain.on('window-close', (event, data) => {
+  app.quit();
+})
 
 // 프린트 정보 열기
 ipcMain.on('openPrint', (event, data) => {
