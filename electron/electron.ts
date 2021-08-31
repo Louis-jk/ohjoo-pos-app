@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, ipcMain, Notification} from 'electron';
 import * as path from 'path';
 const fs = require('fs');
 const os = require('os');
+const url = require('url')
 
 let mainWindow: Electron.BrowserWindow | null;
 
@@ -26,6 +27,11 @@ function createWindow() {
     });
 
     mainWindow.loadFile(path.join(app.getAppPath(), '/index.html'));
+    // mainWindow.loadURL(url.format({
+    //   pathname: path.join(__dirname, '/index.html'),
+    //   protocol: 'file:',
+    //   slashes: true
+    // }));
     
     // 기본 메뉴 숨기기
     mainWindow.setMenuBarVisibility(false);
