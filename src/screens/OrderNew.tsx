@@ -7,7 +7,6 @@ import OrderCard from '../components/OrderCard';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import orderAction from '../redux/actions';
-import appRuntime from '../appRuntime';
 
 // const { ipcRenderer } = window.require('electron');
 // const electron = window.require('electron');
