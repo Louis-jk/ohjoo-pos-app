@@ -1,8 +1,7 @@
-import { app, BrowserWindow, Menu, ipcMain} from 'electron';
+import { app, BrowserWindow, Menu, ipcMain, Notification} from 'electron';
 import * as path from 'path';
 const fs = require('fs');
 const os = require('os');
-
 
 let mainWindow: Electron.BrowserWindow | null;
 
@@ -14,17 +13,19 @@ function createWindow() {
       autoHideMenuBar: true,
       width: 1024,
       height: 768,
-      backgroundColor: 'white',
+      backgroundColor: '#2e2c29',
+      kiosk: false, // 키오스크 모드(실행시 전체 화면 fixed)
+      title: '오늘의주문',
       icon: path.join(app.getAppPath(), '/build/icons/png/64x64.png'),
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true, 
         enableRemoteModule: true, 
-        preload: path.join(app.getAppPath(), '/build/preload.js'),
+        preload: path.join(app.getAppPath(), '/preload.js'),
       }
     });
 
-    mainWindow.loadFile(path.join(app.getAppPath(), '/build/index.html'));
+    mainWindow.loadFile(path.join(app.getAppPath(), '/index.html'));
     
     // 기본 메뉴 숨기기
     mainWindow.setMenuBarVisibility(false);
@@ -32,7 +33,7 @@ function createWindow() {
     // mainWindow.loadURL('https://localhost:3000/')
 
     // 개발자 툴 오픈
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -41,6 +42,17 @@ function createWindow() {
 
 // 브라우저 메뉴창 없애기
 Menu.setApplicationMenu(null);
+
+const NOTIFICATION_TITLE = '김치볶음밥 주문왔어요!';
+const NOTIFICATION_BODY = '옵션: 김치 추가';
+
+ipcMain.on('notification', (event, data) => {
+  console.log('notification data ::', data);
+  new Notification({
+    title: NOTIFICATION_TITLE,
+    body: NOTIFICATION_BODY
+  }).show();
+})
 
 ipcMain.on('window-close', (event, data) => {
   app.quit();
