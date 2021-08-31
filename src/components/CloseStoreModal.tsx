@@ -9,19 +9,13 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
-import Grid from '@material-ui/core/Grid';
 import { styled } from '@material-ui/core/styles';
 import Switch, { SwitchProps } from '@material-ui/core/Switch';
 
 // Local Component
 import { theme, baseStyles, ModalCancelButton } from '../styles/base';
 import storeAction from '../redux/actions';
+import Api from '../Api';
 
 interface IProps {
   isOpen: boolean;
@@ -36,22 +30,80 @@ export default function CloseStoreModal(props: IProps) {
 
   const base = baseStyles();
   const dispatch = useDispatch();
+  const { mt_jumju_key } = useSelector((state: any) => state.login);
   const { allStore, closedStore } = useSelector((state: any) => state.store);
   const [closeId, setCloseId] = React.useState<string[]>([]); // 매장 영업중지 테스트 상태관리
 
-  const setCloseStoreHandler = (id: string) => {
 
-    const filtered = closeId.find(closeId => closeId === id);
+  // 등록된 스토어 가져오기
+  const getStoreHandler = () => {
+    const param = {
+      jumju_id: mt_jumju_key,
+      item_count: 0,
+      limit_count: 10
+    };
 
-    if (filtered) {
-      const removeObj = closeId.filter(closeId => closeId !== id);
-      setCloseId(removeObj);
-      dispatch(storeAction.closedStore(removeObj));
+    Api.send('store_jumju', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+      console.log("store list result ", resultItem);
+      console.log("store list", arrItems);
+      if (resultItem.result === 'Y') {
+        console.log('등록된 스토어 가져오기 success', arrItems);
+        dispatch(dispatch(storeAction.updateStore(arrItems)));
+      } else {
+        console.log('등록된 스토어 가져오기 failed', arrItems);
+        dispatch(dispatch(storeAction.updateStore([])));
+      }
+
+    });
+  };
+
+  // 일시정지 핸들러
+  const setCloseStoreHandler = (id: string, s_id: string, s_jumju_code: string) => {
+
+    console.log('s_id', s_id);
+    console.log('s_jumju_code', s_jumju_code);
+
+    const checked = allStore.filter((store: any) => store.mt_id === s_id).filter((state: any) => state.do_end_state === 'Y');
+    console.log('checked ?', checked);
+    let state = '';
+    if (checked.length > 0) {
+      state = 'N'; // 일시중지
     } else {
-      let result = closeId.concat(id);
-      setCloseId(result);
-      dispatch(storeAction.closedStore(result));
+      state = 'Y'; // 영업중
     }
+
+    const param = {
+      jumju_id: s_id,
+      jumju_code: s_jumju_code,
+      do_end_state: state
+    };
+
+    Api.send('store_close', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("일시정지 API success?", arrItems);
+        getStoreHandler();
+      } else {
+        console.log("일시정지 faild?", arrItems);
+        getStoreHandler();
+      }
+    });
+
+    // const filtered = closeId.find(closeId => closeId === id);
+
+    // if (filtered) {
+    //   const removeObj = closeId.filter(closeId => closeId !== id);
+    //   setCloseId(removeObj);
+    //   dispatch(storeAction.closedStore(removeObj));
+    // } else {
+    //   let result = closeId.concat(id);
+    //   setCloseId(result);
+    //   dispatch(storeAction.closedStore(result));
+    // }
   }
 
   // console.log("closeId", closeId);
@@ -124,16 +176,16 @@ export default function CloseStoreModal(props: IProps) {
                   py={0.5}
                   style={{
                     borderRadius: 5,
-                    backgroundColor: closedStore.find((id: string) => id === store.id) ? '#F8485E' : '#9FE6A0',
-                    color: closedStore.find((id: string) => id === store.id) ? '#fff' : '#564A4A',
+                    backgroundColor: store.do_end_state === 'N' ? '#F8485E' : '#9FE6A0',
+                    color: store.do_end_state === 'N' ? '#fff' : '#564A4A',
                     transition: '.2s ease-in',
                   }}
                 >
-                  {closedStore.find((id: string) => id === store.id) ? '정지중' : '영업중'}
+                  {store.do_end_state === 'N' ? '정지중' : '영업중'}
                 </Typography>
               </Box>
               <Box flexShrink={1}>
-                <Android12Switch color="primary" onChange={() => setCloseStoreHandler(store.id)} checked={closedStore.find((id: string) => id === store.id) ? false : true} />
+                <Android12Switch color="primary" onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} checked={store.do_end_state === 'N' ? false : true} />
               </Box>
             </Box>
           ))
