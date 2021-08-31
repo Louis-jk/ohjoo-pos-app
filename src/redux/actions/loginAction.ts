@@ -9,6 +9,7 @@ export function updateLogin(data: string) {
     id: args.id ? args.id : null, // add
     mt_id: args.mt_id,
     mt_jumju_code: args.mt_jumju_code,
+    mt_jumju_key: args.mt_jumju_key,
     mt_name: args.mt_name,
     mt_nickname: args.mt_nickname,
     mt_hp: args.mt_hp,

@@ -8,6 +8,7 @@ const defaultState = {
   id: '', 
   mt_id: '',
   mt_jumju_code: '',
+  mt_jumju_key: '',
   mt_name: '',
   mt_nickname: '',
   mt_hp: '',
@@ -37,6 +38,7 @@ const loginReducer = (state: loginState = defaultState, action: any) => {
       id: action.id, // add
       mt_id: action.mt_id,
       mt_jumju_code: action.mt_jumju_code,
+      mt_jumju_key: action.mt_jumju_key,
       mt_name: action.mt_name,
       mt_nickname: action.mt_nickname,
       mt_hp: action.mt_hp,
