@@ -21,11 +21,11 @@ function createWindow() {
         nodeIntegration: false,
         contextIsolation: true, 
         enableRemoteModule: true, 
-        preload: path.join(app.getAppPath(), '/preload.js'),
+        preload: path.join(app.getAppPath(), '/build/preload.js'),
       }
     });
 
-    mainWindow.loadFile(path.join(app.getAppPath(), '/index.html'));
+    mainWindow.loadFile(path.join(app.getAppPath(), '/build/index.html'));
     
     // 기본 메뉴 숨기기
     mainWindow.setMenuBarVisibility(false);
