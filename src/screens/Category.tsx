@@ -175,7 +175,7 @@ export default function SetCategory(props: any) {
     const filter = (element: any) => element.ca_name === name;
     let filtered = lists.some(filter);
 
-    console.log("filtered ?", filtered);
+    // console.log("filtered ?", filtered);
 
     if (filtered) {
       setToastState({ msg: '이미 등록된 카테고리명입니다.', severity: 'error' });
