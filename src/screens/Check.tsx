@@ -79,7 +79,7 @@ export default function Check() {
 
 
   return (
-    <Box className={base.loadingWrap} style={{ flexDirection: 'column', backgroundColor: theme.palette.primary.main }}>
+    <Box className={base.loadingWrap} style={{ flexDirection: 'column', backgroundColor: theme.palette.primary.main, height: '100vh' }}>
       <CircularProgress disableShrink color="secondary" style={{ width: 50, height: 50, marginBottom: 20 }} />
       <Typography style={{ color: theme.palette.primary.contrastText }}>체크중</Typography>
     </Box>
