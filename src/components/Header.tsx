@@ -46,6 +46,7 @@ import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import RateReviewOutlinedIcon from '@material-ui/icons/RateReviewOutlined';
 import LogoutOutlinedIcon from '@material-ui/icons/LogoutOutlined';
 import StopCircleOutlinedIcon from '@material-ui/icons/StopCircleOutlined';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import StoreIcon from '@material-ui/icons/Store';
 
 // Local Component
@@ -300,6 +301,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     appRuntime.send('window-close', 'close');
   }
 
+  const sendNotify = () => {
+    appRuntime.send('notification', 'test');
+  }
+
   // 메뉴 드로어
   const drawer = (
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
@@ -476,7 +481,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          paddingRight: 0
+          paddingRight: 0,
+          paddingLeft: 0
         }}>
           <IconButton
             color="inherit"
@@ -502,29 +508,31 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               </IconButton>
               : null}
             <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='baseline'>
-              <Typography noWrap fontSize='1.3rem' fontWeight="bold" style={{ color: '#fff' }} mr={0.3}>
-                {mt_store}
-              </Typography>
-              <Typography fontSize={13} style={{ color: '#fff' }}>
-                {closedStore.find((store: any) => store === mt_store_id) ? '(일시정지중)' : null}
-              </Typography>
+              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                {allStore && allStore.filter((store: any) => store.mt_id === mt_id).find((state: any) => state.do_end_state === 'N') ?
+                  <StopCircleOutlinedIcon style={{ color: '#F8485E', marginRight: 5 }} />
+                  :
+                  <RadioButtonCheckedIcon style={{ color: '#9FE6A0', marginRight: 5 }} />
+                }
+                <Typography noWrap fontSize='1.3rem' fontWeight="bold" style={{ color: '#fff' }} mr={0.3}>
+                  {mt_store}
+                </Typography>
+              </Box>
             </Box>
           </Box>
+          {/* <Box>
+            <Button variant='contained' color='primary' onClick={sendNotify}>NOTIFICATION</Button>
+          </Box> */}
           <Box className={base.flexRowStartCenter}>
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
               ?
-              <>
-                {/* <Button variant='outlined' color='secondary' style={{ borderWidth: 2 }}>
-                  <Typography>매장설정</Typography>
-                </Button> */}
-                <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
-                  <Badge badgeContent={closedStore ? closedStore.length : 0} color="primary">
-                    <StopCircleOutlinedIcon style={{ color: closedStore && closedStore.length > 0 ? '#F8485E' : '#fff' }} />
-                  </Badge>
-                  <Typography ml={1}>영업일시정지</Typography>
-                </Button>
-              </>
+              <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
+                <Badge badgeContent={allStore ? allStore.filter((state: any) => state.do_end_state === 'N').length : 0} color="primary">
+                  <StopCircleOutlinedIcon style={{ color: allStore && allStore.filter((state: any) => state.do_end_state === 'N').length > 0 ? '#F8485E' : '#fff' }} />
+                </Badge>
+                <Typography ml={0.5}>영업일시정지</Typography>
+              </Button>
               : null}
             {props.detail === 'order_new' ?
               <Box style={{ marginRight: 20 }}>
