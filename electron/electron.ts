@@ -2,13 +2,17 @@ import { app, BrowserWindow, Menu, ipcMain, Notification} from 'electron';
 import * as path from 'path';
 const fs = require('fs');
 const os = require('os');
-const url = require('url')
+const url = require('url');
+const { setup: setupPushReceiver } = require('electron-push-receiver');
 
 let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-      titleBarStyle: 'hidden',
+      titleBarStyle: 'customButtonsOnHover',
+      roundedCorners: false,
+      vibrancy: 'fullscreen-ui',
+      transparent: true,
       frame: false,
       resizable: false,
       autoHideMenuBar: true,
@@ -16,6 +20,7 @@ function createWindow() {
       height: 768,
       backgroundColor: '#2e2c29',
       kiosk: false, // 키오스크 모드(실행시 전체 화면 fixed)
+      center: true,
       title: '오늘의주문',
       icon: path.join(app.getAppPath(), '/build/icons/png/64x64.png'),
       webPreferences: {
@@ -26,20 +31,20 @@ function createWindow() {
       }
     });
 
-    mainWindow.loadFile(path.join(app.getAppPath(), '/index.html'));
-    // mainWindow.loadURL(url.format({
-    //   pathname: path.join(__dirname, '/index.html'),
-    //   protocol: 'file:',
-    //   slashes: true
-    // }));
+    let indexPath;
+    indexPath = url.format({
+      protocol: 'file:',
+      pathname: path.join(app.getAppPath(), '/index.html'),
+      slashes: true
+    })
+    mainWindow.loadURL( indexPath );
+    setupPushReceiver(mainWindow.webContents);
     
     // 기본 메뉴 숨기기
     mainWindow.setMenuBarVisibility(false);
-    
-    // mainWindow.loadURL('https://localhost:3000/')
 
     // 개발자 툴 오픈
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -48,17 +53,6 @@ function createWindow() {
 
 // 브라우저 메뉴창 없애기
 Menu.setApplicationMenu(null);
-
-const NOTIFICATION_TITLE = '김치볶음밥 주문왔어요!';
-const NOTIFICATION_BODY = '옵션: 김치 추가';
-
-ipcMain.on('notification', (event, data) => {
-  console.log('notification data ::', data);
-  new Notification({
-    title: NOTIFICATION_TITLE,
-    body: NOTIFICATION_BODY
-  }).show();
-})
 
 ipcMain.on('window-close', (event, data) => {
   app.quit();
