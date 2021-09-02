@@ -31,6 +31,7 @@
     "date-fns": "^2.23.0",
     "electron-is-dev": "^2.0.0",
     "electron-pos-printer": "^1.2.4",
+    "electron-push-receiver": "^2.1.3",
     "firebase": "^8.8.0",
     "jwt-decode": "^3.1.2",
     "jwt-encode": "^1.0.1",
@@ -71,7 +72,7 @@
     "build:win": "yarn build:win32 && yarn build:win64"
   },
   "build": {
-    "productName": "오늘의주문-점주용",
+    "productName": "오늘의주문",
     "appId": "com.ohjoostore.electron",
     "asar": true,
     "mac": {
@@ -81,7 +82,7 @@
       "icon": "build/icons/mac/icon.icns"
     },
     "dmg": {
-      "title": "오늘의주문-점주용",
+      "title": "오늘의주문",
       "icon": "build/icons/mac/icon.icns"
     },
     "win": {
@@ -97,9 +98,9 @@
       "perMachine": true,
       "language": 1042,
       "installerIcon": "build/icons/win/icon.ico",
-      "shortcutName": "오늘의주문-점주용",
-      "artifactName": "오늘의주문-점주용-${version}.${ext}",
-      "uninstallDisplayName": "오늘의주문-점주용"
+      "shortcutName": "오늘의주문",
+      "artifactName": "오늘의주문-${version}.${ext}",
+      "uninstallDisplayName": "오늘의주문"
     },
     "directories": {
       "buildResources": "./build/",
