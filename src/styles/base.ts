@@ -72,16 +72,21 @@ export const theme = createTheme({
 }, koKR);
 
 export const MainBox = styled(Box)({
-  padding: theme.spacing(3),
-  marginTop: 35,
+  // padding: theme.spacing(3),
+  // marginTop: 35,
+  overflowY: 'scroll',
   width: '100%',
+  backgroundColor: '#fff',
   [theme.breakpoints.up('sm')]: {
+    // minHeight: 'calc(100vh - 84px)',
+    height: 'calc(100vh - 84px)',
+    // height: '100%',
     marginTop: 64,
-    minHeight: 'calc(100vh - 112px)',
-    height: 'calc(100% - 112px)',
-    backgroundColor: '#fff',
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
     // backgroundColor: theme.palette.primary.main,
   },
 });
@@ -191,8 +196,8 @@ export const baseStyles = makeStyles({
     justifyContent: 'center !important',
     alignItems: 'center',
     width: '80%',
-    borderTopLeftRadius: '15px !important',
-    borderBottomLeftRadius: '15px !important',
+    borderTopLeftRadius: '10px !important',
+    borderBottomLeftRadius: '10px !important',
   },
   count: {
    
