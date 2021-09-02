@@ -1,6 +1,60 @@
 const { contextBridge, ipcRenderer, remote } = require("electron");
 const { PosPrinter } = remote.require("electron-pos-printer");
 
+const audio01 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_1.mp3');
+const audio02 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_2.mp3');
+const audio03 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_3.mp3');
+
+const {
+  START_NOTIFICATION_SERVICE,
+  NOTIFICATION_SERVICE_STARTED,
+  NOTIFICATION_SERVICE_ERROR,
+  NOTIFICATION_RECEIVED,
+  TOKEN_UPDATED,
+} = require('electron-push-receiver/src/constants')
+
+// Listen for service successfully started
+ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, (_, token) => {
+  console.log('service successfully started', token)
+})
+
+// Handle notification errors
+ipcRenderer.on(NOTIFICATION_SERVICE_ERROR, (_, error) => {
+  console.log('notification error', error)
+})
+
+// Send FCM token to backend
+ipcRenderer.on(TOKEN_UPDATED, (_, token) => {
+  console.log('token updated', token)
+})
+
+// Display notification
+ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
+  // check to see if payload contains a body string, if it doesn't consider it a silent push
+  if (serverNotificationPayload.notification.body) {
+    // payload has a body, so show it to the user
+    console.log('display notification', serverNotificationPayload)
+    let myNotification = new Notification(serverNotificationPayload.notification.title, {
+      body: serverNotificationPayload.notification.body,
+      silent: true,
+      icon: '../build/icons/png/64x64.png',
+      image: '../build/icons/png/64x64.png',
+    })
+    audio03.play();
+    myNotification.onclick = () => {
+      console.log('Notification clicked')
+    }
+  } else {
+    // payload has no body, so consider it silent (and just consider the data portion)
+    console.log('do something with the key/value pairs in the data', serverNotificationPayload.data)
+  }
+})
+
+// Start service
+const senderId = '915859720833' // <-- replace with FCM sender ID from FCM web admin under Settings->Cloud Messaging
+console.log('starting service and registering a client')
+ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId)
+
 contextBridge.exposeInMainWorld("appRuntime", {
   send: (channel: string, data: any) => {
     ipcRenderer.send(channel, data);
