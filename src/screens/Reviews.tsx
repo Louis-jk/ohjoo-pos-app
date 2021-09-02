@@ -65,7 +65,7 @@ export default function Reviews(props: any) {
   const { mt_id, mt_jumju_code, mt_store } = useSelector((state: any) => state.login);
 
   const [isLoading, setLoading] = React.useState(false);
-  const [rate, setRate] = useState({}); // 별점
+  const [rate, setRate] = useState({ }); // 별점
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
   const [postPerPage, setPostPerPage] = useState(3); // 페이지 API 호출 Limit
@@ -120,7 +120,7 @@ export default function Reviews(props: any) {
         setLists(arrItems.review);
         setLoading(false);
       } else {
-        setRate({});
+        setRate({ });
         setLists([]);
         setLoading(false);
       }
@@ -491,7 +491,7 @@ export default function Reviews(props: any) {
             </Box>
             : null}
           {totalCount ?
-            <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+            <Box mt={7} mb={3} display='flex' justifyContent='center' alignSelf="center">
               <Stack spacing={2}>
                 <Pagination
                   color="primary"
