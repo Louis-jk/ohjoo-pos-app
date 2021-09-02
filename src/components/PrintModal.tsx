@@ -47,14 +47,6 @@ const PrintModal = (props: PrintProps) => {
 
   const base = baseStyles();
 
-  // 프린트 출력 부분
-  const componentRef = React.useRef(null);
-
-  //　일반적인 웹형식 프린트출력(프린트 선택 dialog 뜸) 
-  // const handlePrint = useReactToPrint({
-  //   content: () => componentRef.current
-  // });
-
   const data: PosPrintData[] = [
     {
       type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
@@ -112,6 +104,14 @@ const PrintModal = (props: PrintProps) => {
     silent: true,
   };
 
+  // 프린트 출력 부분
+  const componentRef = React.useRef(null);
+
+  //　일반적인 웹형식 프린트출력(프린트 선택 dialog 뜸) 
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current
+  // });
+
   // This is printer handler
   const handlePrint = () => {
     // appRuntime.printer(data, options);
@@ -141,6 +141,7 @@ const PrintModal = (props: PrintProps) => {
                 <Box display="flex" flexDirection="row" justifyContent="flex-end" alignItems="center" style={{ backgroundColor: theme.palette.primary.main }}>
                   {/* <FontAwesomeIcon icon={faPrint} size="1x" /> */}
                   <IconButton
+                    className='no-drag-area'
                     onClick={handlePrint}
                   >
                     <PrintIcon color="secondary" />

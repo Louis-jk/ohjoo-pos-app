@@ -477,12 +477,12 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           backgroundColor: theme.palette.secondary.main
         }}
       >
-        <Toolbar style={{
+        <Toolbar id='toolbar' style={{
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingRight: 0,
-          paddingLeft: 0
+          paddingLeft: 0,
         }}>
           <IconButton
             color="inherit"
@@ -590,7 +590,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   </Box>
                   : props.type === 'menu' ?
                     <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={() => history.push('/menu_add')}>
-                      <Typography variant='body1' fontSize={16} fontWeight='bold'>메뉴 추가하기</Typography>
+                      <Typography variant='body1' fontSize={16} fontWeight='bold'>추가하기</Typography>
                     </Button>
                     : props.type === 'menuAdd' ?
                       <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>

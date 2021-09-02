@@ -127,7 +127,7 @@ export default function Login() {
   }
 
   return (
-    <>
+    <Box className='drag-area'>
       <Box style={{ position: 'absolute', top: 0, right: 0 }}>
         <IconButton onClick={windowCloseHandler}>
           <CloseIcon />
@@ -135,7 +135,7 @@ export default function Login() {
       </Box>
 
       <LoginContainer component="section">
-        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 20, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
+        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 10, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
           <img src={Logo} alt="오늘의 주문 로고" style={{ width: 150, marginBottom: 30 }} />
           {/* <Typography variant="h6">로그인</Typography> */}
           <Box mb={2} style={{ minWidth: 300 }}>
@@ -188,6 +188,6 @@ export default function Login() {
           />
         </Box>
       </LoginContainer>
-    </>
+    </Box>
   )
 }
