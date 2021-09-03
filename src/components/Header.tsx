@@ -28,6 +28,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import PrintIcon from '@material-ui/icons/Print';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import DragHandleIcon from '@material-ui/icons/DragHandle';
 import FormGroup from '@material-ui/core/FormGroup';
 import Badge from '@material-ui/core/Badge';
 import Fade from '@material-ui/core/Fade';
@@ -298,7 +299,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     setWinCloseModalOpen(false);
   }
   const onCloseWinCloseHandler = () => {
-    appRuntime.send('window-close', 'close');
+    appRuntime.send('windowClose', 'close');
   }
 
   const sendNotify = () => {
@@ -632,7 +633,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Button variant='outlined' color='primary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
               <Typography color='primary'>매장선택</Typography>
             </Button>
-            <IconButton onClick={windowCloseHandler} style={{ marginLeft: 20 }}>
+            <IconButton className='dragBtn' style={{ marginLeft: 20 }}>
+              <DragHandleIcon style={{ color: '#fff' }} />
+            </IconButton>
+            <IconButton onClick={windowCloseHandler}>
               <CloseIcon style={{ color: '#fff' }} />
             </IconButton>
           </Box>

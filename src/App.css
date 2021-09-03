@@ -2,19 +2,11 @@ body {
   -webkit-overflow-scrolling: touch !important;
   background-color: #1c1b30;
 }
-
-#toolbar, .drag-area {
+.dragBtn {
   -webkit-app-region: drag;
 }
 
-.titlebar {
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-}
 
-button, input, .no-drag-area {
-  -webkit-app-region: no-drag;
-}
 
 .App {
   /* text-align: center; */

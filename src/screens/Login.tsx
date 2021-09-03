@@ -9,6 +9,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 // Material UI Icons
 import CloseIcon from '@material-ui/icons/Close';
+import DragHandleIcon from '@material-ui/icons/DragHandle';
 
 // Local Component
 import Logo from '../assets/images/logo_bk.png';
@@ -123,12 +124,15 @@ export default function Login() {
 
   // 윈도우 닫기 핸들러
   const windowCloseHandler = () => {
-    appRuntime.send('window-close', 'close');
+    appRuntime.send('windowClose', 'close');
   }
 
   return (
     <Box className='drag-area'>
       <Box style={{ position: 'absolute', top: 0, right: 0 }}>
+        <IconButton className='dragBtn'>
+          <DragHandleIcon />
+        </IconButton>
         <IconButton onClick={windowCloseHandler}>
           <CloseIcon />
         </IconButton>
