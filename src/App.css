@@ -4,9 +4,21 @@ body {
 }
 .dragBtn {
   -webkit-app-region: drag;
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 
+.dragBtn:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
 
+.cursorBtn {
+  cursor: pointer;
+}
 
 .App {
   /* text-align: center; */
