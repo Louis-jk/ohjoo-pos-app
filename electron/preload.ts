@@ -5,6 +5,13 @@ const audio01 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_1.mp3
 const audio02 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_2.mp3');
 const audio03 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_3.mp3');
 
+let soundCount: string = '';
+
+ipcRenderer.on('get_sound_count', (event, data) => {
+  // console.log('get_sound_count', data);
+  soundCount = data;
+})
+
 const {
   START_NOTIFICATION_SERVICE,
   NOTIFICATION_SERVICE_STARTED,
@@ -16,6 +23,8 @@ const {
 // Listen for service successfully started
 ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, (_, token) => {
   console.log('service successfully started', token)
+  ipcRenderer.send('fcmToken', token);
+  // console.log('_ :: NOTIFICATION_SERVICE_STARTED', _);
 })
 
 // Handle notification errors
@@ -33,14 +42,20 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
   // check to see if payload contains a body string, if it doesn't consider it a silent push
   if (serverNotificationPayload.notification.body) {
     // payload has a body, so show it to the user
-    console.log('display notification', serverNotificationPayload)
+    // console.log('display notification', serverNotificationPayload)
     let myNotification = new Notification(serverNotificationPayload.notification.title, {
       body: serverNotificationPayload.notification.body,
       silent: true,
       icon: '../build/icons/png/64x64.png',
       image: '../build/icons/png/64x64.png',
     })
-    audio03.play();
+    if(soundCount === '1') {
+      audio01.play();
+    } else if(soundCount === '2') {
+      audio02.play();
+    } else {
+      audio03.play();
+    }    
     myNotification.onclick = () => {
       console.log('Notification clicked')
     }

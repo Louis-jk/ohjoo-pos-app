@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, ipcMain, Notification} from 'electron';
+import { app, BrowserWindow, Menu, ipcMain, Notification, session} from 'electron';
 import * as path from 'path';
 const fs = require('fs');
 const os = require('os');
@@ -30,7 +30,6 @@ function createWindow() {
         preload: path.join(app.getAppPath(), '/preload.js'),
       }
     });
-
     let indexPath;
     indexPath = url.format({
       protocol: 'file:',
@@ -44,7 +43,7 @@ function createWindow() {
     mainWindow.setMenuBarVisibility(false);
 
     // 개발자 툴 오픈
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -54,8 +53,32 @@ function createWindow() {
 // 브라우저 메뉴창 없애기
 Menu.setApplicationMenu(null);
 
-ipcMain.on('window-close', (event, data) => {
+// 창 닫기
+ipcMain.on('windowClose', (event, data) => {
+  console.log('app quit?', data);
   app.quit();
+});
+
+// 창 내리기
+ipcMain.on('windowMinimize', (event, data) => {
+  mainWindow.minimize();
+});
+
+let fcmToken = '';
+// 토큰 가져오기
+ipcMain.on('fcmToken', (event, data) => {
+  console.log('electron token data', data);
+  fcmToken = data;
+  event.sender.send('electronToken', data);
+});
+
+ipcMain.on('callToken', (event, data) => {
+  event.sender.send('electronToken', fcmToken);
+});
+
+// 사운드 카운트 받기
+ipcMain.on('sound_count', (event, data) => {
+  event.sender.send('get_sound_count', data);
 })
 
 // 프린트 정보 열기
@@ -100,7 +123,7 @@ ipcMain.on('print', (event, data) => {
     console.log("print on message!");
     console.log("print data:: ", data);
     mainWindow.webContents.print({
-      silent: true, // silent true일 경우 기본프린터로 출력 
+      silent: false, // silent true일 경우 기본프린터로 출력 
       margins: {
         marginType: 'custom',
         top: 0,
@@ -134,7 +157,16 @@ ipcMain.handle('quit-app', () => {
 });
 
 app.on('ready', createWindow);
-// app.whenReady().then(createWindow).then(showNotification);
+
+// react dev tools
+// on macOS
+const reactDevToolsPath = path.join(
+  os.homedir(),
+  '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.17.0_0'
+)
+app.whenReady().then(async () => {
+  await session.defaultSession.loadExtension(reactDevToolsPath)
+})
 
 app.on('window-all-closed', () => {
     if(process.platform !== 'darwin') {
