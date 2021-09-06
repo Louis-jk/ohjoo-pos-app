@@ -6,10 +6,14 @@ import { useHistory } from 'react-router-dom';
 // Material UI Components
 import { Box, Typography, TextField, FormControlLabel, Checkbox, IconButton, Button } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 
 // Material UI Icons
 import CloseIcon from '@material-ui/icons/Close';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
+import MinimizeIcon from '@material-ui/icons/Minimize';
+
 
 // Local Component
 import Logo from '../assets/images/logo_bk.png';
@@ -42,6 +46,18 @@ export default function Login() {
     showPassword: false,
   });
 
+  // tooltip
+  const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: '#222',
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#222',
+    },
+  }));
+
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -58,7 +74,6 @@ export default function Login() {
     setValues({ ...values, isAutoLogin: !values.isAutoLogin });
   };
 
-  // 
 
   // 자동 로그인 처리
   const storeData = async () => {
@@ -89,10 +104,11 @@ export default function Login() {
     const param = {
       mt_id: values.email,
       mt_pwd: values.password,
-      mt_app_token: token
+      mt_device: 'pos',
+      mt_pos_token: token
     };
 
-    console.log("로그인 params", param);
+    // console.log("로그인 params", param);
 
     Api.send('store_login', param, (args: any) => {
       let resultItem = args.resultItem;
@@ -104,6 +120,8 @@ export default function Login() {
         }
         storeAddToken(token);
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
+        dispatch(loginAction.updateToken(token));
+        appRuntime.send('sound_count', arrItems.mt_sound); // 알림 사운드 횟수 보내기 : web 테스트시 끄기
         history.replace('/main');
         setValues({
           ...values,
@@ -118,24 +136,53 @@ export default function Login() {
     });
   };
 
+  const getElectronToken = () => {
+
+    // 메인 프로세서 토큰 호출
+    appRuntime.send('callToken', 'call');
+
+    // 메인프로세서로부터 토큰 값 받기
+    appRuntime.on('electronToken', (event: any, data: any) => {
+      setToken(data);
+    });
+
+  }
+
   React.useEffect(() => {
-    getToken(setToken);
-  }, [])
+    // getToken(setToken);
+    getElectronToken(); // 일렉트론 빌드시 토큰 가져오기 : web 테스트시 끄기
+  }, []);
 
   // 윈도우 닫기 핸들러
   const windowCloseHandler = () => {
     appRuntime.send('windowClose', 'close');
-  }
+  };
+
+  // 윈도우 닫기 핸들러
+  const windowMinimizeHandler = () => {
+    appRuntime.send('windowMinimize', 'minimize');
+  };
 
   return (
     <Box className='drag-area'>
+      <Box style={{ position: 'absolute', top: 0, left: 0 }}>
+        <BootstrapTooltip title="아이콘을 누르고 위치를 이동시킬 수 있습니다." placement='right'>
+          <IconButton className='dragBtn'>
+            <DragHandleIcon />
+          </IconButton>
+        </BootstrapTooltip>
+      </Box>
       <Box style={{ position: 'absolute', top: 0, right: 0 }}>
-        <IconButton className='dragBtn'>
-          <DragHandleIcon />
-        </IconButton>
-        <IconButton onClick={windowCloseHandler}>
-          <CloseIcon />
-        </IconButton>
+        <BootstrapTooltip title="최소화" placement='bottom'>
+          <IconButton onClick={windowMinimizeHandler}>
+            <MinimizeIcon />
+          </IconButton>
+        </BootstrapTooltip>
+        <BootstrapTooltip title="종료" placement='bottom'>
+          <IconButton onClick={windowCloseHandler}>
+            <CloseIcon />
+          </IconButton>
+        </BootstrapTooltip>
       </Box>
 
       <LoginContainer component="section">
@@ -181,15 +228,17 @@ export default function Login() {
             로그인
           </LoginButton>
 
-          <FormControlLabel
-            value="end"
-            style={{ marginTop: 20 }}
-            control={<Checkbox color="primary" />}
-            checked={values.isAutoLogin ? true : false}
-            label="자동로그인"
-            labelPlacement="end"
-            onClick={handleClickAutoLogin}
-          />
+          <BootstrapTooltip title="체크 시 다음번부터 로그인 화면 없이 바로 앱을 실행시킵니다." placement='bottom'>
+            <FormControlLabel
+              value="end"
+              style={{ marginTop: 20 }}
+              control={<Checkbox color="primary" />}
+              checked={values.isAutoLogin ? true : false}
+              label="자동로그인"
+              labelPlacement="end"
+              onClick={handleClickAutoLogin}
+            />
+          </BootstrapTooltip>
         </Box>
       </LoginContainer>
     </Box>
