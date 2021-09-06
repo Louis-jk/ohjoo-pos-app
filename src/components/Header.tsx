@@ -29,11 +29,14 @@ import PrintIcon from '@material-ui/icons/Print';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
+import MinimizeIcon from '@material-ui/icons/Minimize';
 import FormGroup from '@material-ui/core/FormGroup';
 import Badge from '@material-ui/core/Badge';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 
 
 // Material icons
@@ -105,6 +108,19 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     let slice = location.pathname.slice(1);
     setCurPathName(slice);
   }, [location])
+
+  // tooltip
+  // tooltip
+  const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: '#222',
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#222',
+    },
+  }));
 
   // 프린트 모달
   const [printOpen, setPrintOpen] = React.useState(false);
@@ -298,9 +314,16 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const cancelWinCloseHandler = () => {
     setWinCloseModalOpen(false);
   }
+
+  // 윈도우 닫기 핸들러
   const onCloseWinCloseHandler = () => {
     appRuntime.send('windowClose', 'close');
   }
+
+  // 윈도우 닫기 핸들러
+  const windowMinimizeHandler = () => {
+    appRuntime.send('windowMinimize', 'minimize');
+  };
 
   const sendNotify = () => {
     appRuntime.send('notification', 'test');
@@ -633,12 +656,21 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Button variant='outlined' color='primary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
               <Typography color='primary'>매장선택</Typography>
             </Button>
-            <IconButton className='dragBtn' style={{ marginLeft: 20 }}>
-              <DragHandleIcon style={{ color: '#fff' }} />
-            </IconButton>
-            <IconButton onClick={windowCloseHandler}>
-              <CloseIcon style={{ color: '#fff' }} />
-            </IconButton>
+            <BootstrapTooltip title="아이콘을 누르고 위치를 이동시킬 수 있습니다." placement='bottom-start'>
+              <IconButton className='dragBtn' style={{ marginLeft: 20 }}>
+                <DragHandleIcon style={{ color: '#fff' }} />
+              </IconButton>
+            </BootstrapTooltip>
+            <BootstrapTooltip title="최소화" placement='bottom-start'>
+              <IconButton onClick={windowMinimizeHandler}>
+                <MinimizeIcon style={{ color: '#fff' }} />
+              </IconButton>
+            </BootstrapTooltip>
+            <BootstrapTooltip title="종료" placement='bottom-start'>
+              <IconButton onClick={windowCloseHandler}>
+                <CloseIcon style={{ color: '#fff' }} />
+              </IconButton>
+            </BootstrapTooltip>
           </Box>
         </Toolbar>
       </AppBar>
@@ -677,13 +709,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         </Drawer>
         <Drawer
           container={container}
-          variant="temporary"
+          variant='temporary'
           anchor='right'
           open={storeListOpen}
           onClose={handleStoreDrawerToggle}
-          // classes={{
-          //   paper: classes.storeListDrawerPaper,
-          // }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
