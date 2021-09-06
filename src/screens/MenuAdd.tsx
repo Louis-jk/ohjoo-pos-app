@@ -256,14 +256,8 @@ export default function MenuAdd(props: any) {
     } else if (menuName === '') {
       setToastState({ msg: '메뉴명을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else if (menuInfo === '') {
-      setToastState({ msg: '기본설명을 입력해주세요.', severity: 'error' });
-      handleOpenAlert();
     } else if (menuPrice === '' || menuPrice == '0') {
       setToastState({ msg: '판매가격을 입력해주세요.', severity: 'error' });
-      handleOpenAlert();
-    } else if (menuDescription === '') {
-      setToastState({ msg: '상세설명을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
     } else {
       let param = {

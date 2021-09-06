@@ -284,43 +284,48 @@ export default function MenuEdit(props: IProps) {
   };
 
   const editMenuHandler = () => {
+    if (category === '') {
+      setToastState({ msg: '카테고리를 선택해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (details.menuName === '') {
+      setToastState({ msg: '메뉴명을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else if (details.menuPrice === '' || details.menuPrice == '0') {
+      setToastState({ msg: '판매가격을 입력해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else {
+      let param = {
+        jumju_id: mt_id,
+        jumju_code: mt_jumju_code,
+        it_id: id,
+        mode: 'update',
+        ca_id2: category,
+        menuName: details.menuName,
+        menuInfo: details.menuInfo,
+        menuPrice: details.menuPrice,
+        menuDescription: details.menuDescription,
+        it_type1: details.it_type1,
+        it_use: details.it_use,
+        menuOption: JSON.stringify(options),
+        menuAddOption: JSON.stringify(addOptions),
+        it_img1: source
+      };
+      Api.send2('store_item_update', param, (args: any) => {
+        let resultItem = args.resultItem;
+        let arrItems = args.arrItems;
 
-    let param = {
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
-      it_id: id,
-      mode: 'update',
-      ca_id2: category,
-      menuName: details.menuName,
-      menuInfo: details.menuInfo,
-      menuPrice: details.menuPrice,
-      menuDescription: details.menuDescription,
-      it_type1: details.it_type1,
-      it_use: details.it_use,
-      menuOption: JSON.stringify(options),
-      menuAddOption: JSON.stringify(addOptions),
-      it_img1: source
-    };
-
-    // if (!isEmptyObj(source)) {
-    //   param.it_img1 = source;
-    // }
-
-    Api.send2('store_item_update', param, (args: any) => {
-      let resultItem = args.resultItem;
-      let arrItems = args.arrItems;
-
-      if (resultItem.result === 'Y') {
-        setToastState({ msg: '메뉴가 수정되었습니다.', severity: 'success' });
-        handleOpenAlert();
-        setTimeout(() => {
-          history.push('/menu');
-        }, 700);
-      } else {
-        setToastState({ msg: `메뉴를 수정중에 오류가 발생되었습니다.\n다시 한번 시도해주세요.`, severity: 'error' });
-        handleOpenAlert();
-      }
-    });
+        if (resultItem.result === 'Y') {
+          setToastState({ msg: '메뉴가 수정되었습니다.', severity: 'success' });
+          handleOpenAlert();
+          setTimeout(() => {
+            history.push('/menu');
+          }, 700);
+        } else {
+          setToastState({ msg: `메뉴를 수정중에 오류가 발생되었습니다.\n다시 한번 시도해주세요.`, severity: 'error' });
+          handleOpenAlert();
+        }
+      });
+    }
   }
 
 
