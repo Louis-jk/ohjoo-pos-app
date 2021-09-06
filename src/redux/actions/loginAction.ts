@@ -17,6 +17,7 @@ export function updateLogin(data: string) {
     mt_level: args.mt_level,
     mt_gubun: args.mt_gubun,
     mt_point: args.mt_point,
+    mt_sound: args.mt_sound,
     mt_coupon: args.mt_coupon,
     mt_app_token: args.mt_app_token,
     updateTime: args.updateTime,

@@ -18,6 +18,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Header from '../components/Header';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
+import appRuntime from '../appRuntime';
 
 interface IProps {
   props: object;
@@ -39,6 +40,7 @@ interface IStoreInfo {
   do_delivery_guide: string;
   do_delivery_time: string;
   do_end_state: string;
+  mt_sound: string;
   mb_one_saving: string;
 }
 
@@ -76,6 +78,7 @@ export default function StoreInfo(props: IProps) {
     do_delivery_guide: '', // 배달 안내
     do_delivery_time: '', // 평균 배달 시간
     do_end_state: '', // 주문마감
+    mt_sound: '', // 알림 횟수
     mb_one_saving: '', // 1인분 가능
   });
 
@@ -107,6 +110,7 @@ export default function StoreInfo(props: IProps) {
           do_delivery_guide: arrItems.do_delivery_guide,
           do_delivery_time: arrItems.do_delivery_time,
           do_end_state: arrItems.do_end_state,
+          mt_sound: arrItems.mt_sound,
           mb_one_saving: arrItems.mb_one_saving
         });
         setLoading(false);
@@ -125,6 +129,7 @@ export default function StoreInfo(props: IProps) {
           do_delivery_guide: '',
           do_delivery_time: '',
           do_end_state: '',
+          mt_sound: '',
           mb_one_saving: ''
         });
         setLoading(false);
@@ -154,6 +159,7 @@ export default function StoreInfo(props: IProps) {
       do_delivery_guide: info.do_delivery_guide,
       do_delivery_time: info.do_delivery_time,
       do_end_state: info.do_end_state,
+      mt_sound: info.mt_sound,
       mb_one_saving: info.mb_one_saving
     };
 
@@ -328,6 +334,59 @@ export default function StoreInfo(props: IProps) {
                 })}
               />
             </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography fontWeight='bold'>알림 설정</Typography>
+              <FormControl component="fieldset">
+                <RadioGroup row aria-label="position" name="position" defaultValue="N">
+                  <FormControlLabel
+                    value={'1'}
+                    checked={info.mt_sound === '1' ? true : false}
+                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                    label="1회 알림"
+                    labelPlacement="start"
+                    style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                    onChange={e => {
+                      setInfo({
+                        ...info,
+                        mt_sound: '1'
+                      });
+                      appRuntime.send('sound_count', '1');
+                    }}
+                  />
+                  <FormControlLabel
+                    value={'2'}
+                    checked={info.mt_sound === '2' ? true : false}
+                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                    label="2회 알림"
+                    labelPlacement="start"
+                    style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                    onChange={e => {
+                      setInfo({
+                        ...info,
+                        mt_sound: '2'
+                      });
+                      appRuntime.send('sound_count', '2');
+                    }}
+                  />
+                  <FormControlLabel
+                    value={'3'}
+                    checked={info.mt_sound === '3' ? true : false}
+                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                    label="3회 알림"
+                    labelPlacement="start"
+                    style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                    onChange={e => {
+                      setInfo({
+                        ...info,
+                        mt_sound: '3'
+                      });
+                      appRuntime.send('sound_count', '3');
+                    }}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+
             {/* <Button variant="contained" color="primary" fullWidth>등록하기</Button> */}
           </Grid>
           <Box className={base.mb10}></Box>
