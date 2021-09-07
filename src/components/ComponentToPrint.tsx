@@ -56,7 +56,7 @@ const OrderPrint = React.forwardRef<HTMLDivElement>((props, ref) => {
         </Box>
         <Box display="flex" flexDirection="row" mb={0.5}>
           <Typography fontSize="11pt" lineHeight={1.2} flex={3}>전화번호 : </Typography>
-          <Typography fontSize="11pt" lineHeight={1.2} flex={10} textAlign="right">{order.order_hp}</Typography>
+          <Typography fontSize="11pt" lineHeight={1.2} flex={10} textAlign="right">{Api.phoneFomatter(order.order_hp)}</Typography>
         </Box>
       </Box>
       <Divider />
