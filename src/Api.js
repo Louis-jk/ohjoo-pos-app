@@ -326,35 +326,39 @@ class Api {
     return str.replace(/[^\d]+/g, "");
   }
   //--------------------------------------------------------------------------------------------------
+  // 전화번호 포맷
+  phoneFomatter(num, type) {
+    let formatNum = "";
+    let stringNum = String(num);
 
-  // phoneFomatter(num, type) {
-  //   var formatNum = "";
+    console.log("stringNum", stringNum);
+    // return false;
 
-  //   if (num.length === 11) {
-  //     if (type === 0) {
-  //       formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, "$1-****-$3");
-  //     } else {
-  //       formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-  //     }
-  //   } else if (num.length == 8) {
-  //     formatNum = num.replace(/(\d{4})(\d{4})/, "$1-$2");
-  //   } else {
-  //     if (num.indexOf("02") == 0) {
-  //       if (type === 0) {
-  //         formatNum = num.replace(/(\d{2})(\d{4})(\d{4})/, "$1-****-$3");
-  //       } else {
-  //         formatNum = num.replace(/(\d{2})(\d{4})(\d{4})/, "$1-$2-$3");
-  //       }
-  //     } else {
-  //       if (type === 0) {
-  //         formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, "$1-***-$3");
-  //       } else {
-  //         formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
-  //       }
-  //     }
-  //   }
-  //   return formatNum;
-  // }
+    if (stringNum.length === 11) {
+      if (type === 0) {
+        formatNum = stringNum.replace(/(\d{3})(\d{4})(\d{4})/, "$1-****-$3");
+      } else {
+        formatNum = stringNum.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+      }
+    } else if (stringNum.length === 8) {
+      formatNum = stringNum.replace(/(\d{4})(\d{4})/, "$1-$2");
+    } else {
+      if (stringNum.indexOf("02") === 0) {
+        if (type === 0) {
+          formatNum = stringNum.replace(/(\d{2})(\d{4})(\d{4})/, "$1-****-$3");
+        } else {
+          formatNum = stringNum.replace(/(\d{2})(\d{4})(\d{4})/, "$1-$2-$3");
+        }
+      } else {
+        if (type === 0) {
+          formatNum = stringNum.replace(/(\d{3})(\d{3})(\d{4})/, "$1-***-$3");
+        } else {
+          formatNum = stringNum.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+        }
+      }
+    }
+    return formatNum;
+  }
 
   // imgResize(imgWidth, imgHeight, maxWidth) {
   //     let width = 0, height = 0;
