@@ -1,41 +1,42 @@
-const { contextBridge, ipcRenderer, remote } = require("electron");
-const { PosPrinter } = remote.require("electron-pos-printer");
+const { contextBridge, ipcRenderer } = require("electron");
 
 const audio01 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_1.mp3');
 const audio02 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_2.mp3');
 const audio03 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_3.mp3');
 
+// 알림 사운드 횟수 받기(메인 프로세서로부터)
 let soundCount: string = '';
 
 ipcRenderer.on('get_sound_count', (event, data) => {
   // console.log('get_sound_count', data);
   soundCount = data;
-})
+});
 
+// firebase 알림 받기
 const {
   START_NOTIFICATION_SERVICE,
   NOTIFICATION_SERVICE_STARTED,
   NOTIFICATION_SERVICE_ERROR,
   NOTIFICATION_RECEIVED,
   TOKEN_UPDATED,
-} = require('electron-push-receiver/src/constants')
+} = require('electron-push-receiver/src/constants');
 
 // Listen for service successfully started
 ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, (_, token) => {
   console.log('service successfully started', token)
   ipcRenderer.send('fcmToken', token);
   // console.log('_ :: NOTIFICATION_SERVICE_STARTED', _);
-})
+});
 
 // Handle notification errors
 ipcRenderer.on(NOTIFICATION_SERVICE_ERROR, (_, error) => {
   console.log('notification error', error)
-})
+});
 
 // Send FCM token to backend
 ipcRenderer.on(TOKEN_UPDATED, (_, token) => {
   console.log('token updated', token)
-})
+});
 
 // Display notification
 ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
@@ -63,13 +64,14 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
     // payload has no body, so consider it silent (and just consider the data portion)
     console.log('do something with the key/value pairs in the data', serverNotificationPayload.data)
   }
-})
+});
 
 // Start service
 const senderId = '915859720833' // <-- replace with FCM sender ID from FCM web admin under Settings->Cloud Messaging
-console.log('starting service and registering a client')
-ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId)
+console.log('starting service and registering a client');
+ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId);
 
+// preload와 electron 브릿지
 contextBridge.exposeInMainWorld("appRuntime", {
   send: (channel: string, data: any) => {
     ipcRenderer.send(channel, data);
@@ -84,11 +86,5 @@ contextBridge.exposeInMainWorld("appRuntime", {
     return () => {
       ipcRenderer.removeListener(channel, subscription);
     };
-  },
-  printer: (channel: string, data: any) => {
-    ipcRenderer.send(channel, data);
-  },
-  printer01: (data: any[], options: any) => new Promise((res: Function, fail: Function) => {
-    PosPrinter.print(data, options);
-  }).then(() => {}).catch(err => console.log(err))
+  }
 });
