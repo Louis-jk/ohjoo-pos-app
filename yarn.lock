@@ -6026,11 +6026,6 @@ electron-is-dev@^2.0.0:
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-2.0.0.tgz#833487a069b8dad21425c67a19847d9064ab19bd"
   integrity sha512-3X99K852Yoqu9AcW50qz3ibYBWY79/pBhlMCab8ToEWS48R0T9tyxRiQhwylE7zQdXrMnx2JKqUJyMPmt5FBqA==
 
-electron-pos-printer@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/electron-pos-printer/-/electron-pos-printer-1.2.4.tgz#f57a5fac2b4f189eed42afb4479303ccb82116bd"
-  integrity sha512-cO4wF3KhrE/6aAokZmPPlLMkCygsPfNv0/CkBsAXYaeN5TlfbQ9MF99P5UHxF++JBPcB6TCuog2DzNW0UF21sQ==
-
 electron-publish@22.11.7:
   version "22.11.7"
   resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-22.11.7.tgz#4126cbb08ccf082a2aa7fef89ee629b3a4b8ae9a"
@@ -7163,6 +7158,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+
+fs@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  integrity sha1-invTcYa23d84E/I4WLV+yq9eQdQ=
 
 fsevents@^1.0.0, fsevents@^1.2.7:
   version "1.2.13"
