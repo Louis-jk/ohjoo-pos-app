@@ -1,7 +1,6 @@
-import { app, BrowserWindow, Menu, ipcMain, Notification, session} from 'electron';
+import { app, BrowserWindow, Menu, ipcMain } from 'electron';
 import * as path from 'path';
 const fs = require('fs');
-const os = require('os');
 const url = require('url');
 const { setup: setupPushReceiver } = require('electron-push-receiver');
 
@@ -27,13 +26,13 @@ function createWindow() {
         nodeIntegration: false,
         contextIsolation: true, 
         enableRemoteModule: true, 
-        preload: path.join(app.getAppPath(), '/preload.js'),
+        preload: path.join(app.getAppPath(), '/build/preload.js'),
       }
     });
     let indexPath;
     indexPath = url.format({
       protocol: 'file:',
-      pathname: path.join(app.getAppPath(), '/index.html'),
+      pathname: path.join(app.getAppPath(), '/build/index.html'),
       slashes: true
     })
     mainWindow.loadURL( indexPath );
@@ -43,7 +42,7 @@ function createWindow() {
     mainWindow.setMenuBarVisibility(false);
 
     // 개발자 툴 오픈
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -52,6 +51,33 @@ function createWindow() {
 
 // 브라우저 메뉴창 없애기
 Menu.setApplicationMenu(null);
+
+// 프린트 기능
+ipcMain.on('pos_print', (event, data) => {
+
+  let win = new BrowserWindow({ width: 302, height: 793, show: false});
+  win.once('ready-to-show', () => win.hide());
+  fs.writeFile(path.join(__dirname, '/printme.html'), data, function() {
+    win.loadURL(`file://${path.join(__dirname, 'printme.html')}`);
+    win.webContents.on('did-finish-load', () => {
+
+      // Finding Default Printer name
+      let printerInfo = win.webContents.getPrinters();
+      let printer = printerInfo.filter(printer => printer.isDefault === true)[0];
+
+      const options = {
+        silent: true,
+        deviceName: printer.name,
+        pageSize: {height: 301000, width: 50000}
+      }
+
+      win.webContents.print(options, () => {
+        win = null;
+      });
+    });
+  })
+  event.returnValue = true;
+});
 
 // 창 닫기
 ipcMain.on('windowClose', (event, data) => {
@@ -96,61 +122,10 @@ ipcMain.on('closeWindow', (event, data) => {
   }
  });
 
-// 프린트 PDF 출력 테스트
-ipcMain.on('print_pdf', (event, data) => {
-  console.log('event >>',event);
-  console.log('data >>',data);
-  mainWindow.webContents.printToPDF({
-    marginsType: 0,
-    printBackground: false,
-    printSelectionOnly: false,
-    landscape: false,
-    pageSize: 'A4',
-    scaleFactor: 100,
-  }).then(data => {
-    const pdfPath = path.join(os.homedir(), 'Desktop', 'temp.pdf')
-    fs.writeFile(pdfPath, data, (error: any) => {
-      if (error) throw error
-      console.log(`Wrote PDF successfully to ${pdfPath}`)
-    })
-  }).catch(error => {
-    console.log(`Failed to write PDF to : `, error)
-  })
-});
-
-// 프린트 출력 테스트
-ipcMain.on('print', (event, data) => {
-    console.log("print on message!");
-    console.log("print data:: ", data);
-    mainWindow.webContents.print({
-      silent: false, // silent true일 경우 기본프린터로 출력 
-      margins: {
-        marginType: 'custom',
-        top: 0,
-        bottom: 100
-      },
-      printBackground: false,
-      color: false,
-      landscape: false,
-      pagesPerSheet: 1,
-      pageRanges: [
-        {
-          from: 0,
-          to: 0
-        }
-      ],
-      collate: false,
-      copies: 1,
-      header: 'Header of the Page',
-      footer: 'Footer of the Page',
-      pageSize: 'Legal'
-    },
-    (success, failureReason) => {
-      if(!success) console.log(failureReason);
-      console.log('Print Initiated');
-    }
-    )
-});
+if (process.platform === 'win32')
+{
+  app.setAppUserModelId('오늘의 주문');
+}
 
 ipcMain.handle('quit-app', () => {
   app.quit();
@@ -158,15 +133,6 @@ ipcMain.handle('quit-app', () => {
 
 app.on('ready', createWindow);
 
-// react dev tools
-// on macOS
-const reactDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.17.0_0'
-)
-app.whenReady().then(async () => {
-  await session.defaultSession.loadExtension(reactDevToolsPath)
-})
 
 app.on('window-all-closed', () => {
     if(process.platform !== 'darwin') {
