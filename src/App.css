@@ -1,19 +1,15 @@
 body {
   -webkit-overflow-scrolling: touch !important;
   background-color: #1c1b30;
-}
-.dragBtn {
   -webkit-app-region: drag;
-  cursor: move; /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
 }
 
-.dragBtn:active {
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
+button, label {
+  -webkit-app-region: no-drag;
+}
+
+.noDrag {
+  -webkit-app-region: no-drag;
 }
 
 .cursorBtn {

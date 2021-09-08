@@ -76,6 +76,7 @@ export default function SetStoreTime(props: TabPanelProps) {
             indicatorColor="primary"
             onChange={handleChange}
             aria-label="nav tabs example"
+            className={base.noDrag}
           >
             <LinkTab label="영업시간" href="/tab01" {...a11yProps(0)} />
             <LinkTab label="정기휴무일" href="/tab02" {...a11yProps(1)} />

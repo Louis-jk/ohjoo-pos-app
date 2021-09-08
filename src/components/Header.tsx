@@ -344,7 +344,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         </ButtonGroup>
       </Toolbar>
       {selectType === 'order' ?
-        <List className={base.orderMenuWrap} sx={{ padding: 0 }}>
+        <List className={clsx(base.orderMenuWrap, base.noDrag)} sx={{ padding: 0 }}>
           <ListItem className={base.orderMenu} component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? '#fff' : 'transparent' }}>
             <Typography component='label' variant='body1' style={{ color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' : (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : '#fff' }}>신규주문</Typography>
             <Typography className='count' component='h3' variant='h4' style={{ color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' : (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : '#fff' }}>{newOrder.length > 99 ? '99+' : newOrder.length}</Typography>
@@ -364,7 +364,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
         </List>
         :
         selectType === 'store' ?
-          <List className={base.orderMenuWrap02} sx={{ padding: 0 }}>
+          <List className={clsx(base.orderMenuWrap02, base.noDrag)} sx={{ padding: 0 }}>
             <ListItem className={base.orderMenu02} component={Link} to='/set_storetime' style={{ color: curPathName === 'set_storetime' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'set_storetime' ? '#fff' : 'transparent' }}>
               <Box display='flex' flexDirection='row'>
                 <AccessTimeOutlinedIcon />
@@ -569,7 +569,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <IconButton
                   color="primary"
                   aria-label="list"
-                  component="span"
+                  component="button"
                   onClick={handlePrint02}
                 >
                   <PrintIcon />
@@ -589,7 +589,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   <IconButton
                     color="primary"
                     aria-label="list"
-                    component="span"
+                    component="button"
                     onClick={handlePrint02}
                   >
                     <PrintIcon />
@@ -603,7 +603,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                     <IconButton
                       color="primary"
                       aria-label="list"
-                      component="span"
+                      component="button"
                       onClick={handlePrint02}
                     >
                       <PrintIcon />
@@ -656,11 +656,11 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Button variant='outlined' color='primary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
               <Typography color='primary'>매장선택</Typography>
             </Button>
-            <BootstrapTooltip title="아이콘을 누르고 위치를 이동시킬 수 있습니다." placement='bottom-start'>
+            {/* <BootstrapTooltip title="아이콘을 누르고 위치를 이동시킬 수 있습니다." placement='bottom-start'>
               <IconButton className='dragBtn' style={{ marginLeft: 20 }}>
                 <DragHandleIcon style={{ color: '#fff' }} />
               </IconButton>
-            </BootstrapTooltip>
+            </BootstrapTooltip> */}
             <BootstrapTooltip title="최소화" placement='bottom-start'>
               <IconButton onClick={windowMinimizeHandler}>
                 <MinimizeIcon style={{ color: '#fff' }} />
@@ -713,6 +713,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           anchor='right'
           open={storeListOpen}
           onClose={handleStoreDrawerToggle}
+          sx={{overflowX: 'hidden'}}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}

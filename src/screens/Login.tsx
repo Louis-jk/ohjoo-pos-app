@@ -165,14 +165,14 @@ export default function Login() {
   };
 
   return (
-    <Box className='drag-area'>
-      <Box style={{ position: 'absolute', top: 0, left: 0 }}>
+    <Box>
+      {/* <Box style={{ position: 'absolute', top: 0, left: 0 }}>
         <BootstrapTooltip title="아이콘을 누르고 위치를 이동시킬 수 있습니다." placement='right'>
-          <IconButton className='dragBtn'>
+          <IconButton className={base.dragBtn}>
             <DragHandleIcon />
           </IconButton>
         </BootstrapTooltip>
-      </Box>
+      </Box> */}
       <Box style={{ position: 'absolute', top: 0, right: 0 }}>
         <BootstrapTooltip title="최소화" placement='bottom'>
           <IconButton onClick={windowMinimizeHandler}>
@@ -187,7 +187,7 @@ export default function Login() {
       </Box>
 
       <LoginContainer component="section">
-        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 10, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
+        <Box className={base.noDrag} display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={5} style={{ backgroundColor: '#fff', borderRadius: 10, boxShadow: '0 0 15px 2px rgba(0,0,0,0.17)' }}>
           <img src={Logo} alt="오늘의 주문 로고" style={{ width: 150, marginBottom: 30 }} />
           {/* <Typography variant="h6">로그인</Typography> */}
           <Box mb={2} style={{ minWidth: 300 }}>

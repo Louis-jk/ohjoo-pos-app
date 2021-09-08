@@ -74,6 +74,7 @@ export const theme = createTheme({
 export const MainBox = styled(Box)({
   // padding: theme.spacing(3),
   // marginTop: 35,
+  '-webkit-app-region' : 'no-drag',
   overflowY: 'scroll',
   width: '100%',
   backgroundColor: '#fff',
@@ -170,6 +171,16 @@ export const baseStyles = makeStyles({
   },
   whiteBg: {
     backgroundColor: '#fff'
+  },
+  dragBtn: {
+    cursor: 'grab',
+
+    '&:active': {
+      cursor: 'grabbing'
+    }
+  },
+  noDrag: {
+    '-webkit-app-region' : 'no-drag'
   },
   loginInput: {
     width: '100%',

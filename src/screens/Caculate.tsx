@@ -100,6 +100,7 @@ export default function Calculate(props: any) {
           <Tabs
             variant="fullWidth"
             value={value}
+            className={base.noDrag}
             indicatorColor="primary"
             onChange={handleChange}
             aria-label="nav tabs example"
