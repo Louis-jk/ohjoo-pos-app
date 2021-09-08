@@ -161,36 +161,37 @@ export default function CloseStoreModal(props: IProps) {
           <Typography id="transition-modal-description">정지하고자 하는 매장은 스위치를 꺼주세요.</Typography>
 
           <Box style={{ height: 1, width: '100%', backgroundColor: '#d5d5d5' }} my={2} />
+          <Box maxHeight={300} overflow='scroll'>
+            {allStore && allStore.length > 0 ? allStore.map((store: Object, index: number) => (
 
-          {allStore && allStore.length > 0 ? allStore.map((store: Object, index: number) => (
-
-            <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" width="100%" my={1}>
-              <Box flexShrink={1} style={{ minWidth: 200 }}>
-                <Typography textAlign="left">{store.mt_store}</Typography>
+              <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" width="100%" my={1}>
+                <Box flexShrink={1} style={{ minWidth: 200 }}>
+                  <Typography textAlign="left">{store.mt_store}</Typography>
+                </Box>
+                <Box flexShrink={1} textAlign="left" style={{ minWidth: 70 }}>
+                  <Typography
+                    component="span"
+                    fontSize={12}
+                    px={1}
+                    py={0.5}
+                    style={{
+                      borderRadius: 5,
+                      backgroundColor: store.do_end_state === 'N' ? '#F8485E' : '#9FE6A0',
+                      color: store.do_end_state === 'N' ? '#fff' : '#564A4A',
+                      transition: '.2s ease-in',
+                    }}
+                  >
+                    {store.do_end_state === 'N' ? '정지중' : '영업중'}
+                  </Typography>
+                </Box>
+                <Box flexShrink={1}>
+                  <Android12Switch color="primary" onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} checked={store.do_end_state === 'N' ? false : true} />
+                </Box>
               </Box>
-              <Box flexShrink={1} textAlign="left" style={{ minWidth: 70 }}>
-                <Typography
-                  component="span"
-                  fontSize={12}
-                  px={1}
-                  py={0.5}
-                  style={{
-                    borderRadius: 5,
-                    backgroundColor: store.do_end_state === 'N' ? '#F8485E' : '#9FE6A0',
-                    color: store.do_end_state === 'N' ? '#fff' : '#564A4A',
-                    transition: '.2s ease-in',
-                  }}
-                >
-                  {store.do_end_state === 'N' ? '정지중' : '영업중'}
-                </Typography>
-              </Box>
-              <Box flexShrink={1}>
-                <Android12Switch color="primary" onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} checked={store.do_end_state === 'N' ? false : true} />
-              </Box>
-            </Box>
-          ))
-            : <Typography textAlign="left">등록된 매장이 없습니다.</Typography>
-          }
+            ))
+              : <Typography textAlign="left">등록된 매장이 없습니다.</Typography>
+            }
+          </Box>
           <ModalCancelButton fullWidth color="primary" sx={{ fontSize: 16, marginTop: 3 }} style={{ boxShadow: 'none' }} variant="contained" onClick={props.isClose}>닫기</ModalCancelButton>
         </Box>
       </Fade>
