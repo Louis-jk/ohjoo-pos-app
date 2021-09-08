@@ -28,21 +28,21 @@ export default function StoreTimeTab03() {
   console.log("dayFormatArray", dayFormatArray);
 
   // 리스트용 포맷 핸들러
-  const dayFormatHandler = (dates: any) => {
-    console.log("dayFormatHandler 눌린거 들고온 데이트 ?", dates);
-    let result = dates.map((date: any, index: number) => {
+  const dayFormatHandler = () => {
+    
+    let result = selectedDayRange.map((date: any, index: number) => {
       return date.year + '-' + date.month + '-' + date.day;
     })
-    console.log('눌린 date', dates);
+    
     // setSelectedDayRange(day);
 
     setDayFormatArray(result);
 
     // API 휴무일 업데이트
-    let lastDate = dates[dates.length - 1];
-    let lastDateToStr = lastDate.year + '-' + lastDate.month + '-' + lastDate.day;
-    let formatApiDate = moment(lastDateToStr, 'YYYY-MM-DD').format('YYYY-MM-DD');
-    selectHolidayHandler(formatApiDate);
+    // let lastDate = dates[dates.length - 1];
+    // let lastDateToStr = lastDate.year + '-' + lastDate.month + '-' + lastDate.day;
+    // let formatApiDate = moment(lastDateToStr, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    // selectHolidayHandler(formatApiDate);
   }
 
   // 휴무일 가져오기 
@@ -105,6 +105,13 @@ export default function StoreTimeTab03() {
   useEffect(() => {
     getStoreClosedHandler();
   }, []);
+
+
+
+  useEffect(() => {
+    console.log('change selectedDayRange?', selectedDayRange)
+    dayFormatHandler();
+  }, [selectedDayRange])
 
   console.log('selectedDayRange 11 ?', selectedDayRange);
   // 휴무일 업데이트 핸들러
@@ -171,12 +178,12 @@ export default function StoreTimeTab03() {
         <Grid item md={6}>
           <Calendar
             value={selectedDayRange}
-            onChange={(day) => {
-              setSelectedDayRange([...day]);
-              dayFormatHandler(day);
-              console.log("day ?", day);
-            }}
-            // onChange={setSelectedDayRange}
+            // onChange={(day) => {
+            //   // setSelectedDayRange([...day]);
+            //   dayFormatHandler(day);
+            //   console.log("day ?", day);
+            // }}
+            onChange={setSelectedDayRange}
             shouldHighlightWeekends
             locale={myCustomLocale}
             colorPrimary={theme.palette.primary.main}
