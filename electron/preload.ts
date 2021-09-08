@@ -1,11 +1,12 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
+// 알림 사운드 종류
 const audio01 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_1.mp3');
 const audio02 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_2.mp3');
 const audio03 = new Audio('https://dmonster1452.cafe24.com/api/ohjoo_sound_3.mp3');
 
 // 알림 사운드 횟수 받기(메인 프로세서로부터)
-let soundCount: string = '';
+let soundCount = '';
 
 ipcRenderer.on('get_sound_count', (event, data) => {
   // console.log('get_sound_count', data);
@@ -71,7 +72,7 @@ const senderId = '915859720833' // <-- replace with FCM sender ID from FCM web a
 console.log('starting service and registering a client');
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId);
 
-// preload와 electron 브릿지
+// preload와 electron 브릿지 ()
 contextBridge.exposeInMainWorld("appRuntime", {
   send: (channel: string, data: any) => {
     ipcRenderer.send(channel, data);
