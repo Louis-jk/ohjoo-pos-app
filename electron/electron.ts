@@ -86,7 +86,7 @@ ipcMain.on('pos_print', (event, data) => {
 // 창 닫기
 ipcMain.on('windowClose', (event, data) => {
   console.log('app quit?', data);
-  app.quit();
+  app.exit();
 });
 
 // 창 내리기
@@ -94,8 +94,8 @@ ipcMain.on('windowMinimize', (event, data) => {
   mainWindow.minimize();
 });
 
-let fcmToken = '';
 // 토큰 가져오기
+let fcmToken = '';
 ipcMain.on('fcmToken', (event, data) => {
   console.log('electron token data', data);
   fcmToken = data;
