@@ -404,7 +404,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <ListItem className={base.orderMenu02} component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? '#fff' : 'transparent' }}>
               <Box display='flex' flexDirection='row'>
                 <StorefrontOutlinedIcon />
-                <Typography component='label' variant='body1' ml={1}>매장소개</Typography>
+                <Typography component='label' variant='body1' ml={1}>매장소개 및 설정</Typography>
               </Box>
             </ListItem>
             <ListItem className={base.orderMenu02} component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? '#fff' : 'transparent' }}>
@@ -423,12 +423,12 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const storeListDrawer = (
     <Box style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
       {/* <div className={classes.toolbar} /> */}
-      <Box display="flex" justifyContent="flex-start" alignItems="center" py={0.5} px={1} style={{ backgroundColor: theme.palette.secondary.main, color: '#fff' }}>
+      <Box display="flex" justifyContent="flex-start" alignItems="center" py={0.5} px={1} style={{ position: 'fixed', width: '100%', zIndex: 100, backgroundColor: theme.palette.secondary.main, color: '#fff' }}>
         <Typography variant="h5" component="h5" style={{ fontWeight: 500, color: theme.palette.secondary.contrastText, margin: '12px 20px' }}>매장선택</Typography>
       </Box>
       <Divider />
       <Box display="flex" flex={3}>
-        <FormControl component="fieldset" style={{ padding: 10 }}>
+        <FormControl component="fieldset" style={{ padding: 10, overflowY: 'scroll', marginTop: 55, marginBottom: 55, zIndex: 5 }}>
           <RadioGroup aria-label="select_store" name="store" value={value} onChange={handleChange}>
             {allStore && allStore.length > 0 ? allStore.map((store: any, index: number) => (
               <Box key={index}>
@@ -436,7 +436,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   value={store.mt_store}
                   control={<Radio color="primary" />}
                   label={store.mt_store}
-                  style={{ margin: 10, color: '#222' }}
+                  style={{ marginTop: 15, marginBottom: 15, marginLeft: 10, marginRight: 10, color: '#222' }}
                   onClick={() => setStoreHandler(store, store.id, store.mt_id, store.mt_jumju_code, store.mt_store, store.mt_addr)}
                   checked={store.mt_store === mt_store ? true : false}
                 />
@@ -448,7 +448,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           </RadioGroup>
         </FormControl>
       </Box>
-      <Box justifySelf="flex-end" p={1} style={{ backgroundColor: '#ececec' }}>
+      <Box justifySelf="flex-end" p={1} style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 100, backgroundColor: '#ececec' }}>
         <Button style={{ color: theme.palette.primary.contrastText }} onClick={logout}>
           <LogoutOutlinedIcon />
           <Typography ml={1}>로그아웃</Typography>
@@ -461,7 +461,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   return (
     <Box>
-      <PrintModal type='print' isOpen={printOpen} isClose={closePrintModal} />
+      <PrintModal isOpen={printOpen} isClose={closePrintModal} />
       <CloseStoreModal isOpen={closeStoreModalOpen} isClose={closeCloseStoreModal} />
 
       {/* 윈도우 닫기 컨펌 모달 */}
