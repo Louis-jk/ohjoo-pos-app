@@ -142,7 +142,6 @@ export default function OrdersDetail(od_id: string) {
 
   const newFn = () => {
     handleOpen();
-    handlePrint02();
   }
   const checkOrderHandler = (id: string, type: string) => {
     setOdId(id);
@@ -345,7 +344,7 @@ export default function OrdersDetail(od_id: string) {
 
   return (
     <Box component="div" className={base.root}>
-      <PrintModal type='check' isOpen={printOpen} isClose={closePrintModal} />
+      <PrintModal isOpen={printOpen} isClose={closePrintModal} />
       {detailOrder ?
         <Header
           detail={
