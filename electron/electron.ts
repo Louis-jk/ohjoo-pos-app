@@ -26,13 +26,15 @@ function createWindow() {
         nodeIntegration: false,
         contextIsolation: true, 
         enableRemoteModule: true, 
-        preload: path.join(app.getAppPath(), '/build/preload.js'),
+        preload: path.join(app.getAppPath(), '/preload.js'),
       }
     });
+
     let indexPath;
+    
     indexPath = url.format({
       protocol: 'file:',
-      pathname: path.join(app.getAppPath(), '/build/index.html'),
+      pathname: path.join(app.getAppPath(), '/index.html'),
       slashes: true
     })
     mainWindow.loadURL( indexPath );
@@ -42,7 +44,7 @@ function createWindow() {
     mainWindow.setMenuBarVisibility(false);
 
     // 개발자 툴 오픈
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -65,8 +67,10 @@ ipcMain.on('pos_print', (event, data) => {
       let printerInfo = win.webContents.getPrinters();
       let printer = printerInfo.filter(printer => printer.isDefault === true)[0];
 
+      console.log('printer info', printer);
+
       const options = {
-        silent: true,
+        silent: false,
         deviceName: printer.name,
         pageSize: {height: 301000, width: 50000}
       }

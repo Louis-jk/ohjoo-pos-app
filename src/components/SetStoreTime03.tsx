@@ -23,12 +23,18 @@ export default function StoreTimeTab03() {
   const [selectedDayRange, setSelectedDayRange] = useState<Day[]>([]); // 마커용
   const [dayFormatArray, setDayFormatArray] = useState<string[]>([]); // 리스트용 - Chip
 
+  console.log("===============");
+  console.log("selectedDayRange", selectedDayRange);
+  console.log("dayFormatArray", dayFormatArray);
+
   // 리스트용 포맷 핸들러
   const dayFormatHandler = (dates: any) => {
     console.log("dayFormatHandler 눌린거 들고온 데이트 ?", dates);
     let result = dates.map((date: any, index: number) => {
       return date.year + '-' + date.month + '-' + date.day;
     })
+    console.log('눌린 date', dates);
+    // setSelectedDayRange(day);
 
     setDayFormatArray(result);
 
@@ -78,7 +84,10 @@ export default function StoreTimeTab03() {
           }
           toArr.push(obj);
 
+          console.log('toArr ?', toArr);
+
           toChipArr.push(date.sh_date);
+          // selectedDayRange
         });
 
         // 대입된 값들을 캘린더 상태값에 저장(마커용)
@@ -97,7 +106,7 @@ export default function StoreTimeTab03() {
     getStoreClosedHandler();
   }, []);
 
-
+  console.log('selectedDayRange 11 ?', selectedDayRange);
   // 휴무일 업데이트 핸들러
   const selectHolidayHandler = (date: string) => {
 
@@ -110,14 +119,19 @@ export default function StoreTimeTab03() {
 
     console.log("param은?", param);
 
+    // return false;
+
     Api.send('store_hoilday', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        console.log('업데이트 완료');
+        console.log('업데이트 완료 result', resultItem);
+        console.log('업데이트 완료', arrItems);
+        getStoreClosedHandler();
       } else {
         console.log('업데이트 실패');
+        getStoreClosedHandler();
       }
     });
   };
@@ -158,10 +172,11 @@ export default function StoreTimeTab03() {
           <Calendar
             value={selectedDayRange}
             onChange={(day) => {
-              setSelectedDayRange(day);
+              setSelectedDayRange([...day]);
               dayFormatHandler(day);
-              // console.log("보자 day", day);
+              console.log("day ?", day);
             }}
+            // onChange={setSelectedDayRange}
             shouldHighlightWeekends
             locale={myCustomLocale}
             colorPrimary={theme.palette.primary.main}

@@ -1,5 +1,13 @@
 importScripts("https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/8.7.1/firebase-messaging.js");
+// self.importScripts(
+//   "./firebase/8.7.1/firebase-app.js",
+//   "./firebase/8.7.1/firebase-messaging.js"
+// );
+// import "./firebase/8.7.1/firebase-app";
+// import "./firebase/8.7.1/firebase-messaging";
+
+// 경로 로컬 경로로 수정 테스트 후 일렉트론 빌드 테스트 예정
 
 var firebaseConfig = {
   apiKey: "AIzaSyBOyroyao3fp4wbGG8N4oFWx6zmrkH2vzg",
