@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
   Typography,
@@ -15,6 +16,7 @@ import OrderCancelModal from './OrderCancelModal'; // 접수완료 주문 취소
 import { theme } from '../styles/base';
 import Api from '../Api';
 import moment from 'moment';
+import orderDetailAction from '../redux/actions';
 
 interface orderData {
   [key: string]: string;
@@ -29,8 +31,10 @@ interface OrderProps {
 
 export default function OrderCard(props: OrderProps) {
 
-  const history = useHistory();
   const { orders, type } = props;
+  const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const history = useHistory();
+  const dispatch = useDispatch();
   const params = useParams();
 
   const [odId, setOdId] = React.useState('');
@@ -46,9 +50,33 @@ export default function OrderCard(props: OrderProps) {
     setOpen(false);
   };
 
+  // 주문 디테일 정보 가져오기
+  const getOrderDetailHandler = (od_id: string) => {
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_id
+    };
+    Api.send('store_order_detail', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        dispatch(orderDetailAction.updateOrderDetail(JSON.stringify(arrItems)));
+      } else {
+        console.log("faild?", arrItems)
+        alert('주문 정보를 받아올 수 없습니다.')
+        dispatch(orderDetailAction.updateOrderDetail([]));
+      }
+    });
+  }
+
   const checkOrderHandler = (id: string, type: string) => {
     setOdId(id);
     setOdType(type);
+    getOrderDetailHandler(id);
     handleOpen();
   }
 

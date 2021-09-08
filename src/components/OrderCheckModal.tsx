@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 // Material UI Components
 import Modal from '@material-ui/core/Modal';
@@ -20,6 +22,8 @@ import Alert from '@material-ui/lab/Alert';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import orderAction from '../redux/actions';
+import orderDetailAction from '../redux/actions';
+import appRuntime from '../appRuntime';
 
 interface IProps {
   isOpen: boolean;
@@ -27,15 +31,21 @@ interface IProps {
   od_type: string;
   handleClose: () => void;
 }
+interface IDetails {
+  [key: string]: string;
+}
 
 export default function OrderCheckModal(props: IProps) {
 
-  const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const { mt_id, mt_jumju_code, mt_print } = useSelector((state: any) => state.login);
   const history = useHistory();
   const base = baseStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false); // 신규 주문 -> 접수(배달/포장 시간 입력 모달)
   const [deliveryTime, setDeliveryTime] = React.useState(''); // 신규 주문 -> 배달시간 입력
+
+  const { order, product, store } = useSelector((state: any) => state.orderDetail);
+
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -49,6 +59,107 @@ export default function OrderCheckModal(props: IProps) {
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
+
+  // 일렉트론쪽 프린트 출력
+  const handlePrint = () => {
+    if (order !== null && product !== null && store !== null) {
+      const htmlFormat = `
+      <h5 style='text-align: center; font-size: 20px; font-weight: bold;'>오늘의 주문</h5>
+      <hr style='margin: 5px 0;' />
+      <table style='width: 100%;'>
+        <tr colspan='2'>
+          <th style='text-align: left;'>주문정보</th>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>주문매장 :</td>
+          <td style='text-align: right;'>${store.mb_company}</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>주문시간 :</td>
+          <td style='text-align: right;'>${moment(order.od_time).format('YYYY년 M월 D일, HH시 mm분')}</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>주문방법 :</td>
+          <td style='text-align: right;'>${order.od_type}</td>
+        </tr>
+      </table>
+      <hr style='margin: 5px 0;' />
+      <table style='width: 100%;'>
+        <tr colspan='2'>
+          <th style='text-align: left;'>주문메뉴</th>
+        </tr>
+        ${product.map((item: any, index: number) => (
+        `<tr colspan='2'><td key=${index} style='text-align: left;' >메뉴 : ${item.it_name} / 옵션 - ${item.ct_option}</td></tr>`
+      ))}
+      </table>
+      <hr style='margin: 5px 0;' />
+      <table style='width: 100%;'>
+        <tr colspan='2'>
+          <th style='text-align: left;'>배달정보</th>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>배달주소 :</td>
+          <td style='text-align: right;'>${order.order_addr1}${order.order_addr3}</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>전화번호 :</td>
+          <td style='text-align: right;'>${Api.phoneFomatter(order.order_hp)}</td>
+        </tr>
+      </table>
+      <hr style='margin: 5px 0;' />
+      <table style='width: 100%;'>
+        <tr colspan='2'>
+          <th style='text-align: left;'>요청사항</th>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>사장님께 :</td>
+          <td style='text-align: right;'>${order.order_seller ? order.order_seller : '요청사항이 없습니다.'}</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>기사님께 :</td>
+          <td style='text-align: right;'>${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
+        </tr>
+      </table>
+      <hr style='margin: 5px 0;' />
+      <table style='width: 100%;'>
+        <tr colspan='2'>
+          <th style='text-align: left;'>결제정보</th>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>총 주문금액 :</td>
+          <td style='text-align: right;'>${Api.comma(order.odder_cart_price)} 원</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>배달팁 :</td>
+          <td style='text-align: right;'>${Api.comma(order.order_cost)} 원</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>포인트 :</td>
+          <td style='text-align: right;'>${Api.comma(order.order_point)} P</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>쿠폰할인 :</td>
+          <td style='text-align: right;'>${Api.comma(order.order_coupon)} 원</td>
+        </tr>
+        <tr>
+          <td style='text-align: left;'>결제방법 :</td>
+          <td style='text-align: right;'>${order.od_settle_case}</td>
+        </tr>
+      </table>
+      <hr style='margin: 5px 0;' />
+      <table style='width: 100%;'>
+        <tr>
+          <td style='text-align: left; font-size: 16px; font-weight: bold'>총 결제금액 :</td>
+          <td style='text-align: right; font-size: 16px; font-weight: bold'>${Api.comma(order.order_sumprice)} 원</td>
+        </tr>
+      </table>
+      <hr style='margin: 5px 0;' />
+    `
+      appRuntime.send('pos_print', htmlFormat);
+    } else {
+      alert('주문 디테일이 없습니다.');
+    }
+  }
 
   // 현재 신규주문 건수 가져오기
   const getNewOrderHandler = () => {
@@ -126,6 +237,12 @@ export default function OrderCheckModal(props: IProps) {
           handleOpenAlert();
           props.handleClose();
           getNewOrderHandler();
+
+          if (mt_print === '1') {
+            // 주문 접수시 자동 출력일 경우
+            handlePrint();
+          }
+
           setTimeout(() => {
             history.push('/order_new');
           }, 700);
@@ -138,6 +255,7 @@ export default function OrderCheckModal(props: IProps) {
       });
     }
   };
+
 
   return (
     <>
