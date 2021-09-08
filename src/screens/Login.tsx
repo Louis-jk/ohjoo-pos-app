@@ -118,6 +118,7 @@ export default function Login() {
         if (values.isAutoLogin) {
           storeData();
         }
+        // console.log('login result', arrItems);
         storeAddToken(token);
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
         dispatch(loginAction.updateToken(token));
