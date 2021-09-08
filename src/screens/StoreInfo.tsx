@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Material UI Components
 import Grid from '@material-ui/core/Grid';
@@ -19,6 +19,8 @@ import Header from '../components/Header';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import appRuntime from '../appRuntime';
+import clsx from 'clsx';
+import loginAction from '../redux/actions';
 
 interface IProps {
   props: object;
@@ -41,6 +43,7 @@ interface IStoreInfo {
   do_delivery_time: string;
   do_end_state: string;
   mt_sound: string;
+  mt_print: string;
   mb_one_saving: string;
 }
 
@@ -49,6 +52,7 @@ export default function StoreInfo(props: IProps) {
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const base = baseStyles();
   const [isLoading, setLoading] = React.useState(false);
+  const dispatch = useDispatch();
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -79,6 +83,7 @@ export default function StoreInfo(props: IProps) {
     do_delivery_time: '', // 평균 배달 시간
     do_end_state: '', // 주문마감
     mt_sound: '', // 알림 횟수
+    mt_print: '', // 주문 접수시 자동프린트 유무 (1: true / 0: false)
     mb_one_saving: '', // 1인분 가능
   });
 
@@ -96,6 +101,7 @@ export default function StoreInfo(props: IProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
+
         setStoreInit(true);
         setInfo({
           do_jumju_introduction: arrItems.do_jumju_introduction,
@@ -111,6 +117,7 @@ export default function StoreInfo(props: IProps) {
           do_delivery_time: arrItems.do_delivery_time,
           do_end_state: arrItems.do_end_state,
           mt_sound: arrItems.mt_sound,
+          mt_print: arrItems.mt_print,
           mb_one_saving: arrItems.mb_one_saving
         });
         setLoading(false);
@@ -130,6 +137,7 @@ export default function StoreInfo(props: IProps) {
           do_delivery_time: '',
           do_end_state: '',
           mt_sound: '',
+          mt_print: '',
           mb_one_saving: ''
         });
         setLoading(false);
@@ -160,6 +168,7 @@ export default function StoreInfo(props: IProps) {
       do_delivery_time: info.do_delivery_time,
       do_end_state: info.do_end_state,
       mt_sound: info.mt_sound,
+      mt_print: info.mt_print,
       mb_one_saving: info.mb_one_saving
     };
 
@@ -168,6 +177,8 @@ export default function StoreInfo(props: IProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
+        dispatch(loginAction.updateNotify(info.mt_sound));
+        dispatch(loginAction.updateAutoPrint(info.mt_print));
         if (storeInit) {
           setToastState({ msg: '매장소개가 수정 되었습니다.', severity: 'success' });
           handleOpenAlert();
@@ -186,7 +197,6 @@ export default function StoreInfo(props: IProps) {
         }
       }
     });
-
   }
 
   return (
@@ -334,63 +344,98 @@ export default function StoreInfo(props: IProps) {
                 })}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography fontWeight='bold'>알림 설정</Typography>
-              <FormControl component="fieldset">
-                <RadioGroup row aria-label="position" name="position" defaultValue="N">
-                  <FormControlLabel
-                    value={'1'}
-                    checked={info.mt_sound === '1' ? true : false}
-                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                    label="1회 알림"
-                    labelPlacement="start"
-                    style={{ width: 110, margin: 0, flexDirection: 'row' }}
-                    onChange={e => {
-                      setInfo({
-                        ...info,
-                        mt_sound: '1'
-                      });
-                      appRuntime.send('sound_count', '1');
-                    }}
-                  />
-                  <FormControlLabel
-                    value={'2'}
-                    checked={info.mt_sound === '2' ? true : false}
-                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                    label="2회 알림"
-                    labelPlacement="start"
-                    style={{ width: 110, margin: 0, flexDirection: 'row' }}
-                    onChange={e => {
-                      setInfo({
-                        ...info,
-                        mt_sound: '2'
-                      });
-                      appRuntime.send('sound_count', '2');
-                    }}
-                  />
-                  <FormControlLabel
-                    value={'3'}
-                    checked={info.mt_sound === '3' ? true : false}
-                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                    label="3회 알림"
-                    labelPlacement="start"
-                    style={{ width: 110, margin: 0, flexDirection: 'row' }}
-                    onChange={e => {
-                      setInfo({
-                        ...info,
-                        mt_sound: '3'
-                      });
-                      appRuntime.send('sound_count', '3');
-                    }}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-
             {/* <Button variant="contained" color="primary" fullWidth>등록하기</Button> */}
           </Grid>
-          <Box className={base.mb10}></Box>
-          <Grid item xs={12} md={6}>
+          <Box className={clsx(base.mb10, base.mt20)}></Box>
+          <Grid item xs={12} md={6} mb={2}>
+            <Typography fontWeight='bold'>알림 설정</Typography>
+            <FormControl component="fieldset">
+              <RadioGroup row aria-label="position" name="position" defaultValue="N">
+                <FormControlLabel
+                  value={'1'}
+                  checked={info.mt_sound === '1' ? true : false}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                  label="1회 알림"
+                  labelPlacement="start"
+                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  onChange={e => {
+                    setInfo({
+                      ...info,
+                      mt_sound: '1'
+                    });
+                    appRuntime.send('sound_count', '1');
+                  }}
+                />
+                <FormControlLabel
+                  value={'2'}
+                  checked={info.mt_sound === '2' ? true : false}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                  label="2회 알림"
+                  labelPlacement="start"
+                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  onChange={e => {
+                    setInfo({
+                      ...info,
+                      mt_sound: '2'
+                    });
+                    appRuntime.send('sound_count', '2');
+                  }}
+                />
+                <FormControlLabel
+                  value={'3'}
+                  checked={info.mt_sound === '3' ? true : false}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                  label="3회 알림"
+                  labelPlacement="start"
+                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  onChange={e => {
+                    setInfo({
+                      ...info,
+                      mt_sound: '3'
+                    });
+                    appRuntime.send('sound_count', '3');
+                  }}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6} mb={2}>
+            <Typography fontWeight='bold'>주문 접수시 자동 프린트 여부</Typography>
+            <FormControl component="fieldset">
+              <RadioGroup row aria-label="position" name="position" defaultValue="N">
+                <FormControlLabel
+                  value={'1'}
+                  checked={info.mt_print === '1' ? true : false}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                  label="자동출력"
+                  labelPlacement="start"
+                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  onChange={e => {
+                    setInfo({
+                      ...info,
+                      mt_print: '1'
+                    });
+                  }}
+                />
+                <FormControlLabel
+                  value={'0'}
+                  checked={info.mt_print === '0' ? true : false}
+                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
+                  label="출력안함"
+                  labelPlacement="start"
+                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  onChange={e => {
+                    setInfo({
+                      ...info,
+                      mt_print: '0'
+                    });
+                  }}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6} mb={2}>
+            <Typography fontWeight='bold'>주문 포장 가능 여부</Typography>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
@@ -420,8 +465,9 @@ export default function StoreInfo(props: IProps) {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} mb={2}>
             <FormControl component="fieldset">
+              <Typography fontWeight='bold'>쿠폰 사용 가능 여부</Typography>
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
                   value={'Y'}
