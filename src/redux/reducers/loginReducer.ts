@@ -1,3 +1,4 @@
+import { type } from 'os';
 import types from '../actions/types';
 
 interface loginState {
@@ -18,6 +19,7 @@ const defaultState = {
   mt_point: 0,
   mt_sound: '',
   mt_coupon: 0,
+  mt_print: '',
   mt_app_token: '',
   updateTime: '',
   fcmToken: '',
@@ -49,6 +51,7 @@ const loginReducer = (state: loginState = defaultState, action: any) => {
       mt_point: action.mt_point,
       mt_sound: action.mt_sound,
       mt_coupon: action.mt_coupon,
+      mt_print: action.mt_print,
       mt_app_token: action.mt_app_token,
       mt_store: action.mt_store,
       updateTime: action.updateTime,
@@ -61,13 +64,23 @@ const loginReducer = (state: loginState = defaultState, action: any) => {
   case types.UPDATE_FCM_TOKEN:
     return {
       ...state,
-      mt_app_token: action.mt_app_token
+      mt_app_token: action.payload
     };
   case types.SELECT_STORE:
     return {
       ...state,
       mt_jumju_code: action.mt_jumju_code,
       mt_store: action.mt_store
+    };
+  case types.UPDATE_NOTIFY_COUNT: 
+    return {
+      ...state,
+      mt_sound: action.payload
+    };
+  case types.UPDATE_AUTO_PRINT: 
+    return {
+      ...state,
+      mt_print: action.payload
     };
   default:
     return state;

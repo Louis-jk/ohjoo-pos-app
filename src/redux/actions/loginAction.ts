@@ -1,6 +1,6 @@
 import types from './types';
 
-
+// 최초 로그인시 업데이트
 export function updateLogin(data: string) {
   const args = JSON.parse(data);
 
@@ -19,6 +19,7 @@ export function updateLogin(data: string) {
     mt_point: args.mt_point,
     mt_sound: args.mt_sound,
     mt_coupon: args.mt_coupon,
+    mt_print: args.mt_print,
     mt_app_token: args.mt_app_token,
     updateTime: args.updateTime,
     mt_store: args.mt_store,
@@ -30,10 +31,29 @@ export function updateLogin(data: string) {
   };
 }
 
+// 토큰 업데이트(firebase)
 export function updateToken(data: string) {
   
   return {
     type: types.UPDATE_FCM_TOKEN,
-    mt_app_token: data
+    payload: data
+  };
+}
+
+// 알림 설정(1회, 2회, 3회)
+export function updateNotify(data: string) {
+  
+  return {
+    type: types.UPDATE_NOTIFY_COUNT,
+    payload: data
+  };
+}
+
+// 주문 접수시 자동 프린트 여부
+export function updateAutoPrint(data: string) {
+  
+  return {
+    type: types.UPDATE_AUTO_PRINT,
+    payload: data
   };
 }
