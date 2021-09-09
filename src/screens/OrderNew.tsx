@@ -60,7 +60,7 @@ export default function OrderNew() {
   return (
     <Box component="div" className={base.root}>
       <Header />
-      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderBottomLeftRadius: 10 }}>
         <OrderCard orders={list} type="new" />
       </MainBox>
     </Box>

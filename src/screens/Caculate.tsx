@@ -90,7 +90,7 @@ export default function Calculate(props: any) {
   return (
     <Box component="div" className={base.root}>
       <Header type="calculate" />
-      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
         <AppBar position="static" style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
           <div>
             <h3 style={{ color: '#222' }}>7월 정산 금액</h3>

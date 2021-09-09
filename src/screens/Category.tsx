@@ -261,13 +261,13 @@ export default function SetCategory(props: any) {
       </Box>
 
       {isLoading ?
-        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box className={base.loadingWrap}>
             <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
           </Box>
         </MainBox>
         :
-        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box mt={3} />
           {/* 신규 카테고리 추가 모달 */}
           <Modal

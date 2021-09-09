@@ -68,7 +68,7 @@ export default function SetStoreTime(props: TabPanelProps) {
   return (
     <Box component="div" className={base.root}>
       <Header />
-      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderBottomLeftRadius: 10 }}>
         <AppBar position="static" style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
           <Tabs
             variant="fullWidth"

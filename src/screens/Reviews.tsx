@@ -397,13 +397,13 @@ export default function Reviews(props: any) {
       </Modal>
       {/* // 답글 삭제 모달 */}
       {isLoading ?
-        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10 }}>
           <Box className={base.loadingWrap}>
             <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
           </Box>
         </MainBox>
         :
-        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10 }}>
           {lists && lists.length > 0 &&
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) =>
