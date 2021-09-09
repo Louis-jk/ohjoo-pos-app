@@ -31,12 +31,16 @@ export default function StoreTimeTab03() {
   const dayFormatHandler = () => {
     
     let result = selectedDayRange.map((date: any, index: number) => {
-      return date.year + '-' + date.month + '-' + date.day;
+       let changeDate = date.year + '-' + date.month + '-' + date.day;
+       let formatDate = moment(changeDate, 'YYYY-M-DD').format('YYYY-MM-DD');
+       return formatDate;
     })
     
     // setSelectedDayRange(day);
 
     setDayFormatArray(result);
+
+    console.log("캘린더 찍었을 때 RESULT", result);
 
     // API 휴무일 업데이트
     // let lastDate = dates[dates.length - 1];
@@ -114,6 +118,7 @@ export default function StoreTimeTab03() {
   }, [selectedDayRange])
 
   console.log('selectedDayRange 11 ?', selectedDayRange);
+  
   // 휴무일 업데이트 핸들러
   const selectHolidayHandler = (date: string) => {
 
@@ -147,28 +152,30 @@ export default function StoreTimeTab03() {
   const handleDelete = (date: string) => {
     console.log("handleDelete date?", date);
     console.log("handleDelete date type?", typeof date);
-    let filtered = dayFormatArray.filter(chipDate => chipDate !== date);
-    setDayFormatArray(filtered);
 
-    // 리스트용 - Chip 삭제 필터
-    let obj: Day;
+    // Chip의 날짜 형식을 캘린더 형식으로 변경
+    let changeObj: Day;
     let yearToNum = Number(moment(date, 'YYYY-MM-DD').format('YYYY'));
     let monthToNum = Number(moment(date, 'YYYY-MM-DD').format('MM'));
     let dayToNum = Number(moment(date, 'YYYY-MM-DD').format('DD'));
 
-    obj = {
+    changeObj = {
       day: dayToNum,
       month: monthToNum,
       year: yearToNum
     }
 
-    // 마커 삭제
-    let markerFiltered = selectedDayRange.filter(markerDate => JSON.stringify(markerDate) !== JSON.stringify(obj));
-    setSelectedDayRange(markerFiltered);
+    // 선택된 Chip날짜를 Chip 배열에서 찾아서 제거
+    let filtered = dayFormatArray.filter(chipDate => chipDate !== date);
+    setDayFormatArray(filtered);
+
+    // 캘린더 형식으로 변경된 날짜를 캘린더 배열에서 찾아서 제거
+    let CalendarResult = selectedDayRange.filter(date => JSON.stringify(date) !== JSON.stringify(changeObj));
+    setSelectedDayRange(CalendarResult);
 
     // API 휴무일 업데이트
-    let formatApiDate = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
-    selectHolidayHandler(formatApiDate);
+    // selectHolidayHandler(date);
+    
   };
 
 
