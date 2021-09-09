@@ -70,9 +70,14 @@ ipcMain.on('pos_print', (event, data) => {
       console.log('printer info', printer);
 
       const options = {
-        silent: false,
+        marginsType: 0,
+        printBackground: false,
+        printSelectionOnly: false,
+        landscape: false,
+        scaleFactor: 100,
+        silent: true,
         deviceName: printer.name,
-        pageSize: {height: 301000, width: 50000}
+        pageSize: {height: 301000, width: 72000}
       }
 
       win.webContents.print(options, () => {
