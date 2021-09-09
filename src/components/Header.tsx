@@ -389,7 +389,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <Typography component='label' variant='body1' ml={1}>메뉴관리</Typography>
               </Box>
             </ListItem>
-            <ListItem className={base.orderMenu02} component={Link} to='/coupons' style={{ color: curPathName === 'coupons' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' ? '#fff' : 'transparent' }}>
+            <ListItem className={base.orderMenu02} component={Link} to='/coupons' style={{ color: curPathName === 'coupons' || props.type === 'couponAdd' || props.type === 'couponEdit' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'coupons' || props.type === 'couponAdd' || props.type === 'couponEdit' ? '#fff' : 'transparent' }}>
               <Box display='flex' flexDirection='row'>
                 <ConfirmationNumberOutlinedIcon />
                 <Typography component='label' variant='body1' ml={1}>쿠폰관리</Typography>
@@ -713,7 +713,6 @@ export default function ResponsiveDrawer(props: OptionalProps) {
           anchor='right'
           open={storeListOpen}
           onClose={handleStoreDrawerToggle}
-          sx={{overflowX: 'hidden'}}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
