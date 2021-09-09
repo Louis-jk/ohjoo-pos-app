@@ -313,7 +313,7 @@ export default function MenuAdd(props: any) {
           </Alert>
         </Snackbar>
       </Box>
-      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <Box className={base.mb10} style={{ position: 'relative' }}>
