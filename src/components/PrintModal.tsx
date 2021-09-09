@@ -41,13 +41,21 @@ const PrintModal = (props: any) => {
   const handlePrint = () => {
     if (order !== null && product !== null && store !== null) {
       const htmlFormat = `
-      <div style='width: 80mm;'>
+      <style>
+        @page { margin: 0; margin-bottom: 20px; }
+        @media print {
+          .print_area {
+            margin-bottom: 50mm;
+          }
+        }
+      </style>
+      <div class='print_area' style='width: 100%;'>
         <h5 style='text-align: center; font-size: 12pt; font-weight: bold;'>오늘의 주문</h5>
         <hr style='margin: 5px 0;' />
-        <table style='width: 80mm; border-collapse: collapse; border-spacing: 0;'>
+        <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
           <colgroup>
-            <col width='20%' />
-            <col width='80%' />
+            <col width='35%' />
+            <col width='65%' />
           </colgroup>
           <tr colspan='2'>
             <th style='text-align: left; font-size: 9.6pt;'>주문정보</th>
@@ -66,10 +74,10 @@ const PrintModal = (props: any) => {
           </tr>
         </table>
         <hr style='margin: 5px 0;' />
-        <table style='width: 80mm; border-collapse: collapse; border-spacing: 0;'>
+        <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
           <colgroup>
-            <col width='20%' />
-            <col width='80%' />
+            <col width='35%' />
+            <col width='65%' />
           </colgroup>
           <tr colspan='2'>
             <th style='text-align: left; font-size: 9.6pt;'>주문메뉴</th>
@@ -79,10 +87,10 @@ const PrintModal = (props: any) => {
         ))}
         </table>
         <hr style='margin: 5px 0;' />
-        <table style='width: 80mm; border-collapse: collapse; border-spacing: 0;'>
+        <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
           <colgroup>
-            <col width='20%' />
-            <col width='80%' />
+            <col width='35%' />
+            <col width='65%' />
           </colgroup>
           <tr colspan='2'>
             <th style='text-align: left; font-size: 9.6pt;'>배달정보</th>
@@ -97,10 +105,10 @@ const PrintModal = (props: any) => {
           </tr>
         </table>
         <hr style='margin: 5px 0;' />
-        <table style='width: 80mm; border-collapse: collapse; border-spacing: 0;'>
+        <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
           <colgroup>
-            <col width='20%' />
-            <col width='80%' />
+            <col width='35%' />
+            <col width='65%' />
           </colgroup>
           <tr colspan='2'>
             <th style='text-align: left; font-size: 9.6pt;'>요청사항</th>
@@ -115,10 +123,10 @@ const PrintModal = (props: any) => {
           </tr>
         </table>
         <hr style='margin: 5px 0;' />
-        <table style='width: 80mm; border-collapse: collapse; border-spacing: 0;'>
+        <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
           <colgroup>
-            <col width='20%' />
-            <col width='80%' />
+            <col width='35%' />
+            <col width='65%' />
           </colgroup>
           <tr colspan='2'>
             <th style='text-align: left; font-size: 9.6pt;'>결제정보</th>
@@ -145,16 +153,17 @@ const PrintModal = (props: any) => {
           </tr>
         </table>
         <hr style='margin: 5px 0;' />
-        <table style='width: 80mm; border-collapse: collapse; border-spacing: 0;'>
+        <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
           <colgroup>
-            <col width='20%' />
-            <col width='80%' />
+            <col width='40%' />
+            <col width='60%' />
           </colgroup>
           <tr>
             <td style='text-align: left; font-size: 9.6pt; font-weight: bold'>총 결제금액 :</td>
             <td style='text-align:right;  font-size: 9.6pt; font-weight: bold'>${Api.comma(order.order_sumprice)} 원</td>
           </tr>
         </table>
+        <p>&nbsp;</p>
         <hr style='margin: 5px 0;' />
       </div>
     `
