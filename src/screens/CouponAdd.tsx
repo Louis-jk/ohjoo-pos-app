@@ -258,7 +258,7 @@ export default function CouponAdd() {
       </Modal>
       {/* // 쿠폰 입력 완료 모달 */}
 
-      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
         <Box style={{ marginBottom: 20 }}>
           <Typography variant="h5" component="h5">쿠폰 등록</Typography>
         </Box>
