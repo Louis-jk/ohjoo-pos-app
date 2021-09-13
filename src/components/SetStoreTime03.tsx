@@ -25,28 +25,19 @@ export default function StoreTimeTab03() {
   // const [selectedDayRange, setSelectedDayRange] = useState<Day[]>([]); // 마커용
   // const [dayFormatArray, setDayFormatArray] = useState<string[]>([]); // 리스트용 - Chip
 
-  const [dates, setDates] = useState([]); // 새로운 캘린더
+  const [dates, setDates] = useState(new Date()); // 새로운 캘린더
 
     // 데이트 Select 핸들러
   const dateSelectHandler = (date: any) => {
     
-    let newDateArr: any = [];
-    
-    newDateArr.push(date);
-    newDateArr.concat(...dates, date);
-    console.log("newDateArr", newDateArr);
-    console.log("newDateArr typeof", typeof newDateArr);
-    console.log("newDateArr isArray", Array.isArray(newDateArr));
-    
-    setDates(newDateArr);
+    let newArr = [];
+    newArr.push(new Date(date));
+    console.log('newArr', newArr);
+    // setDates(newArr);
   } 
-  console.log("===============");
-  // console.log("selectedDayRange", selectedDayRange);
-  // console.log("dayFormatArray", dayFormatArray);
-  console.log("===============");
-  console.log("dates", dates);
-  console.log("===============");
 
+  console.log('dates', dates);
+  
   // 리스트용 포맷 핸들러
 //   const dayFormatHandler = () => {
 //     
@@ -231,6 +222,7 @@ export default function StoreTimeTab03() {
               dateSelectHandler(date);
               // onChange
             }}
+            // onChange={setDates}
             value={[new Date(2021, 9, 9), new Date(2021, 9, 10)]}
             
           />
