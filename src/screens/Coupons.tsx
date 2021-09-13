@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
@@ -243,22 +244,6 @@ export default function Tips(props: any) {
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) => (
                 <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }} alignContent='baseline'>
-                  <IconButton
-                    color="primary"
-                    component="span"
-                    onClick={() => deleteCouponConfirmHandler(list.cz_no)}
-                    style={{
-                      position: 'absolute',
-                      top: 15,
-                      right: -10,
-                      width: 25,
-                      height: 25,
-                      color: '#fff',
-                      backgroundColor: theme.palette.primary.main
-                    }}
-                  >
-                    <CloseRoundedIcon />
-                  </IconButton>
                   <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left', borderWidth: 1, borderStyle: 'dotted', borderColor: theme.palette.primary.main }}>
                     <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
                     <Box component="article" className={coupon.couponBox}>
@@ -275,6 +260,12 @@ export default function Tips(props: any) {
                     </Box>
                     <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간</Typography>
                     <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
+                    
+                    <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{marginTop:10, width:'100%'}}>
+                      <Button color='primary' variant='contained' style={{flex: 1, boxShadow: 'none'}}>수정</Button>
+                      <Button color='secondary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => deleteCouponConfirmHandler(list.cz_no)}>삭제</Button>
+                    </ButtonGroup>
+                    
                   </Paper>
                 </Grid>
               )
