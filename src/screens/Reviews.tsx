@@ -27,6 +27,9 @@ import Stack from '@material-ui/core/Stack';
 import Rating from '@material-ui/core/Rating';
 import Pagination from '@material-ui/core/Pagination';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import { styled } from '@mui/material/styles';
+
 
 // Material icons
 import AddCommentOutlinedIcon from '@material-ui/icons/AddCommentOutlined';
@@ -39,6 +42,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Header from '../components/Header';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
+import ThumbUp from '../assets/images/thumbup.png';
 
 
 interface IReview {
@@ -57,6 +61,14 @@ interface IReview {
   subject: string;
   wr_id: string;
   wr_mb_id: string;
+  wr_score1: string;
+  wr_score2: string;
+  wr_score3: string;
+  wr_score4: string;
+}
+
+interface RateProp {
+  [key: string]: number | string;
 }
 
 export default function Reviews(props: any) {
@@ -65,12 +77,16 @@ export default function Reviews(props: any) {
   const { mt_id, mt_jumju_code, mt_store } = useSelector((state: any) => state.login);
 
   const [isLoading, setLoading] = React.useState(false);
-  const [rate, setRate] = useState({ }); // 별점
+  const [rate, setRate] = useState<RateProp>({}); // 평점
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
   const [postPerPage, setPostPerPage] = useState(3); // 페이지 API 호출 Limit
   const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
   const [lists, setLists] = useState<IReview[]>([]); // 리뷰 리스트
+  const [per01, setPer01] = useState(0); // 맛 퍼센트 (리뷰평점)
+  const [per02, setPer02] = useState(0); // 또주문 퍼센트 (리뷰평점)
+  const [per03, setPer03] = useState(0); // 빠른배달 퍼센트 (리뷰평점)
+  const [per04, setPer04] = useState(0); // 가성비 퍼센트 (리뷰평점)
   const [isImageOpen, setImageOpen] = useState(false); // 이미지 LightBox 오픈상태
   const [photoIndex, setPhotoIndex] = useState(0); // 이미지 LightBox 인덱스
   const [images, setImages] = useState<string[]>([]); // 리뷰 해당 이미지 저장소 (LightBox 사용때문) 
@@ -90,6 +106,20 @@ export default function Reviews(props: any) {
     setOpenAlert(false);
   };
 
+  // 리뷰 각 progress
+ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 5,
+    width: 400,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      borderRadius: 5,
+      backgroundColor: theme.palette.mode === 'light' ? '#ffc739' : '#1c1b30',
+    },
+  }));
+
   //  리뷰 가져오기
   const getReviewListHandler = () => {
 
@@ -103,7 +133,7 @@ export default function Reviews(props: any) {
       jumju_code: mt_jumju_code
     };
 
-    Api.send('store_review_list', param, (args: any) => {
+    Api.send('store_review_list2', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
@@ -116,11 +146,16 @@ export default function Reviews(props: any) {
       console.log("reviews resultItem", resultItem);
 
       if (resultItem.result === 'Y') {
+        console.log(arrItems);
         setRate(arrItems.rate);
         setLists(arrItems.review);
+        setPer01(arrItems.rate.rating_per1 * 100);
+        setPer02(arrItems.rate.rating_per2 * 100);
+        setPer03(arrItems.rate.rating_per3 * 100);
+        setPer04(arrItems.rate.rating_per4 * 100);
         setLoading(false);
       } else {
-        setRate({ });
+        setRate({});
         setLists([]);
         setLoading(false);
       }
@@ -131,6 +166,8 @@ export default function Reviews(props: any) {
     getReviewListHandler();
   }, [mt_id, mt_jumju_code, startOfIndex])
 
+  console.log("rate", rate);
+  console.log("lists", lists);
 
   // 리뷰 삭제 핸들러
   const deleteReviewHandler = (it_id: string, wr_id: string) => {
@@ -337,7 +374,7 @@ export default function Reviews(props: any) {
                 </Grid>
               </Box>
             </Box>
-            <Box mb={3}>
+            {/* <Box mb={3}> 고객 답글 확인
               <TextField
                 value={reviewContent}
                 fullWidth
@@ -350,7 +387,7 @@ export default function Reviews(props: any) {
                 spellCheck={false}
                 variant='outlined'
               />
-            </Box>
+            </Box> */}
             <TextField
               value={comment}
               fullWidth
@@ -404,6 +441,37 @@ export default function Reviews(props: any) {
         </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10 }}>
+          {lists && rate && 
+            <Grid container spacing={3} mb={3}>
+              <Grid item xs={12} display='flex' flexDirection='row' justifyContent='flex-start' alignItems='flex-start'>
+                <Grid item xs={12} md={10} display='flex' flexDirection='column' justifyContent='flex-start' alignItems='flex-start'>
+                  <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
+                    <BorderLinearProgress variant="determinate" value={per01} />
+                    <Typography ml={1} style={{color: '#888'}}>{`맛 ${rate.wr_score1}`}</Typography>
+                  </Box>
+                  <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
+                    <BorderLinearProgress variant="determinate" value={per02} />
+                    <Typography ml={1} style={{color: '#888'}}>{`또 주문 ${rate.wr_score2}`}</Typography>
+                  </Box>
+                  <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
+                    <BorderLinearProgress variant="determinate" value={per03} />
+                    <Typography ml={1} style={{color: '#888'}}>{`빠른배달 ${rate.wr_score3}`}</Typography>
+                  </Box>
+                  <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
+                    <BorderLinearProgress variant="determinate" value={per04} />
+                    <Typography ml={1} style={{color: '#888'}}>{`가성비 ${rate.wr_score4}`}</Typography>
+                  </Box>
+                </Grid>
+                <div style={{width:1, height: '90%', backgroundColor: '#e3e3e3'}}></div>
+                <Grid item xs={12} md={5}>
+                  <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center'>
+                    <img src={ThumbUp} style={{ width:148, height:122, objectFit:'cover' }} alt='리뷰아이콘'/>
+                    <Typography fontSize={24} fontWeight='bold' style={{color: '#222'}}>{rate.max_score_value}</Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Grid>
+          }
           {lists && lists.length > 0 &&
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) =>
@@ -419,8 +487,7 @@ export default function Reviews(props: any) {
                             <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
                           </Grid>
                         </Grid>
-                        <Grid className={base.title} style={{ display: 'flex', alignItems: 'center' }}>
-                          <Rating name="half-rating-read" size="small" value={Number(list.rating)} readOnly />
+                        <Grid className={base.title} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                           <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
                           <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
                           <Box style={{ position: 'absolute', right: 10, top: 10 }}>
@@ -448,14 +515,34 @@ export default function Reviews(props: any) {
                         </Grid>
                       </Grid>
                     </Grid>
+                    <Grid display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' mt={2} ml={7}>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score1 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
+                        <Typography fontSize={16} style={{ color: list.wr_score1 === '1' ? '#222' : '#888888'}}>맛</Typography>
+                        <Typography fontSize={12} style={{backgroundColor:  list.wr_score1 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      </Box>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score2 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
+                        <Typography fontSize={16} style={{ color: list.wr_score2 === '1' ? '#222' : '#888888'}}>또 주문</Typography>
+                        <Typography fontSize={12} style={{backgroundColor: list.wr_score2 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      </Box>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score3 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
+                        <Typography fontSize={16} style={{ color: list.wr_score3 === '1' ? '#222' : '#888888'}}>빠른배달</Typography>
+                        <Typography fontSize={12} style={{backgroundColor: list.wr_score3 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      </Box>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score4 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
+                        <Typography fontSize={16} style={{ color: list.wr_score4 === '1' ? '#222' : '#888888'}}>가성비</Typography>
+                        <Typography fontSize={12} style={{backgroundColor: list.wr_score4 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      </Box>
+                    </Grid>
                     {list.pic.length > 0 ?
-                      <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3}>
+                      <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20}} spacing={3} ml={7}>
                         {list.pic.map((image, index) =>
                           <Box key={index}>
-                            <Button onClick={() => {
-                              setImages(list.pic);
-                              setImageOpen(true);
-                            }
+                            <Button 
+                              style={{margin:0, padding:0}}
+                              onClick={() => {
+                                setImages(list.pic);
+                                setImageOpen(true);
+                              }
                             }
                             >
                               <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
@@ -464,11 +551,8 @@ export default function Reviews(props: any) {
                         )}
                       </Grid>
                       : null}
-                    <Grid className={clsx(base.flexColumn, base.mt20, base.commantWrap)}>
-                      <Typography variant="body1" component="b" textAlign='left'>{list.content}</Typography>
-                    </Grid>
                     {list.reply ?
-                      <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }}>
+                      <Grid className={clsx(base.flexColumn, base.mt10, base.commantWrap)} style={{ position: 'relative', backgroundColor: theme.palette.primary.light }} ml={7}>
                         <FontAwesomeIcon icon={faReply} size="1x" rotation={180} style={{ marginRight: 10 }} />
                         <Typography variant="body1" component="b" textAlign='left'>{list.replyComment}</Typography>
                         <Box style={{ position: 'absolute', right: 10, top: 10 }}>
