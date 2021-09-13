@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 
@@ -58,6 +59,7 @@ export default function Tips(props: any) {
 
   const base = baseStyles();
   const coupon = CouponStyles();
+  const history = useHistory();
 
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
@@ -262,7 +264,10 @@ export default function Tips(props: any) {
                     <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
                     
                     <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{marginTop:10, width:'100%'}}>
-                      <Button color='primary' variant='contained' style={{flex: 1, boxShadow: 'none'}}>수정</Button>
+                      <Button color='primary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => history.push({
+                        pathname: `/coupon_edit/${list.cz_no}`,
+                        state: {item: list}
+                      })}>수정</Button>
                       <Button color='secondary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => deleteCouponConfirmHandler(list.cz_no)}>삭제</Button>
                     </ButtonGroup>
                     
