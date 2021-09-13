@@ -19,6 +19,7 @@ import Reviews from '../screens/Reviews'; // 리뷰
 import StoreInfo from '../screens/StoreInfo'; // 매장소개
 import Coupons from '../screens/Coupons'; // 쿠폰
 import CouponAdd from '../screens/CouponAdd'; // 쿠폰 등록
+import CouponEdit from '../screens/CouponEdit'; // 쿠폰 수정
 import Tips from '../screens/Tips'; // 배달팁
 
 
@@ -44,6 +45,7 @@ export default function Routes() {
         <Route path='/reviews' component={Reviews} />
         <Route path='/coupons' component={Coupons} />
         <Route path='/coupon_add' component={CouponAdd} />
+        <Route path='/coupon_edit/:id' component={CouponEdit} />
         <Route path='/tips' component={Tips} />
         <Route render={({ location }) => (
           <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
