@@ -45,7 +45,7 @@ export default function CouponAdd() {
   const base = baseStyles();
   const history = useHistory();
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
-  const [type, setType] = useState(''); // 쿠폰 구분
+  const [type, setType] = useState(''); // 쿠폰 사용범위
   const [name, setName] = useState(''); // 쿠폰명
   const [minPrice, setMinPrice] = useState(''); // 최소주문금액
   const [maxPrice, setMaxPrice] = useState(''); // 최대주문금액
@@ -55,7 +55,7 @@ export default function CouponAdd() {
   const [value, setValue] = useState<DateRange<Date>>([null, null]); // 쿠폰 다운로드 유효기간
   const discountRef = useRef<HTMLDivElement | null>(null); //
 
-  // 쿠폰 구분 셀렉트 핸들러
+  // 쿠폰 사용범위 셀렉트 핸들러
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
   };
@@ -147,7 +147,7 @@ export default function CouponAdd() {
 
   const addCouponConfirmHandler = () => {
     if (type === null || type === '') {
-      setToastState({ msg: '구분(쿠폰타입)을 선택해주세요.', severity: 'error' });
+      setToastState({ msg: '사용범위(쿠폰타입)를 선택해주세요.', severity: 'error' });
       handleOpenAlert();
     } else if (name === null || name === '') {
       setToastState({ msg: '쿠폰명을 입력해주세요.', severity: 'error' });
@@ -266,12 +266,12 @@ export default function CouponAdd() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">구분</InputLabel>
+              <InputLabel id="demo-simple-select-label">사용범위</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={type}
-                label="구분"
+                label="사용범위"
                 onChange={handleChange}
               >
                 <MenuItem value={10}>모두 사용가능</MenuItem>
