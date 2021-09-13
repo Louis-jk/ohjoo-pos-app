@@ -518,7 +518,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <MenuIcon />
           </IconButton>
           <Box className={base.flexRowStartCenter}>
-            {props.type === 'menuAdd' || props.type === 'menuEdit' || props.type === 'couponAdd'
+            {props.type === 'menuAdd' || props.type === 'menuEdit' || props.type === 'couponAdd' || props.type === 'couponEdit'
               || props.detail === 'order_new' || props.detail === 'order_check' || props.detail === 'order_delivery' || props.detail === 'order_done'
               ?
               <IconButton
@@ -635,6 +635,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                             : props.type === 'couponAdd' ?
                               <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
                                 <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                              </Button>
+                               : props.type === 'couponEdit' ?
+                              <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                                <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                               </Button>
                               : props.type === 'tips' ?
                                 <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
