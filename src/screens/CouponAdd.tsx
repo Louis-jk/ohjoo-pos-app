@@ -175,7 +175,10 @@ export default function CouponAdd() {
     } else if (duration === null || duration === '') {
       setToastState({ msg: '쿠폰사용기한을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else {
+    } else if (Number(minPrice) > Number(maxPrice)) {
+      setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
+      handleOpenAlert();
+    }  else {
       addCouponHandler();
     }
   }
