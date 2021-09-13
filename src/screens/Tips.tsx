@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useHistory} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
@@ -16,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
@@ -52,6 +54,7 @@ export default function Tips(props: any) {
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
 
   const base = baseStyles();
+  const history = useHistory();
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
@@ -66,6 +69,7 @@ export default function Tips(props: any) {
     }
   ]);
 
+  const [tipNo, setTipNo] = useState(0); // 배달팁 No
   const [tipId, setTipId] = useState(''); // 배달팁 아이디
   const [minPrice, setMinPrice] = useState(''); // 최소금액 설정 
   const [maxPrice, setMaxPrice] = useState(''); // 최대금액 설정 
@@ -81,6 +85,37 @@ export default function Tips(props: any) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  // 배달팁 수정 모달 관리
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const handleEditOpen = () => {
+    setOpenEdit(true);
+  };
+
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
+
+  // 배달팁 수정 모달 전 처리 
+  const editModalHandler = (no: number, id: string, min: string, max: string, tip: string) => {
+    setTipNo(no);
+    setTipId(id);
+    setMinPrice(min);
+    setMaxPrice(max);
+    setTipPrice(tip);
+    handleEditOpen();
+  }
+
+  // 배달팁 수정 모달 닫기 전 처리
+  const editCloseModalHandler = () => {
+    setTipNo(0);
+    setTipId('');
+    setMinPrice('');
+    setMaxPrice('');
+    setTipPrice('');
+    handleEditClose();
+  }
 
   // 배달팁 삭제 모달 관리
   const [openTip, setOpenTip] = useState(false);
@@ -164,36 +199,62 @@ export default function Tips(props: any) {
   }
 
   // 배달팁 등록
-  const onSubmitTips = () => {
-    const param = {
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
-      charge_start: minPrice,
-      charge_end: maxPrice,
-      charge_price: tipPrice,
-      mode: 'insert'
-    };
+  const onSubmitTips = (payload: string) => {
+    
+    let param = {};
 
+    if(payload === 'insert') {
+      param = {
+        jumju_id: mt_id,
+        jumju_code: mt_jumju_code,
+        charge_start: minPrice,
+        charge_end: maxPrice,
+        charge_price: tipPrice,
+        mode: 'insert'
+      };  
+    } else {
+      param = {
+        jumju_id: mt_id,
+        jumju_code: mt_jumju_code,
+        dd_id: tipId,
+        charge_start: minPrice,
+        charge_end: maxPrice,
+        charge_price: tipPrice,
+        mode: 'update'
+      };  
+    }
+    
     Api.send('store_delivery_input', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
       if (resultItem.result === 'Y') {
-        setToastState({ msg: '새로운 배달팁이 등록 되었습니다.', severity: 'success' });
-        handleOpenAlert();
-        handleClose();
-        initializeState();
-        getTipsHandler();
+        if(payload === 'insert') {
+          setToastState({ msg: '새로운 배달팁이 등록 되었습니다.', severity: 'success' });
+          handleOpenAlert();
+          handleClose();
+        } else {
+          setToastState({ msg: '배달팁이 수정 되었습니다.', severity: 'success' });
+          handleOpenAlert();
+          handleEditClose();
+        }
       } else {
-        setToastState({ msg: '배달팁을 등록하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
-        handleOpenAlert();
-        handleClose();
-        initializeState();
+        if(payload === 'insert') {
+          setToastState({ msg: '배달팁을 등록하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
+          handleOpenAlert();
+          handleClose();
+        } else {
+          setToastState({ msg: '배달팁을 수정하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
+          handleOpenAlert();
+          handleEditClose();
+        }
       }
+      initializeState();
+      getTipsHandler();
     });
   }
 
-  // 배달팁 등록 전 체크
-  const onSubmitHandler = () => {
+  // 배달팁 등록/수정 전 체크
+  const onSubmitHandler = (type: string) => {
     if (minPrice === null || minPrice === '') {
       setToastState({ msg: '최소주문금액을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
@@ -203,10 +264,14 @@ export default function Tips(props: any) {
     } else if (tipPrice === null || tipPrice === '') {
       setToastState({ msg: '배달비를 입력해주세요.', severity: 'error' });
       handleOpenAlert();
+    } else if (Number(minPrice) > Number(maxPrice)) {
+      setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
+      handleOpenAlert();
     } else {
-      onSubmitTips();
+      onSubmitTips(type);
     }
   }
+
 
   // 배달팁 삭제
   const deleteTipHandler = () => {
@@ -238,6 +303,7 @@ export default function Tips(props: any) {
     setTipId(id);
     handleOpenTip();
   }
+  
 
   return (
     <Box component="div" className={base.root}>
@@ -273,7 +339,7 @@ export default function Tips(props: any) {
         <Fade in={open}>
           <Box className={base.modalInner}>
             <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>배달팁 입력</Typography>
-            <IconButton
+            {/* <IconButton
               color="primary"
               component="span"
               onClick={handleClose}
@@ -288,7 +354,7 @@ export default function Tips(props: any) {
               }}
             >
               <CloseRoundedIcon />
-            </IconButton>
+            </IconButton> */}
             <Paper className={base.paper}>
               <Box className={base.txtRoot}>
                 <TextField
@@ -356,13 +422,123 @@ export default function Tips(props: any) {
               </Box>
             </Paper>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 20 }}>
-              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={onSubmitHandler}>등록하기</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={() => onSubmitHandler('insert')}>등록하기</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={handleClose}>닫기</ModalCancelButton>
             </ButtonGroup>
           </Box>
         </Fade>
       </Modal>
       {/* // 배달팁 입력 모달 */}
+      
+      {/* 배달팁 수정 모달 */}
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={base.modal}
+        open={openEdit}
+        // onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={openEdit}>
+          <Box className={base.modalInner}>
+            <Box mb={2}>
+              <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>{`배달팁 ${tipNo < 10 ? `0${tipNo+1}` : `${tipNo+1}`} - 수정`}</Typography>
+            </Box>
+            {/* <IconButton
+              color="primary"
+              component="span"
+              onClick={handleClose}
+              style={{
+                position: 'absolute',
+                top: -10,
+                right: -10,
+                width: 30,
+                height: 30,
+                color: '#fff',
+                backgroundColor: theme.palette.primary.main
+              }}
+            >
+              <CloseRoundedIcon />
+            </IconButton> */}
+            <Paper className={base.paper}>
+              <Box className={base.txtRoot}>
+                <TextField
+                  value={minPrice}
+                  className={base.textField}
+                  fullWidth
+                  id="outlined-basic"
+                  label="최소주문금액"
+                  variant="outlined"
+                  required
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setMinPrice(changed);
+                    }
+                  }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">원 이상</InputAdornment>,
+                  }}
+                />
+              </Box>
+              <Box className={base.txtRoot}>
+                <TextField
+                  value={maxPrice}
+                  className={base.textField}
+                  fullWidth
+                  id="outlined-basic"
+                  label="최대주문금액"
+                  variant="outlined"
+                  required
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setMaxPrice(changed);
+                    }
+                  }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">원 미만</InputAdornment>,
+                  }}
+                />
+              </Box>
+              <Typography mb={3} fontSize={13}>위 금액일 경우, 아래 배달비 적용</Typography>
+              <Box className={base.txtRoot}>
+                <TextField
+                  value={tipPrice}
+                  className={base.textField}
+                  fullWidth
+                  id="outlined-basic"
+                  label="배달비"
+                  variant="outlined"
+                  required
+                  onChange={e => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      let changed = e.target.value.replace(/(^0+)/, '');
+                      setTipPrice(changed);
+                    }
+                  }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">원 적용</InputAdornment>,
+                  }}
+                />
+              </Box>
+            </Paper>
+            <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 20 }}>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={() => onSubmitHandler('update')}>수정하기</ModalConfirmButton>
+              <ModalCancelButton variant="outlined" onClick={editCloseModalHandler}>닫기</ModalCancelButton>
+            </ButtonGroup>
+          </Box>
+        </Fade>
+      </Modal>
+      {/* // 배달팁 수정 모달 */}
+
       {/* 배달팁 삭제 모달 */}
       <Modal
         aria-labelledby="transition-modal-title"
@@ -401,24 +577,12 @@ export default function Tips(props: any) {
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) =>
                 <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }} alignContent='baseline'>
-                  <IconButton
-                    color="primary"
-                    aria-label="delete"
-                    component="span"
-                    onClick={() => deleteTipConfirmHandler(list.dd_id)}
-                    style={{
-                      position: 'absolute',
-                      top: 15,
-                      right: -7,
-                      width: 25,
-                      height: 25,
-                      color: '#fff',
-                      backgroundColor: theme.palette.primary.main
-                    }}
-                  >
-                    <CloseRoundedIcon />
-                  </IconButton>
-                  <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>
+                  <Box style={{backgroundColor: '#1c1b30', padding: '5px 20px'}}>
+                    <Typography color='#fff'>
+                    {`배달팁 ${index < 10 ? `0${index+1}` : `${index+1}`}`}
+                    </Typography>
+                  </Box>
+                  <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>                    
                     <Box className={base.txtRoot}>
                       <TextField
                         value={Api.comma(list.dd_charge_start)}
@@ -468,6 +632,10 @@ export default function Tips(props: any) {
                         contentEditable={false}
                       />
                     </Box>
+                      <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{marginTop:10, width:'100%'}}>
+                      <Button color='primary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => editModalHandler(index, list.dd_id, list.dd_charge_start, list.dd_charge_end, list.dd_charge_price)}>수정</Button>
+                      <Button color='secondary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => deleteTipConfirmHandler(list.dd_id)}>삭제</Button>
+                    </ButtonGroup>
                   </Paper>
                 </Grid>
               )}
