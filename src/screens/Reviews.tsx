@@ -60,6 +60,7 @@ interface IReview {
   replyComment: string;
   subject: string;
   wr_id: string;
+  wr_mb_nickname: string;
   wr_mb_id: string;
   wr_score1: string;
   wr_score2: string;
@@ -107,7 +108,7 @@ export default function Reviews(props: any) {
   };
 
   // 리뷰 각 progress
- const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
     borderRadius: 5,
     width: 400,
@@ -146,7 +147,7 @@ export default function Reviews(props: any) {
       console.log("reviews resultItem", resultItem);
 
       if (resultItem.result === 'Y') {
-        console.log(arrItems);
+        console.log('review arrItems', arrItems);
         setRate(arrItems.rate);
         setLists(arrItems.review);
         setPer01(arrItems.rate.rating_per1 * 100);
@@ -441,32 +442,32 @@ export default function Reviews(props: any) {
         </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10 }}>
-          {lists && rate && 
+          {lists && rate &&
             <Grid container spacing={3} mb={3}>
               <Grid item xs={12} display='flex' flexDirection='row' justifyContent='flex-start' alignItems='flex-start'>
                 <Grid item xs={12} md={10} display='flex' flexDirection='column' justifyContent='flex-start' alignItems='flex-start'>
                   <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
                     <BorderLinearProgress variant="determinate" value={per01} />
-                    <Typography ml={1} style={{color: '#888'}}>{`맛 ${rate.wr_score1}`}</Typography>
+                    <Typography ml={1} style={{ color: '#888' }}>{`맛 ${rate.wr_score1}`}</Typography>
                   </Box>
                   <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
                     <BorderLinearProgress variant="determinate" value={per02} />
-                    <Typography ml={1} style={{color: '#888'}}>{`또 주문 ${rate.wr_score2}`}</Typography>
+                    <Typography ml={1} style={{ color: '#888' }}>{`또 주문 ${rate.wr_score2}`}</Typography>
                   </Box>
                   <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
                     <BorderLinearProgress variant="determinate" value={per03} />
-                    <Typography ml={1} style={{color: '#888'}}>{`빠른배달 ${rate.wr_score3}`}</Typography>
+                    <Typography ml={1} style={{ color: '#888' }}>{`빠른배달 ${rate.wr_score3}`}</Typography>
                   </Box>
                   <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mb={1}>
                     <BorderLinearProgress variant="determinate" value={per04} />
-                    <Typography ml={1} style={{color: '#888'}}>{`가성비 ${rate.wr_score4}`}</Typography>
+                    <Typography ml={1} style={{ color: '#888' }}>{`가성비 ${rate.wr_score4}`}</Typography>
                   </Box>
                 </Grid>
-                <div style={{width:1, height: '90%', backgroundColor: '#e3e3e3'}}></div>
+                <div style={{ width: 1, height: '90%', backgroundColor: '#e3e3e3' }}></div>
                 <Grid item xs={12} md={5}>
                   <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center'>
-                    <img src={ThumbUp} style={{ width:148, height:122, objectFit:'cover' }} alt='리뷰아이콘'/>
-                    <Typography fontSize={24} fontWeight='bold' style={{color: '#222'}}>{rate.max_score_value}</Typography>
+                    <img src={ThumbUp} style={{ width: 148, height: 122, objectFit: 'cover' }} alt='리뷰아이콘' />
+                    <Typography fontSize={24} fontWeight='bold' style={{ color: '#222' }}>{rate.max_score_value}</Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -478,18 +479,17 @@ export default function Reviews(props: any) {
                 <Grid item xs={12} key={index + list.wr_id + list.wr_mb_id} alignContent='baseline'>
                   <Paper className={base.reviewPaper} style={{ position: 'relative' }}>
                     <Grid className={base.flexRow} alignItems='center'>
-                      <Avatar alt={`유저아이디: ${list.wr_mb_id} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
+                      <Avatar alt={`유저아이디: ${list.wr_mb_nickname} 님의 프로필 사진`} src={list.profile} className={clsx(base.large, base.mr20)} />
                       <Grid className={base.flexColumn}>
                         <Grid className={base.flexRow}>
                           <Grid className={base.title}>
-                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
-                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
-                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_id}</Typography>
+                            {/* <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.menu}</Typography>
+                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography> */}
+                            <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{list.wr_mb_nickname}</Typography>
                           </Grid>
                         </Grid>
                         <Grid className={base.title} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                          <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
-                          <Typography variant="body1" component="b">{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
+                          <Typography variant="body1" component="b" style={{ color: '#999' }}>{moment(list.datetime, 'YYYYMMDD').fromNow()}</Typography>
                           <Box style={{ position: 'absolute', right: 10, top: 10 }}>
                             {list.reply ?
                               <Button
@@ -516,34 +516,34 @@ export default function Reviews(props: any) {
                       </Grid>
                     </Grid>
                     <Grid display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' mt={2} ml={7}>
-                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score1 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
-                        <Typography fontSize={16} style={{ color: list.wr_score1 === '1' ? '#222' : '#888888'}}>맛</Typography>
-                        <Typography fontSize={12} style={{backgroundColor:  list.wr_score1 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: list.wr_score1 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                        <Typography fontSize={16} style={{ color: list.wr_score1 === '1' ? '#222' : '#888888' }}>맛</Typography>
+                        <Typography fontSize={12} style={{ backgroundColor: list.wr_score1 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
                       </Box>
-                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score2 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
-                        <Typography fontSize={16} style={{ color: list.wr_score2 === '1' ? '#222' : '#888888'}}>또 주문</Typography>
-                        <Typography fontSize={12} style={{backgroundColor: list.wr_score2 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: list.wr_score2 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                        <Typography fontSize={16} style={{ color: list.wr_score2 === '1' ? '#222' : '#888888' }}>또 주문</Typography>
+                        <Typography fontSize={12} style={{ backgroundColor: list.wr_score2 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
                       </Box>
-                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score3 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
-                        <Typography fontSize={16} style={{ color: list.wr_score3 === '1' ? '#222' : '#888888'}}>빠른배달</Typography>
-                        <Typography fontSize={12} style={{backgroundColor: list.wr_score3 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: list.wr_score3 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                        <Typography fontSize={16} style={{ color: list.wr_score3 === '1' ? '#222' : '#888888' }}>빠른배달</Typography>
+                        <Typography fontSize={12} style={{ backgroundColor: list.wr_score3 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
                       </Box>
-                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{width:'100%', borderWidth:1, borderColor: list.wr_score4 === '1' ? '#222' : '#E3E3E3', borderStyle:'solid', borderRadius:10, padding: '7px 10px'}}>
-                        <Typography fontSize={16} style={{ color: list.wr_score4 === '1' ? '#222' : '#888888'}}>가성비</Typography>
-                        <Typography fontSize={12} style={{backgroundColor: list.wr_score4 === '1' ? '#222' : '#e3e3e3', color:'#fff', borderRadius:5, padding: '1px 10px'}} ml={0.7}>BEST</Typography>
+                      <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: list.wr_score4 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                        <Typography fontSize={16} style={{ color: list.wr_score4 === '1' ? '#222' : '#888888' }}>가성비</Typography>
+                        <Typography fontSize={12} style={{ backgroundColor: list.wr_score4 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
                       </Box>
                     </Grid>
                     {list.pic.length > 0 ?
-                      <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20}} spacing={3} ml={7}>
+                      <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3} ml={7}>
                         {list.pic.map((image, index) =>
                           <Box key={index}>
-                            <Button 
-                              style={{margin:0, padding:0}}
+                            <Button
+                              style={{ margin: 0, padding: 0 }}
                               onClick={() => {
                                 setImages(list.pic);
                                 setImageOpen(true);
                               }
-                            }
+                              }
                             >
                               <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
                             </Button>
