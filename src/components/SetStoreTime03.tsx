@@ -182,7 +182,7 @@ export default function StoreTimeTab03() {
         <Grid item md={5} style={{padding:0}}>
           <Stack direction="row" justifyContent='flex-end' flexWrap='wrap'>
             {dayFormatArray?.map((date, index) => (
-              <Chip key={date + index} label={date} variant='filled' color='primary' sx={{ m: 1 }} onDelete={() => handleDelete(date)} />
+              <Chip key={date + index} label={date} variant='filled' color='primary' sx={{ m: 1, borderRadius:1 }} onDelete={() => handleDelete(date)} />
             ))}
           </Stack>
         </Grid>
