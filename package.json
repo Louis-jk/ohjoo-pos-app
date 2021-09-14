@@ -41,6 +41,7 @@
     "react-calendar": "3.4.0",
     "react-datepicker": "^4.1.1",
     "react-dates": "^21.8.0",
+    "react-day-picker": "7.4.10",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.3",
     "react-hot-toast": "^2.1.0",
