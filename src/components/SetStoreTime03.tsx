@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
-import 'moment/locale/ko';
-import 'react-modern-calendar-datepicker/lib/DatePicker.css';
-// import DatePicker, { Calendar, DayValue, DayRange, Day } from 'react-modern-calendar-datepicker'
-import { ko } from "date-fns/esm/locale";
-// import Calendar from 'react-calendar'; range 기능밖에 안됨 지워야됨
-// import 'react-calendar/dist/Calendar.css'; range 기능밖에 안됨 지워야됨
-
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 // Material UI Components
 import Chip from '@material-ui/core/Chip';
@@ -19,9 +13,9 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Local Component
-import { myCustomLocale } from '../assets/datas/calendar_locale';
+import { MONTHS, WEEKDAYS_SHORT, LABELS } from '../assets/datas/calendar_locale';
 import Api from '../Api';
-import { theme, baseStyles, MainBox } from '../styles/base';
+import { theme, baseStyles } from '../styles/base';
 
 
 
@@ -142,39 +136,6 @@ export default function StoreTimeTab03() {
     setDayFormatArray(formatArr);
     
   }
-
-  const MONTHS = {
-    ko: [
-      '1월',
-      '2월',
-      '3월',
-      '4월',
-      '5월',
-      '6월',
-      '7월',
-      '8월',
-      '9월',
-      '10월',
-      '11월',
-      '12월'
-    ]
-  };
- 
-  const WEEKDAYS_SHORT = {
-    ko: [
-      '일',
-      '월',
-      '화',
-      '수',
-      '목',
-      '금',
-      '토',
-    ]
-  };
-
-  const LABELS = {
-    ko: { nextMonth: '다음달', previousMonth: '이전달' }
-  };
 
   // 리스트 - Chip 에서 날짜 삭제 핸들러
   const handleDelete = (date: string) => {
