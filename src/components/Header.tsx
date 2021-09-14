@@ -37,6 +37,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
+import Switch, { SwitchProps } from '@material-ui/core/Switch';
 
 
 // Material icons
@@ -75,12 +76,48 @@ interface OptionalProps {
   window?: () => Window;
 }
 
+const Android12Switch = styled(Switch)(({ theme }) => ({
+    padding: 8,
+    '& .MuiSwitch-track': {
+      backgroundColor: '#b3b3b3',
+      borderRadius: 22 / 2,
+      '&:before, &:after': {
+        content: '""',
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: 16,
+        height: 16,
+      },
+      '&:before': {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main),
+        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+        left: 12,
+      },
+      '&:after': {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main),
+        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+        right: 12,
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxShadow: 'none',
+      width: 16,
+      height: 16,
+      margin: 2,
+    },
+  }));
+
+
 export default function ResponsiveDrawer(props: OptionalProps) {
-  // console.log("Header props data >>>", props);
+  console.log("Header props data >>>", props);
   const { window } = props;
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
+  console.log("location >>>", location);
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
   const { id: mt_store_id, mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
@@ -548,15 +585,26 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Button variant='contained' color='primary' onClick={sendNotify}>NOTIFICATION</Button>
           </Box> */}
           <Box className={base.flexRowStartCenter}>
+            { 
+            props.detail === 'order_new' || location.pathname === '/order_new' ||
+            props.detail === 'order_check' || location.pathname === '/order_check' ||
+            props.detail === 'order_delivery' || location.pathname === '/order_delivery' ||
+            props.detail === 'order_done' || location.pathname === '/order_done' ?
+              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
+                  <Android12Switch color="primary" /* onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} */ checked={true} />
+                  <Typography color='#fff' ml={0.5}>원산지출력</Typography>
+                </Box>
+                : null
+            }
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
-              ?
-              <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 10 }} onClick={openCloseStoreModalHandler}>
-                <Badge badgeContent={allStore ? allStore.filter((state: any) => state.do_end_state === 'N').length : 0} color="primary">
-                  <StopCircleOutlinedIcon style={{ color: allStore && allStore.filter((state: any) => state.do_end_state === 'N').length > 0 ? '#F8485E' : '#fff' }} />
-                </Badge>
-                <Typography ml={0.5}>영업일시정지</Typography>
-              </Button>
+              ? 
+                <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 30 }} onClick={openCloseStoreModalHandler}>
+                  <Badge badgeContent={allStore ? allStore.filter((state: any) => state.do_end_state === 'N').length : 0} color="primary">
+                    <StopCircleOutlinedIcon style={{ color: allStore && allStore.filter((state: any) => state.do_end_state === 'N').length > 0 ? '#F8485E' : '#fff' }} />
+                  </Badge>
+                  <Typography ml={0.5}>영업일시정지</Typography>
+                </Button>
               : null}
             {props.detail === 'order_new' ?
               <Box style={{ marginRight: 20 }}>
