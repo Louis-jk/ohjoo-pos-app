@@ -29,6 +29,10 @@ const PrintModal = (props: any) => {
 
   const base = baseStyles();
 
+  console.log('order', order);
+  console.log('product', product);
+  console.log('store', store);
+
   // 프린트 출력 부분
   const componentRef = React.useRef(null);
 
@@ -190,7 +194,7 @@ const PrintModal = (props: any) => {
           }
         </style>
         <div class='print_area' style='width: 100%;'>
-          <h5 style='text-align: center; font-size: 12pt; font-weight: bold;'>배달 주문전표</h5>
+          <h5 style='text-align: center; font-size: 12pt; font-weight: bold;'>${order.od_type} 주문전표</h5>
           <hr style='margin: 5px 0;' />
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
