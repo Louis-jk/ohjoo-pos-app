@@ -128,3 +128,16 @@ button, label {
 @media print {
   .print_no_area {display: none;}
 }
+
+/* 캘린더 커스텀 */
+.DayPicker-Day {
+  padding: 1.35em !important;
+  border-radius: 10% !important;
+}
+.DayPicker-Day--selected {
+  background-color: #ffc739 !important;
+  color: #1c1b30 !important;
+}
+.DayPicker-Day--today {
+  color: #309975 !important;
+}
