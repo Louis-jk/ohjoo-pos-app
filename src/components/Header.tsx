@@ -79,7 +79,7 @@ interface OptionalProps {
 const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
     '& .MuiSwitch-track': {
-      backgroundColor: '#b3b3b3',
+      backgroundColor: '#656565 !important',
       borderRadius: 22 / 2,
       '&:before, &:after': {
         content: '""',
@@ -112,12 +112,11 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 
 
 export default function ResponsiveDrawer(props: OptionalProps) {
-  console.log("Header props data >>>", props);
+  // console.log("Header props data >>>", props);
   const { window } = props;
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  console.log("location >>>", location);
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
   const { id: mt_store_id, mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
@@ -591,7 +590,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             props.detail === 'order_delivery' || location.pathname === '/order_delivery' ||
             props.detail === 'order_done' || location.pathname === '/order_done' ?
               <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
-                  <Android12Switch color="primary" /* onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} */ checked={true} />
+                  <Android12Switch color='primary' /* onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} */ checked={true} />
                   <Typography color='#fff' ml={0.5}>원산지출력</Typography>
                 </Box>
                 : null
