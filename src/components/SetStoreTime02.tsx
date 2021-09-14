@@ -267,7 +267,7 @@ export default function StoreTimeTab01() {
             <Box className={clsx(base.flexRowBetweenCenter)} style={{ margin: '10px 0' }}>
               <Box className={base.flexRowStartCenter}>
                 <Box className={clsx(base.flexRow, base.mr10)} style={{ minWidth: 200 }}>
-                  <p className={base.mr10} style={{ fontSize: 14, padding: '2px 10px', backgroundColor: theme.palette.primary.main, color: '#fff', borderRadius: 5 }}>{list.st_week}</p>
+                  <p className={base.mr10} style={{ fontSize: 14, padding: '2px 10px', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText, borderRadius: 5 }}>{list.st_week}</p>
                   <p className={base.mr20}>{list.st_yoil_txt}</p>
                 </Box>
               </Box>
