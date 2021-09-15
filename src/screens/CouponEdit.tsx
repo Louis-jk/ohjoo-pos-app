@@ -242,8 +242,6 @@ export default function CouponEdit(props: any) {
     handleClose();
   }
 
-  console.log("setValue", value);
-
   return (
     <Box component="div" className={base.root}>
       <Header type="couponEdit" action={editCouponConfirmHandler} />
@@ -304,9 +302,9 @@ export default function CouponEdit(props: any) {
                 label="사용범위"
                 onChange={handleChange}
               >
-                <MenuItem value={10}>모두 사용가능</MenuItem>
-                <MenuItem value={20}>포장용 쿠폰</MenuItem>
-                <MenuItem value={30}>배달용 쿠폰</MenuItem>
+                <MenuItem value={'0'}>모두 사용가능</MenuItem>
+                <MenuItem value={'1'}>포장용 쿠폰</MenuItem>
+                <MenuItem value={'2'}>배달용 쿠폰</MenuItem>
               </Select>
             </FormControl>
           </Grid>
