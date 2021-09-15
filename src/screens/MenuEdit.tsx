@@ -157,6 +157,8 @@ export default function MenuEdit(props: IProps) {
     });
   };
 
+  console.log("options", options);
+
   const optionAddHandler = (payload: OptionType) => {
     if (payload === 'default') {
       if (options.length < 10) {
@@ -260,8 +262,8 @@ export default function MenuEdit(props: IProps) {
         setDetails(arrItems);
         setImage(arrItems.it_img1);
         setCategory(arrItems.ca_code);
-        setOptions(arrItems.menuOption);
-        setAddOptions(arrItems.menuAddOption);
+        setOptions(arrItems.menuOption === undefined ? [] : arrItems.menuOption);
+        setAddOptions(arrItems.menuAddOption === undefined ? [] : arrItems.menuAddOption);
       } else {
         setDetails({});
         setImage('');
