@@ -112,7 +112,7 @@ export default function Tips(props: any) {
     setCouponId(coupon_id);
     setOpen(true);
   }
-  console.log("couponId :: ", couponId);
+  
 
   // 쿠폰 삭제 핸들러
   const deleteCouponHandler = () => {
