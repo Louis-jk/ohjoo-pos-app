@@ -2,7 +2,7 @@ import types from './types';
 
 export function updateNewOrder(data: any) {
   const args = JSON.parse(data);
-  console.log('args', args);
+  
   return {
     type: types.UPDATE_NEW_ORDER_LIST,
     payload: args !== null ? args : []

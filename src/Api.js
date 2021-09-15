@@ -82,7 +82,7 @@ class Api {
       this.state.option.headers
     )
       .then((response) => {
-        console.log("Axios response :: ", response);
+        // console.log("Axios response :: ", response);
         const decoded_jwt = jwt_decode(response.data.jwt, jwt_secret);
         //console.warn(decoded_jwt);
         /*
