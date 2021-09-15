@@ -29,10 +29,6 @@ const PrintModal = (props: any) => {
 
   const base = baseStyles();
 
-  console.log('order', order);
-  console.log('product', product);
-  console.log('store', store);
-
   // 프린트 출력 부분
   const componentRef = React.useRef(null);
 
@@ -173,7 +169,6 @@ const PrintModal = (props: any) => {
         </div>
       `
         res(appRuntime.send('pos_print', htmlFormat));
-        console.log("1차 프린트", htmlFormat);
       } else {
         alert('주문 디테일이 없습니다.');
       }
@@ -313,7 +308,6 @@ const PrintModal = (props: any) => {
       `
       setTimeout(() => {
         res(appRuntime.send('pos_print', htmlFormat02));
-        console.log("2차 프린트", htmlFormat02);
       }, 1000);
       
       } else {

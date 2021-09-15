@@ -217,11 +217,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        console.log("신규주문 success?", arrItems);
         dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
         getCheckOrderHandler();
       } else {
-        console.log("신규주문 faild?", arrItems);
         dispatch(dispatch(orderAction.updateNewOrder(null)));
         getCheckOrderHandler();
       }
@@ -243,11 +241,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        console.log("접수완료 success?", arrItems);
         dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
         getDeliveryOrderHandler();
       } else {
-        console.log("접수완료 faild?", arrItems);
         dispatch(dispatch(orderAction.updateCheckOrder(null)));
         getDeliveryOrderHandler();
       }
@@ -269,11 +265,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        console.log("배달중 success?", arrItems);
         dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
         getDoneOrderHandler();
       } else {
-        console.log("배달중 faild?", arrItems);
         dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
         getDoneOrderHandler();
       }
@@ -295,10 +289,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        console.log("배달완료 success?", arrItems);
         dispatch(dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems))));
       } else {
-        console.log("배달완료 faild?", arrItems);
         dispatch(dispatch(orderAction.updateDoneOrder(null)));
       }
     });

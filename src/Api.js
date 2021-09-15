@@ -331,9 +331,6 @@ class Api {
     let formatNum = "";
     let stringNum = String(num);
 
-    console.log("stringNum", stringNum);
-    // return false;
-
     if (stringNum.length === 11) {
       if (type === 0) {
         formatNum = stringNum.replace(/(\d{3})(\d{4})(\d{4})/, "$1-****-$3");
