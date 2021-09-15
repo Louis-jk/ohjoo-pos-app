@@ -107,6 +107,7 @@ button, label {
 /* 스크롤바 커스텀 */
 ::-webkit-scrollbar {
   width: 3px;
+  display: none;
 }
 
 /* Track */
@@ -118,6 +119,7 @@ button, label {
 ::-webkit-scrollbar-thumb {
   background: #ffc739; 
   border-radius: 20px;
+  height: 50px;
 }
 
 /* Handle on hover */
