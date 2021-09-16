@@ -111,6 +111,7 @@ export default function OrdersDetail(od_id: string) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
+        console.log('디테일 arrItems', arrItems);
         dispatch(orderDetailAction.updateOrderDetail(JSON.stringify(arrItems)));
         setDetailStore(arrItems.store);
         setDetailOrder(arrItems.order);
@@ -471,8 +472,8 @@ export default function OrdersDetail(od_id: string) {
                   <Typography variant="body1">{detailStore.mb_company}</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
-                  <Typography variant="body1" className={orderStyle.orderSubtitle}>주문시간 : </Typography>
-                  <Typography variant="body1">{moment(detailStore.od_time).format('YYYY년 M월 D일, HH시 mm분')}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubtitle}>주문일시 : </Typography>
+                  <Typography variant="body1">{moment(detailOrder.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY년 M월 D일, HH시 mm분')}</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>주문방법 : </Typography>
