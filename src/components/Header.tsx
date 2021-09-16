@@ -119,7 +119,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const location = useLocation();
   const base = baseStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false); // 메뉴 드로어
-  const { id: mt_store_id, mt_id, mt_jumju_code, mt_store, mt_app_token } = useSelector((state: any) => state.login);
+  const { id: mt_store_id, mt_id, mt_jumju_code, mt_store, mt_app_token, do_jumju_origin_use } = useSelector((state: any) => state.login);
   const { allStore, closedStore } = useSelector((state: any) => state.store);
   const { newOrder, checkOrder, deliveryOrder, doneOrder } = useSelector((state: any) => state.order);
   const { selectType } = useSelector((state: any) => state.menuContr);
@@ -308,13 +308,55 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   // 매장 선택 핸들러
   const setStoreHandler = async (store: any, id: string, jumju_id: string, jumju_code: string, storeName: string, addr: string) => {
     try {
+      // console.log("select store", store);
       await dispatch(storeAction.selectStore(id, jumju_id, jumju_code, storeName, addr));
       await dispatch(loginAction.updateLogin(JSON.stringify(store)));
       await dispatch(loginAction.updateToken(mt_app_token));
     } catch (err) {
-      console.log('에러 발생 ::', err);
+      console.error('에러 발생 ::', err);
     }
   };
+
+  // 원산지 출력 여부 핸들러
+  const setOriginStoreHandler = async (result: string) => {
+    try {
+      await dispatch(loginAction.updateOriginPrint(result));
+      await dispatch(storeAction.updateStoreOriginPrint(mt_id, result));
+    } catch(err) {
+      console.error(err);
+    }
+    
+  }
+
+  const setOriginPrintHandler = () => {
+    
+    let result = '';
+    if(do_jumju_origin_use === 'Y') {
+      result = 'N';
+    } else {
+      result = 'Y';
+    }
+    
+    setOriginStoreHandler(result);
+
+    let param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      do_jumju_origin_use: result
+    }
+
+    Api.send('store_origin_update', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        // console.log('origin update arrItems', arrItems);
+        console.log('원산지 출력여부를 업데이트 성공.');
+      } else {
+        console.log('원산지 출력여부를 업데이트하지 못했습니다.');
+      }
+    });
+  }
 
   // 프린트 정보
   const openPrint = () => {
@@ -582,8 +624,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             props.detail === 'order_delivery' || location.pathname === '/order_delivery' ||
             props.detail === 'order_done' || location.pathname === '/order_done' ?
               <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
-                  <Android12Switch color='primary' /* onChange={() => setCloseStoreHandler(store.id, store.mt_id, store.mt_jumju_code)} */ checked={true} />
-                  <Typography color='#fff' ml={0.5}>원산지출력</Typography>
+                  <Android12Switch color='primary' onChange={() => setOriginPrintHandler()} checked={do_jumju_origin_use === 'Y' ? true : false} />
+                  <Typography color='#fff' ml={0.5}>원산지출력{/*  {do_jumju_origin_use === 'Y' ? 'O' : 'X'} */}</Typography>
                 </Box>
                 : null
             }
