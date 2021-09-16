@@ -122,7 +122,7 @@ export default function Login() {
         storeAddToken(token);
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
         dispatch(loginAction.updateToken(token));
-        // appRuntime.send('sound_count', arrItems.mt_sound); // 알림 사운드 횟수 보내기 : web 테스트시 끄기
+        appRuntime.send('sound_count', arrItems.mt_sound); // 알림 사운드 횟수 보내기 : web 테스트시 끄기
         history.replace('/main');
         setValues({
           ...values,
@@ -145,13 +145,13 @@ export default function Login() {
     // 메인프로세서로부터 토큰 값 받기
     appRuntime.on('electronToken', (event: any, data: any) => {
       setToken(data);
+      console.log('token', data);
     });
-
   }
 
   React.useEffect(() => {
     // getToken(setToken);
-    // getElectronToken(); // 일렉트론 빌드시 토큰 가져오기 : web 테스트시 끄기
+    getElectronToken(); // 일렉트론 빌드시 토큰 가져오기 : web 테스트시 끄기
   }, []);
 
   // 윈도우 닫기 핸들러

@@ -61,7 +61,7 @@
   },
   "scripts": {
     "start:web": "react-scripts start",
-    "build:web": "react-scripts build",
+    "build:web": "PUBLIC_URL=./ react-scripts build",
     "build:desktop": "tsc -p electron/tsconfig.json",
     "start:desktop": "npm run build:desktop && electron ./build/electron.js",
     "test": "react-scripts test",
