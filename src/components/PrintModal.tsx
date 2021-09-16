@@ -24,7 +24,7 @@ import appRuntime from '../appRuntime';
 
 
 const PrintModal = (props: any) => {
-  const { mt_store } = useSelector((state: any) => state.login);
+  const { mt_store, do_jumju_origin_use } = useSelector((state: any) => state.login);
   const { order, product, store } = useSelector((state: any) => state.orderDetail);
 
   const base = baseStyles();
@@ -181,12 +181,14 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY.MM.DD HH;mm')}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          ${do_jumju_origin_use === 'Y' ?
+          `<hr style='margin: 5px 0;' />
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${store.do_jumju_origin}</td>
             </tr>
-          </table>
+          </table>`
+          : null }
           <p>&nbsp;</p>
           <hr style='margin: 5px 0;' />
         </div>
@@ -342,12 +344,14 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY.MM.DD HH;mm')}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          ${do_jumju_origin_use === 'Y' ?
+          `<hr style='margin: 5px 0;' />
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${store.do_jumju_origin}</td>
             </tr>
-          </table>
+          </table>`
+          : null }
           <p>&nbsp;</p>
           <hr style='margin: 5px 0;' />
         </div>
