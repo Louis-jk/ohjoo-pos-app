@@ -608,7 +608,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   :
                   <RadioButtonCheckedIcon style={{ color: '#9FE6A0', marginRight: 5 }} />
                 }
-                <Typography noWrap fontSize='1.3rem' fontWeight="bold" style={{ color: '#fff' }} mr={0.3}>
+                <Typography noWrap fontSize='1.1rem' fontWeight="bold" style={{ color: '#fff' }} mr={0.3}>
                   {mt_store}
                 </Typography>
               </Box>
@@ -640,11 +640,11 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 </Button>
               : null}
             {props.detail === 'order_new' ?
-              <Box style={{ marginRight: 20 }}>
-                <Button variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+              <Box style={{ marginRight: 10 }}>
+                <Button variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                   <Typography color='secondary'>접수처리</Typography>
                 </Button>
-                <Button variant='outlined' style={{ borderWidth: 2, marginRight: 20 }} onClick={props.action02}>
+                <Button variant='outlined' style={{ paddingLeft: 10, paddingRight: 10, borderWidth: 2, marginRight: 10 }} onClick={props.action02}>
                   <Typography color='primary'>거부처리</Typography>
                 </Button>
                 <IconButton
@@ -661,10 +661,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
               </Box>
               : props.detail === 'order_check' ?
                 <Box>
-                  <Button variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                  <Button variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                     <Typography color='secondary'>배달처리</Typography>
                   </Button>
-                  <Button variant='outlined' style={{ borderWidth: 2, marginRight: 20 }} onClick={props.action02}>
+                  <Button variant='outlined' style={{ paddingLeft: 10, paddingRight: 10, borderWidth: 2, marginRight: 20 }} onClick={props.action02}>
                     <Typography color='primary'>취소처리</Typography>
                   </Button>
                   <IconButton
@@ -694,39 +694,39 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                     </Box> */}
                   </Box>
                   : props.type === 'menu' ?
-                    <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={() => history.push('/menu_add')}>
+                    <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={() => history.push('/menu_add')}>
                       <Typography variant='body1' fontSize={16} fontWeight='bold'>추가하기</Typography>
                     </Button>
                     : props.type === 'menuAdd' ?
-                      <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                      <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                         <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                       </Button>
                       : props.type === 'menuEdit' ?
-                        <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                        <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                           <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                         </Button>
                         : props.type === 'category' ?
-                          <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                          <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                             <Typography variant='body1' fontSize={16} fontWeight='bold'>카테고리 추가하기</Typography>
                           </Button>
                           : props.type === 'coupon' ?
-                            <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={() => history.push('/coupon_add')}>
+                            <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={() => history.push('/coupon_add')}>
                               <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                             </Button>
                             : props.type === 'couponAdd' ?
-                              <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                              <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                                 <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
                               </Button>
-                               : props.type === 'couponEdit' ?
-                              <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                              : props.type === 'couponEdit' ?
+                              <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                                 <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                               </Button>
                               : props.type === 'tips' ?
-                                <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                                <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                                   <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                                 </Button>
                                 : props.type === 'storeInfo' ?
-                                  <Button color='primary' variant='contained' style={{ marginRight: 10 }} onClick={props.action}>
+                                  <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                                     <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
                                   </Button>
                                   : null}
@@ -738,7 +738,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             >
               <AppsIcon />
             </IconButton> */}
-            <Button variant='outlined' color='primary' style={{ borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
+            <Button variant='outlined' color='primary' style={{ paddingLeft: 10, paddingRight: 10, borderWidth: 2 }} onClick={handleStoreDrawerToggle}>
               <Typography color='primary'>매장선택</Typography>
             </Button>
             {/* <BootstrapTooltip title="아이콘을 누르고 위치를 이동시킬 수 있습니다." placement='bottom-start'>
