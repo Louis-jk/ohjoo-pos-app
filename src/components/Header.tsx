@@ -623,11 +623,11 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             props.detail === 'order_check' || location.pathname === '/order_check' ||
             props.detail === 'order_delivery' || location.pathname === '/order_delivery' ||
             props.detail === 'order_done' || location.pathname === '/order_done' ?
-              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
-                  <Android12Switch color='primary' onChange={() => setOriginPrintHandler()} checked={do_jumju_origin_use === 'Y' ? true : false} />
-                  <Typography color='#fff' ml={0.5}>원산지출력{/*  {do_jumju_origin_use === 'Y' ? 'O' : 'X'} */}</Typography>
-                </Box>
-                : null
+              <Box className={base.noDrag} display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
+                <Android12Switch color='primary' onChange={() => setOriginPrintHandler()} checked={do_jumju_origin_use === 'Y' ? true : false} />
+                <Typography color='#fff' ml={0.5}>원산지출력{/*  {do_jumju_origin_use === 'Y' ? 'O' : 'X'} */}</Typography>
+              </Box>
+              : null
             }
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
