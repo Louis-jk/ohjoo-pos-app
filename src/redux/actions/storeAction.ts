@@ -25,3 +25,14 @@ export function closedStore(store: any) {
     storeClosed: store,
   };
 }
+
+export function updateStoreOriginPrint(mt_id: string, origin: string) {
+  console.log("updateOriginPrint Store id", mt_id);
+  console.log("updateOriginPrint Store result", origin);
+  // console.log("updateOriginPrint Store origin", origin);
+  return {
+    type: types.UPDATE_ORIGIN_PRINT_STORE,
+    mt_id,
+    origin,
+  };
+}

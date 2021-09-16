@@ -41,10 +41,18 @@ const store = (state: State = defaultState, action: any) => {
         mt_addr: action.mt_addr
       }
     };
-    case types.CLOSED_STORE:
+  case types.CLOSED_STORE:
     return {
       ...state,
       closedStore: action.storeClosed
+    };
+  case types.UPDATE_ORIGIN_PRINT_STORE:
+    return {
+      ...state,
+      allStore: state.allStore.map(
+        (store, index) => store.mt_id === action.mt_id ? {...store, do_jumju_origin_use: action.origin} 
+                                                        : store
+      )
     };
   default:
     return state;
