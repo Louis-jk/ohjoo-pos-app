@@ -27,7 +27,8 @@ export function updateLogin(data: string) {
     mb_ca_name: args.mb_ca_name ? args.mb_ca_name : null, // add
     mt_addr: args.mt_addr ? args.mt_addr : null, // add
     mt_lat: args.mt_lat ? args.mt_lat : null, // add
-    mt_lng: args.mt_lng ? args.mt_lng : null // add
+    mt_lng: args.mt_lng ? args.mt_lng : null, // add
+    do_jumju_origin_use: args.do_jumju_origin_use, // add
   };
 }
 

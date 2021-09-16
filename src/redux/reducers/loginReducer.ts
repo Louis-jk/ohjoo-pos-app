@@ -28,7 +28,8 @@ const defaultState = {
   mb_ca_name: '', 
   mt_addr: '', 
   mt_lat: '', 
-  mt_lng: '' 
+  mt_lng: '' ,
+  do_jumju_origin_use: '',
 };
 
 const loginReducer = (state: loginState = defaultState, action: any) => {
@@ -55,11 +56,12 @@ const loginReducer = (state: loginState = defaultState, action: any) => {
       mt_app_token: action.mt_app_token,
       mt_store: action.mt_store,
       updateTime: action.updateTime,
-      mt_ca_code: action.mt_ca_code, // add
-      mb_ca_name: action.mb_ca_name, // add
-      mt_addr: action.mt_addr, // add
-      mt_lat: action.mt_lat, // add
-      mt_lng: action.mt_lng // add
+      mt_ca_code: action.mt_ca_code,
+      mb_ca_name: action.mb_ca_name,
+      mt_addr: action.mt_addr,
+      mt_lat: action.mt_lat,
+      mt_lng: action.mt_lng,
+      do_jumju_origin_use: action.do_jumju_origin_use // 원산지 출력 여부
     };
   case types.UPDATE_FCM_TOKEN:
     return {
