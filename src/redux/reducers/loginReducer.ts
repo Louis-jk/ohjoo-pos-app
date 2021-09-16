@@ -84,6 +84,11 @@ const loginReducer = (state: loginState = defaultState, action: any) => {
       ...state,
       mt_print: action.payload
     };
+  case types.UPDATE_ORIGIN_PRINT: 
+    return {
+      ...state,
+      do_jumju_origin_use: action.payload
+    };
   default:
     return state;
   }

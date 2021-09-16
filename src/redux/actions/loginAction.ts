@@ -58,3 +58,12 @@ export function updateAutoPrint(data: string) {
     payload: data
   };
 }
+
+// 원산지 출력 여부
+export function updateOriginPrint(data: string) {
+  
+  return {
+    type: types.UPDATE_ORIGIN_PRINT,
+    payload: data
+  };
+}
