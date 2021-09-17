@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron';
 import * as path from 'path';
 const fs = require('fs');
+const os = require('os');
 const url = require('url');
 const { setup: setupPushReceiver } = require('electron-push-receiver');
 
@@ -26,7 +27,7 @@ function createWindow() {
         nodeIntegration: false,
         contextIsolation: true, 
         enableRemoteModule: true, 
-        preload: path.join(app.getAppPath(), '/preload.js'),
+        preload: path.join(app.getAppPath(), '/build/preload.js'), // 빌드시 /build/preload.js 로 변경 필요
       }
     });
 
@@ -34,7 +35,7 @@ function createWindow() {
     
     indexPath = url.format({
       protocol: 'file:',
-      pathname: path.join(app.getAppPath(), '/index.html'),
+      pathname: path.join(app.getAppPath(), '/build/index.html'), // 빌드시 /build/index.html 로 변경 필요
       slashes: true
     })
     mainWindow.loadURL( indexPath );
@@ -59,10 +60,10 @@ ipcMain.on('pos_print', (event, data) => {
 
   let win = new BrowserWindow({ width: 302, height: 793, show: false});
   win.once('ready-to-show', () => win.hide());
-  fs.writeFile(path.join(__dirname, '/printme.html'), data, function() {
-    win.loadURL(`file://${path.join(__dirname, 'printme.html')}`);
-    win.webContents.on('did-finish-load', () => {
+  fs.writeFile(path.join(os.tmpdir(), '/printme.html'), data, function() {
+  win.loadURL(`file://${path.join(os.tmpdir(), 'printme.html')}`);
 
+  win.webContents.on('did-finish-load', () => {
       // Finding Default Printer name
       let printerInfo = win.webContents.getPrinters();
       let printer = printerInfo.filter(printer => printer.isDefault === true)[0];
@@ -71,7 +72,7 @@ ipcMain.on('pos_print', (event, data) => {
 
       const options = {
         marginsType: 0,
-        printBackground: false,
+        printBackground: true,
         printSelectionOnly: false,
         landscape: false,
         scaleFactor: 100,
