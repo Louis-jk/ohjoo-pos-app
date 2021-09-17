@@ -124,7 +124,7 @@ const PrintModal = (props: any) => {
             `<tr key=${index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
-                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}원</td>
+                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
               </tr>`
           ))}
           </table>
@@ -196,7 +196,7 @@ const PrintModal = (props: any) => {
           <hr style='margin: 5px 0;' />
         </div>
       `
-        res(appRuntime.send('pos_print', htmlFormat));
+      res(appRuntime.send('pos_print', htmlFormat));
       } else {
         alert('주문 디테일이 없습니다.');
       }
@@ -290,7 +290,7 @@ const PrintModal = (props: any) => {
             `<tr key=${index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
-                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}원</td>
+                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
               </tr>`
           ))}
           </table>
@@ -412,16 +412,16 @@ const PrintModal = (props: any) => {
             {mt_store && order && product && store ?
               <Box id='printBox' className={base.printModal} style={{ backgroundColor: '#fff' }}>
                 <Typography textAlign="center" fontWeight="bold" component="h5" variant="h5" mb={4}>{order.od_type} 주문전표</Typography>
-                <Box display="flex" flexDirection="row" mb={0.5}>
+                {/* <Box display="flex" flexDirection="row" mb={0.5}>
                   <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={3}>주문번호</Typography>
                   <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={10} textAlign="right">{order.order_id}</Typography>
                 </Box>
                 <Box display="flex" flexDirection="row" mb={1}>
                   <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={3}>결제방식</Typography>
                   <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={10} textAlign="right">{order.od_settle_case}</Typography>
-                </Box>
-                {/* <Typography fontSize="11pt" fontWeight="bold">주문번호 : {order.order_id}</Typography>
-                <Typography mb={1} fontSize="11pt" fontWeight="bold">결제방식 : {order.od_settle_case}</Typography> */}
+                </Box> */}
+                <Typography fontSize="11pt" fontWeight="bold">주문번호 : {order.order_id}</Typography>
+                <Typography mb={1} fontSize="11pt" fontWeight="bold">결제방식 : {order.od_settle_case}</Typography>
                 <Divider />
                 <Box my={1}>
                   <Box display="flex" flexDirection="column">
@@ -434,7 +434,7 @@ const PrintModal = (props: any) => {
                 <Box my={1}>
                   <Box display="flex" flexDirection="column">
                     <Typography mb={0.5} fontSize="10pt">연락처</Typography>
-                    {order.order_safety_number ?
+                    {order.order_safety_number && order.od_settle_type !== 'cash' ?
                       <>
                         <Typography mb={0.5} fontSize="12pt" fontWeight="bold">{order.order_safety_number}</Typography>
                         <Typography fontSize="10pt">{order.order_safety_str}</Typography>
@@ -447,14 +447,16 @@ const PrintModal = (props: any) => {
                 <Divider />
                 <Box mt={1} mb={2}>
                   <Typography mb={0.5} fontSize="10pt">요청사항</Typography>
-                  <Box display="flex" flexDirection="row" mb={0.5}>
+                  <Typography fontSize="11pt" fontWeight="bold">가게 : {order.order_seller ? order.order_seller : "요청사항이 없습니다."}</Typography>
+                  <Typography mb={1} fontSize="11pt" fontWeight="bold">배달 : {order.order_officer ? order.order_officer : "요청사항이 없습니다."}</Typography>
+                  {/* <Box display="flex" flexDirection="row" mb={0.5}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={3}>가게</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={10} textAlign="right">{order.order_seller ? order.order_seller : "요청사항이 없습니다."}</Typography>
                   </Box>
                   <Box display="flex" flexDirection="row">
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={3}>배달</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={10} textAlign="right">{order.order_officer ? order.order_officer : "요청사항이 없습니다."}</Typography>
-                  </Box>
+                  </Box> */}
                 </Box>
                 <Divider />
                 <Divider />
@@ -490,29 +492,29 @@ const PrintModal = (props: any) => {
                 <Divider />
                 <Box mt={1.5} mb={1}>
                   <Typography mb={0.5} fontSize="10pt">결제정보</Typography>
-                  <Box display="flex" flexDirection="row" mb={0.5}>
+                  {/* <Box display="flex" flexDirection="row" mb={0.5}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>총 주문금액</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.odder_cart_price)}원</Typography>
-                  </Box>
+                  </Box> */}
                   <Box display="flex" flexDirection="row" mb={0.5}>
-                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>배달팁</Typography>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>배달 팁</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_cost)}원</Typography>
                   </Box>
                   <Box display="flex" flexDirection="row" mb={0.5}>
-                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>포인트</Typography>
-                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_point)}P</Typography>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>오주 포인트</Typography>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_point)}원</Typography>
                   </Box>
-                  <Box display="flex" flexDirection="row" mb={0.5}>
-                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>쿠폰할인</Typography>
+                  <Box display="flex" flexDirection="row" mb={1}>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>오주 쿠폰</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_coupon)}원</Typography>
                   </Box>
-                  <Box display="flex" flexDirection="row" mb={2}>
+                  {/* <Box display="flex" flexDirection="row" mb={2}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>결제방법</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{order.od_settle_case}</Typography>
-                  </Box>
+                  </Box> */}
                   <Divider />
                   <Box display="flex" flexDirection="row" my={1}>
-                    <Typography fontSize="12pt" fontWeight="bold" lineHeight={1.2} flex={4}>총 결제금액</Typography>
+                    <Typography fontSize="12pt" fontWeight="bold" lineHeight={1.2} flex={4}>합계(결재완료)</Typography>
                     <Typography fontSize="12pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_sumprice)}원</Typography>
                   </Box>
                 </Box>
