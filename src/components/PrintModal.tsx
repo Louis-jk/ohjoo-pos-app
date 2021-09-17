@@ -41,7 +41,8 @@ const PrintModal = (props: any) => {
   const handlePrint = () => {
     return new Promise((res, rej) => {
       if (order !== null && product !== null && store !== null) {
-        const htmlFormat = `
+
+      const htmlFormat = `
         <style>
           @page { margin: 0; margin-bottom: 20px; }
           @media print {
@@ -54,13 +55,13 @@ const PrintModal = (props: any) => {
           <h5 style='text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 15px'>매장 주문전표</h5>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
-              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>주문번호 ${order.order_id}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>주문번호 : ${order.order_id}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>결제방식 ${order.od_settle_case}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>결제방식 : ${order.od_settle_case}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>매장주소</td>
@@ -72,12 +73,12 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${order.od_addr_jibeon}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>연락처</td>
             </tr>
-            ${order.order_safety_number ?
+            ${order.order_safety_number && order.od_settle_type !== 'cash' ?
             `<tr>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.order_safety_number}</td>
               </tr>
@@ -90,45 +91,52 @@ const PrintModal = (props: any) => {
               </tr>`
           }
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
-            <colgroup>
-              <col width='35%' />
-              <col width='65%' />
-            </colgroup>
-            <tr colspan='2'>
-              <td style='text-align: left; font-size: 8pt;'>요청사항</td>
+            <tr>
+              <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>요청사항</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>가게</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.order_seller ? order.order_seller : '요청사항이 없습니다.'}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>가게 : ${order.order_seller ? order.order_seller : '요청사항이 없습니다.'}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>배달 : ${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='70%' />
+              <col width='65%' />
               <col width='10%' />
-              <col width='20%' />
+              <col width='25%' />
             </colgroup>
-            <tr colspan='2'>
+            <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
               <td style='text-align: center; font-size: 8pt; letter-spacing: -1;'>수량</td>
               <td style='text-align: right; font-size: 8pt; letter-spacing: -1;'>금액</td>
             </tr>
+          </table>
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
+          <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
+            <colgroup>
+              <col width='65%' />
+              <col width='10%' />
+              <col width='25%' />
+            </colgroup>
             ${product?.map((item: any, index: number) => (
-            `<tr key=${index}>
+              `<tr key=${item.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
+              </tr>
+              <tr key=${item.io_id + index}>
+                <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션 : ${item.io_id}</td>
+                <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
+                <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
               </tr>`
-          ))}
+            )).join('')}
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
               <col width='35%' />
@@ -138,51 +146,43 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>결제정보</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>총 주문금액</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.odder_cart_price)}원</td>
-            </tr>
-            <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달팁</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달 팁</td>
               <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_cost)}원</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>포인트</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_point)}P</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 포인트</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_point)}원</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>쿠폰할인</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 쿠폰</td>
               <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon)}원</td>
             </tr>
-            <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>결제방법</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.od_settle_case}</td>
-            </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
               <col width='40%' />
               <col width='60%' />
             </colgroup>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>총 결제금액</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.od_sum_type}</td>
               <td style='text-align:right;  font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_sumprice)}원</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>주문매장 : ${store.mb_company}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>주문번호 : ${order.order_id}</td>
+              <td style='text-align: left; font-size: 8pt;'>주문번호 : ${order.order_id}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>주문일시 : ${moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY.MM.DD HH:mm')}</td>
+              <td style='text-align: left; font-size: 8pt;'>주문일시 : ${moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY. MM. DD  HH:mm')}</td>
             </tr>
           </table>
           ${do_jumju_origin_use === 'Y' ?
-          `<hr style='margin: 5px 0;' />
+          `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>원산지</td>
@@ -193,7 +193,7 @@ const PrintModal = (props: any) => {
           </table>`
           : `<p>&nbsp;</p>` }
           <p>&nbsp;</p>
-          <hr style='margin: 5px 0;' />
+          <hr style='margin: 0 5px;' />
         </div>
       `
       res(appRuntime.send('pos_print', htmlFormat));
@@ -207,7 +207,8 @@ const PrintModal = (props: any) => {
 
     return new Promise((res, rej) => {
       if (order !== null && product !== null && store !== null) {
-        const htmlFormat02 = `
+
+      const htmlFormat02 = `
         <style>
           @page { margin: 0; margin-bottom: 20px; }
           @media print {
@@ -220,13 +221,13 @@ const PrintModal = (props: any) => {
           <h5 style='text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 15px'>${order.od_type} 주문전표</h5>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
-              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>주문번호 ${order.order_id}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>주문번호 : ${order.order_id}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>결제방식 ${order.od_settle_case}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>결제방식 : ${order.od_settle_case}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>매장주소</td>
@@ -238,12 +239,12 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${order.od_addr_jibeon}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>연락처</td>
             </tr>
-            ${order.order_safety_number ?
+            ${order.order_safety_number && order.od_settle_type !== 'cash' ?
             `<tr>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.order_safety_number}</td>
               </tr>
@@ -256,45 +257,52 @@ const PrintModal = (props: any) => {
               </tr>`
           }
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
-            <colgroup>
-              <col width='35%' />
-              <col width='65%' />
-            </colgroup>
-            <tr colspan='2'>
-              <td style='text-align: left; font-size: 8pt;'>요청사항</td>
+            <tr>
+              <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>요청사항</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>가게</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.order_seller ? order.order_seller : '요청사항이 없습니다.'}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>가게 : ${order.order_seller ? order.order_seller : '요청사항이 없습니다.'}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>배달 : ${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='70%' />
+              <col width='65%' />
               <col width='10%' />
-              <col width='20%' />
+              <col width='25%' />
             </colgroup>
-            <tr colspan='2'>
+            <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
               <td style='text-align: center; font-size: 8pt; letter-spacing: -1;'>수량</td>
               <td style='text-align: right; font-size: 8pt; letter-spacing: -1;'>금액</td>
             </tr>
+          </table>
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
+          <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
+            <colgroup>
+              <col width='65%' />
+              <col width='10%' />
+              <col width='25%' />
+            </colgroup>
             ${product?.map((item: any, index: number) => (
-            `<tr key=${index}>
+              `<tr key=${item.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
+              </tr>
+              <tr key=${item.io_id + index}>
+                <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션 : ${item.io_id}</td>
+                <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
+                <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
               </tr>`
-          ))}
+            )).join('')}
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
               <col width='35%' />
@@ -304,51 +312,43 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>결제정보</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>총 주문금액</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.odder_cart_price)}원</td>
-            </tr>
-            <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달팁</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달 팁</td>
               <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_cost)}원</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>포인트</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_point)}P</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 포인트</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_point)}원</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>쿠폰할인</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 쿠폰</td>
               <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon)}원</td>
             </tr>
-            <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>결제방법</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.od_settle_case}</td>
-            </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
               <col width='40%' />
               <col width='60%' />
             </colgroup>
             <tr>
-              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>총 결제금액</td>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${order.od_sum_type}</td>
               <td style='text-align:right;  font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_sumprice)}원</td>
             </tr>
           </table>
-          <hr style='margin: 5px 0;' />
+          <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>주문매장 : ${store.mb_company}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>주문번호 : ${order.order_id}</td>
+              <td style='text-align: left; font-size: 8pt;'>주문번호 : ${order.order_id}</td>
             </tr>
             <tr>
-              <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>주문일시 : ${moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY.MM.DD HH:mm')}</td>
+              <td style='text-align: left; font-size: 8pt;'>주문일시 : ${moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY. MM. DD  HH:mm')}</td>
             </tr>
           </table>
           ${do_jumju_origin_use === 'Y' ?
-          `<hr style='margin: 5px 0;' />
+          `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>원산지</td>
@@ -359,7 +359,7 @@ const PrintModal = (props: any) => {
           </table>`
           : `<p>&nbsp;</p>` }
           <p>&nbsp;</p>
-          <hr style='margin: 5px 0;' />
+          <hr style='margin: 0 5px;' />
         </div>
       `
         setTimeout(() => {
@@ -476,17 +476,26 @@ const PrintModal = (props: any) => {
                 <Divider />
                 <Box my={1}>
                   {product?.map((item: any, index: number) => (
-                  <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+                  <>
+                  <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" my={1}>
                     <Box flex="5">
                       <Typography textAlign="left" fontSize="11pt" fontWeight="bold">{item.it_name}</Typography>
+                      <Typography textAlign="left" fontSize="9pt">└ 옵션 : {item.io_id}</Typography>
                     </Box>
                     <Box flex="1">
                       <Typography textAlign="center" fontSize="11pt" fontWeight="bold">{item.ct_qty}</Typography>
+                      <Typography textAlign="left" fontSize="9pt"></Typography>
                     </Box>
                     <Box flex="2">
                       <Typography textAlign="right" fontSize="11pt" fontWeight="bold">{Api.comma(item.ct_price)}</Typography>
+                      <Typography textAlign="right" fontSize="9pt">{Api.comma(item.io_price)}</Typography>
                     </Box>
                   </Box>
+                  {index !== product.length -1 ? 
+                    <Divider style={{borderStyle:'dotted'}} />
+                    : null
+                  }
+                  </>
                   ))}
                 </Box>
                 <Divider />
@@ -514,7 +523,7 @@ const PrintModal = (props: any) => {
                   </Box> */}
                   <Divider />
                   <Box display="flex" flexDirection="row" my={1}>
-                    <Typography fontSize="12pt" fontWeight="bold" lineHeight={1.2} flex={4}>합계(결재완료)</Typography>
+                    <Typography fontSize="12pt" fontWeight="bold" lineHeight={1.2} flex={4}>{order.od_sum_type}</Typography>
                     <Typography fontSize="12pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_sumprice)}원</Typography>
                   </Box>
                 </Box>
