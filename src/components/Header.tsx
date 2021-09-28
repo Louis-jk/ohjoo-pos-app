@@ -53,6 +53,7 @@ import LogoutOutlinedIcon from '@material-ui/icons/LogoutOutlined';
 import StopCircleOutlinedIcon from '@material-ui/icons/StopCircleOutlined';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import StoreIcon from '@material-ui/icons/Store';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 // Local Component
 import PrintModal from './PrintModal';
@@ -77,38 +78,38 @@ interface OptionalProps {
 }
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
-    padding: 8,
-    '& .MuiSwitch-track': {
-      backgroundColor: '#656565 !important',
-      borderRadius: 22 / 2,
-      '&:before, &:after': {
-        content: '""',
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: 16,
-        height: 16,
-      },
-      '&:before': {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-          theme.palette.getContrastText(theme.palette.primary.main),
-        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
-        left: 12,
-      },
-      '&:after': {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-          theme.palette.getContrastText(theme.palette.primary.main),
-        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
-        right: 12,
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      boxShadow: 'none',
+  padding: 8,
+  '& .MuiSwitch-track': {
+    backgroundColor: '#656565 !important',
+    borderRadius: 22 / 2,
+    '&:before, &:after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
       width: 16,
       height: 16,
-      margin: 2,
     },
-  }));
+    '&:before': {
+      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+        theme.palette.getContrastText(theme.palette.primary.main),
+      )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+      left: 12,
+    },
+    '&:after': {
+      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+        theme.palette.getContrastText(theme.palette.primary.main),
+      )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+      right: 12,
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxShadow: 'none',
+    width: 16,
+    height: 16,
+    margin: 2,
+  },
+}));
 
 
 export default function ResponsiveDrawer(props: OptionalProps) {
@@ -322,21 +323,21 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     try {
       await dispatch(loginAction.updateOriginPrint(result));
       await dispatch(storeAction.updateStoreOriginPrint(mt_id, result));
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
-    
+
   }
 
   const setOriginPrintHandler = () => {
-    
+
     let result = '';
-    if(do_jumju_origin_use === 'Y') {
+    if (do_jumju_origin_use === 'Y') {
       result = 'N';
     } else {
       result = 'Y';
     }
-    
+
     setOriginStoreHandler(result);
 
     let param = {
@@ -404,7 +405,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
       <Toolbar style={{ backgroundColor: theme.palette.secondary.main }}>
         {/* <img src={Logo} alt="오늘의주문" style={{ width: 130 }} /> */}
-        <ButtonGroup variant="contained" color="primary" style={{ width: '100%' }} aria-label="text primary button group">
+        <ButtonGroup variant="contained" color="inherit" style={{ width: '100%' }} aria-label="text button group">
           <Button onClick={() => menuControlHandler('order')} style={{ background: selectType === 'order' ? '#ffc739' : '#444259' }}>
             <Typography style={{ color: selectType === 'order' ? '#1c1b30' : '#ffc739' }}>주문</Typography>
           </Button>
@@ -474,7 +475,13 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <ListItem className={base.orderMenu02} component={Link} to='/store_info' style={{ color: curPathName === 'store_info' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_info' ? '#fff' : 'transparent' }}>
               <Box display='flex' flexDirection='row'>
                 <StorefrontOutlinedIcon />
-                <Typography component='label' variant='body1' ml={1}>매장소개 및 설정</Typography>
+                <Typography component='label' variant='body1' ml={1}>매장소개</Typography>
+              </Box>
+            </ListItem>
+            <ListItem className={base.orderMenu02} component={Link} to='/store_setting' style={{ color: curPathName === 'store_setting' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'store_setting' ? '#fff' : 'transparent' }}>
+              <Box display='flex' flexDirection='row'>
+                <SettingsIcon />
+                <Typography component='label' variant='body1' ml={1}>매장설정</Typography>
               </Box>
             </ListItem>
             <ListItem className={base.orderMenu02} component={Link} to='/reviews' style={{ color: curPathName === 'reviews' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'reviews' ? '#fff' : 'transparent' }}>
@@ -618,26 +625,26 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Button variant='contained' color='primary' onClick={sendNotify}>NOTIFICATION</Button>
           </Box> */}
           <Box className={base.flexRowStartCenter}>
-            { 
-            props.detail === 'order_new' || location.pathname === '/order_new' ||
-            props.detail === 'order_check' || location.pathname === '/order_check' ||
-            props.detail === 'order_delivery' || location.pathname === '/order_delivery' ||
-            props.detail === 'order_done' || location.pathname === '/order_done' ?
-              <Box className={base.noDrag} display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
-                <Android12Switch color='primary' onChange={() => setOriginPrintHandler()} checked={do_jumju_origin_use === 'Y' ? true : false} />
-                <Typography color='#fff' ml={0.5}>원산지출력{/*  {do_jumju_origin_use === 'Y' ? 'O' : 'X'} */}</Typography>
-              </Box>
-              : null
+            {
+              props.detail === 'order_new' || location.pathname === '/order_new' ||
+                props.detail === 'order_check' || location.pathname === '/order_check' ||
+                props.detail === 'order_delivery' || location.pathname === '/order_delivery' ||
+                props.detail === 'order_done' || location.pathname === '/order_done' ?
+                <Box className={base.noDrag} display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mr={2}>
+                  <Android12Switch color='primary' onChange={() => setOriginPrintHandler()} checked={do_jumju_origin_use === 'Y' ? true : false} />
+                  <Typography color='#fff' ml={0.5}>원산지출력{/*  {do_jumju_origin_use === 'Y' ? 'O' : 'X'} */}</Typography>
+                </Box>
+                : null
             }
             {props.detail !== 'order_new' && props.detail !== 'order_check' && props.detail !== 'order_delivery' && props.detail !== 'order_done'
               && props.type !== 'menuAdd' && props.type !== 'menuEdit' && props.type !== 'couponAdd'
-              ? 
-                <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 30 }} onClick={openCloseStoreModalHandler}>
-                  <Badge badgeContent={allStore ? allStore.filter((state: any) => state.do_end_state === 'N').length : 0} color="primary">
-                    <StopCircleOutlinedIcon style={{ color: allStore && allStore.filter((state: any) => state.do_end_state === 'N').length > 0 ? '#F8485E' : '#fff' }} />
-                  </Badge>
-                  <Typography ml={0.5}>영업일시정지</Typography>
-                </Button>
+              ?
+              <Button color="primary" style={{ color: theme.palette.secondary.contrastText, marginRight: 30 }} onClick={openCloseStoreModalHandler}>
+                <Badge badgeContent={allStore ? allStore.filter((state: any) => state.do_end_state === 'N').length : 0} color="primary">
+                  <StopCircleOutlinedIcon style={{ color: allStore && allStore.filter((state: any) => state.do_end_state === 'N').length > 0 ? '#F8485E' : '#fff' }} />
+                </Badge>
+                <Typography ml={0.5}>영업일시정지</Typography>
+              </Button>
               : null}
             {props.detail === 'order_new' ?
               <Box style={{ marginRight: 10 }}>
@@ -718,18 +725,22 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                                 <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
                               </Button>
                               : props.type === 'couponEdit' ?
-                              <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
-                              </Button>
-                              : props.type === 'tips' ?
                                 <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                  <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
+                                  <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                                 </Button>
-                                : props.type === 'storeInfo' ?
+                                : props.type === 'tips' ?
                                   <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                    <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                    <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                                   </Button>
-                                  : null}
+                                  : props.type === 'storeInfo' ?
+                                    <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                                      <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                    </Button>
+                                    : props.type === 'storeSetting' ?
+                                      <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                                        <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                      </Button>
+                                      : null}
             {/* <IconButton
               color="info"
               aria-label="list"
