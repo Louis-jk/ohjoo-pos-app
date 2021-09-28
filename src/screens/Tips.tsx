@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
@@ -200,10 +200,10 @@ export default function Tips(props: any) {
 
   // 배달팁 등록
   const onSubmitTips = (payload: string) => {
-    
+
     let param = {};
 
-    if(payload === 'insert') {
+    if (payload === 'insert') {
       param = {
         jumju_id: mt_id,
         jumju_code: mt_jumju_code,
@@ -211,7 +211,7 @@ export default function Tips(props: any) {
         charge_end: maxPrice,
         charge_price: tipPrice,
         mode: 'insert'
-      };  
+      };
     } else {
       param = {
         jumju_id: mt_id,
@@ -221,14 +221,14 @@ export default function Tips(props: any) {
         charge_end: maxPrice,
         charge_price: tipPrice,
         mode: 'update'
-      };  
+      };
     }
-    
+
     Api.send('store_delivery_input', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
       if (resultItem.result === 'Y') {
-        if(payload === 'insert') {
+        if (payload === 'insert') {
           setToastState({ msg: '새로운 배달팁이 등록 되었습니다.', severity: 'success' });
           handleOpenAlert();
           handleClose();
@@ -238,7 +238,7 @@ export default function Tips(props: any) {
           handleEditClose();
         }
       } else {
-        if(payload === 'insert') {
+        if (payload === 'insert') {
           setToastState({ msg: '배달팁을 등록하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
           handleOpenAlert();
           handleClose();
@@ -303,7 +303,7 @@ export default function Tips(props: any) {
     setTipId(id);
     handleOpenTip();
   }
-  
+
 
   return (
     <Box component="div" className={base.root}>
@@ -339,22 +339,6 @@ export default function Tips(props: any) {
         <Fade in={open}>
           <Box className={base.modalInner}>
             <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>배달팁 입력</Typography>
-            {/* <IconButton
-              color="primary"
-              component="span"
-              onClick={handleClose}
-              style={{
-                position: 'absolute',
-                top: -10,
-                right: -10,
-                width: 30,
-                height: 30,
-                color: '#fff',
-                backgroundColor: theme.palette.primary.main
-              }}
-            >
-              <CloseRoundedIcon />
-            </IconButton> */}
             <Paper className={base.paper}>
               <Box className={base.txtRoot}>
                 <TextField
@@ -411,7 +395,7 @@ export default function Tips(props: any) {
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
                     if (e.target.value === '' || re.test(e.target.value)) {
-                      let changed = e.target.value.replace(/(^0+)/, '');
+                      let changed = e.target.value.replace(/^(0+)\w+/, '0');
                       setTipPrice(changed);
                     }
                   }}
@@ -429,7 +413,7 @@ export default function Tips(props: any) {
         </Fade>
       </Modal>
       {/* // 배달팁 입력 모달 */}
-      
+
       {/* 배달팁 수정 모달 */}
       <Modal
         aria-labelledby="transition-modal-title"
@@ -446,24 +430,8 @@ export default function Tips(props: any) {
         <Fade in={openEdit}>
           <Box className={base.modalInner}>
             <Box mb={2}>
-              <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>{`배달팁 ${tipNo < 10 ? `0${tipNo+1}` : `${tipNo+1}`} - 수정`}</Typography>
+              <Typography component="h2" id="transition-modal-title" style={{ fontSize: 20 }}>{`배달팁 ${tipNo < 10 ? `0${tipNo + 1}` : `${tipNo + 1}`} - 수정`}</Typography>
             </Box>
-            {/* <IconButton
-              color="primary"
-              component="span"
-              onClick={handleClose}
-              style={{
-                position: 'absolute',
-                top: -10,
-                right: -10,
-                width: 30,
-                height: 30,
-                color: '#fff',
-                backgroundColor: theme.palette.primary.main
-              }}
-            >
-              <CloseRoundedIcon />
-            </IconButton> */}
             <Paper className={base.paper}>
               <Box className={base.txtRoot}>
                 <TextField
@@ -520,7 +488,7 @@ export default function Tips(props: any) {
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
                     if (e.target.value === '' || re.test(e.target.value)) {
-                      let changed = e.target.value.replace(/(^0+)/, '');
+                      let changed = e.target.value.replace(/^(0+)\w+/, '0');
                       setTipPrice(changed);
                     }
                   }}
@@ -577,12 +545,12 @@ export default function Tips(props: any) {
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) =>
                 <Grid item xs={6} sm={6} md={4} key={list.dd_id} style={{ position: 'relative' }} alignContent='baseline'>
-                  <Box style={{backgroundColor: '#1c1b30', padding: '5px 20px'}}>
+                  <Box style={{ backgroundColor: '#1c1b30', padding: '5px 20px' }}>
                     <Typography color='#fff'>
-                    {`배달팁 ${index < 10 ? `0${index+1}` : `${index+1}`}`}
+                      {`배달팁 ${index < 10 ? `0${index + 1}` : `${index + 1}`}`}
                     </Typography>
                   </Box>
-                  <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>                    
+                  <Paper className={clsx(base.paper, base.gradient, base.boxBlur, base.border)} style={{ background: "linear-gradient(45deg, #f9f9f9, #fff9ea)" }}>
                     <Box className={base.txtRoot}>
                       <TextField
                         value={Api.comma(list.dd_charge_start)}
@@ -632,9 +600,9 @@ export default function Tips(props: any) {
                         contentEditable={false}
                       />
                     </Box>
-                      <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{marginTop:10, width:'100%'}}>
-                      <Button color='primary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => editModalHandler(index, list.dd_id, list.dd_charge_start, list.dd_charge_end, list.dd_charge_price)}>수정</Button>
-                      <Button color='secondary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => deleteTipConfirmHandler(list.dd_id)}>삭제</Button>
+                    <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 10, width: '100%' }}>
+                      <Button color='primary' variant='contained' style={{ flex: 1, boxShadow: 'none' }} onClick={() => editModalHandler(index, list.dd_id, list.dd_charge_start, list.dd_charge_end, list.dd_charge_price)}>수정</Button>
+                      <Button color='secondary' variant='contained' style={{ flex: 1, boxShadow: 'none' }} onClick={() => deleteTipConfirmHandler(list.dd_id)}>삭제</Button>
                     </ButtonGroup>
                   </Paper>
                 </Grid>
