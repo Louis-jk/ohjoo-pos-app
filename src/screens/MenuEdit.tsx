@@ -29,12 +29,14 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import QueueIcon from '@material-ui/icons/Queue';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 // Local Component
 import Api from '../Api';
@@ -168,7 +170,8 @@ export default function MenuEdit(props: IProps) {
           return result;
         });
       } else {
-        alert('최대 10개 입력하실 수 있습니다.');
+        setToastState({ msg: '기본옵션은 최대 10개 입력하실 수 있습니다.', severity: 'error' });
+        handleOpenAlert();
       }
     } else {
       setAddOptions(options => {
@@ -579,10 +582,14 @@ export default function MenuEdit(props: IProps) {
                     <TextField
                       value={option.name === null || option.name === undefined ? '' : option.name}
                       id="outlined-basic"
-                      label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 옵션명`}
+                      label={`기본 옵션명 ${index < 9 ? '0' : ''}${index + 1}`}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      placeholder='옵션분류 예: 사이즈 or 맛 등'
                       variant="outlined"
                       className={base.fieldMargin}
-                      style={{ width: '40%', marginRight: '1%' }}
+                      style={{ width: '54%', marginRight: '1%' }}
                       onChange={e => {
                         setOptions(options => {
                           const result = [...options];
@@ -592,7 +599,7 @@ export default function MenuEdit(props: IProps) {
                       }}
                     />
                     <Button
-                      style={{ width: '29%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
+                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
                       variant="outlined"
                       color="secondary"
                       startIcon={<HighlightOffIcon />}
@@ -607,7 +614,7 @@ export default function MenuEdit(props: IProps) {
                       삭제
                     </Button>
                     <Button
-                      style={{ width: '29%', height: 56, color: '#666', borderColor: '#C4C4C4' }}
+                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4' }}
                       variant="outlined"
                       color="secondary"
                       startIcon={<PostAddIcon />}
@@ -625,12 +632,18 @@ export default function MenuEdit(props: IProps) {
                     </Button>
                   </Box>
                   {option.select && option.select.map((item, selectIndex) => (
-                    <Box className={base.fieldMargin} flexDirection="row" key={selectIndex} style={{ height: 50 }}>
+                    <Box className={base.fieldMargin} display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" key={selectIndex} style={{ height: 50 }}>
+                      <Typography fontSize={18} color="#ffc739" mr={1}>┗</Typography>
                       <TextField
-                        style={{ width: '40%', marginRight: '1%' }}
+                        style={{ width: '47%', marginRight: '1%' }}
                         value={item.value === null || item.value === undefined ? '' : item.value}
                         id="outlined-basic"
-                        label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                        // label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                        label='세부명'
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        placeholder='세부명을 입력해주세요.'
                         variant="outlined"
                         onChange={e => {
                           setOptions(options => {
@@ -641,24 +654,33 @@ export default function MenuEdit(props: IProps) {
                         }}
                       />
                       <TextField
-                        style={{ width: '39%', marginRight: '1%' }}
+                        style={{ width: '28%', marginRight: '1%' }}
                         value={item.price === null || item.price === undefined ? '' : item.price}
                         id="outlined-basic"
-                        label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                        // label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                        label='추가금액'
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        placeholder='0'
                         variant="outlined"
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">원</InputAdornment>,
+                        }}
                         onChange={e => {
                           const re = /^[0-9\b]+$/;
                           if (e.target.value === '' || re.test(e.target.value)) {
+                            let changed = e.target.value.replace(/(^0+)/, '');
                             setOptions(options => {
                               const result = [...options];
-                              result[index].select[selectIndex].price = e.target.value;
+                              result[index].select[selectIndex].price = changed;
                               return result;
                             })
                           }
                         }}
                       />
                       <Button
-                        style={{ width: '19%', height: 55, color: '#666', borderColor: '#e5e5e5' }}
+                        style={{ height: 55, color: '#666', borderColor: '#e5e5e5' }}
                         variant="outlined"
                         // startIcon={<HighlightOffIcon />}
                         onClick={() => handleClickOpen('default', index, selectIndex)}
@@ -696,10 +718,14 @@ export default function MenuEdit(props: IProps) {
                     <TextField
                       value={option.name === null || option.name === undefined ? '' : option.name}
                       id="outlined-basic"
-                      label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 옵션명`}
+                      label={`추가 옵션명 ${index < 9 ? '0' : ''}${index + 1}`}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      placeholder='추가옵션명을 입력해주세요.'
                       variant="outlined"
                       className={base.fieldMargin}
-                      style={{ width: '40%', marginRight: '1%' }}
+                      style={{ width: '54%', marginRight: '1%' }}
                       onChange={e => {
                         setAddOptions(options => {
                           const result = [...options];
@@ -709,7 +735,7 @@ export default function MenuEdit(props: IProps) {
                       }}
                     />
                     <Button
-                      style={{ width: '29%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
+                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
                       variant="outlined"
                       color="secondary"
                       startIcon={<HighlightOffIcon />}
@@ -724,7 +750,7 @@ export default function MenuEdit(props: IProps) {
                       삭제
                     </Button>
                     <Button
-                      style={{ width: '29%', height: 56, color: '#666', borderColor: '#C4C4C4' }}
+                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4' }}
                       variant="outlined"
                       color="secondary"
                       startIcon={<PostAddIcon />}
@@ -742,12 +768,18 @@ export default function MenuEdit(props: IProps) {
                     </Button>
                   </Box>
                   {option.select && option.select.map((item, selectIndex) => (
-                    <Box className={base.fieldMargin} flexDirection="row" key={selectIndex} style={{ height: 50 }}>
+                    <Box className={base.fieldMargin} display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" key={selectIndex} style={{ height: 50 }}>
+                      <Typography fontSize={18} color="#ffc739" mr={1}>┗</Typography>
                       <TextField
-                        style={{ width: '40%', marginRight: '1%' }}
+                        style={{ width: '47%', marginRight: '1%' }}
                         value={item.value === null || item.value === undefined ? '' : item.value}
                         id="outlined-basic"
-                        label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                        // label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                        label='세부명'
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        placeholder='세부명을 입력해주세요.'
                         variant="outlined"
                         onChange={e => {
                           setAddOptions(options => {
@@ -758,24 +790,33 @@ export default function MenuEdit(props: IProps) {
                         }}
                       />
                       <TextField
-                        style={{ width: '39%', marginRight: '1%' }}
+                        style={{ width: '28%', marginRight: '1%' }}
                         value={item.price === null || item.price === undefined ? '' : item.price}
                         id="outlined-basic"
-                        label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                        // label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                        label='추가금액'
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        placeholder='0'
                         variant="outlined"
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">원</InputAdornment>,
+                        }}
                         onChange={e => {
                           const re = /^[0-9\b]+$/;
                           if (e.target.value === '' || re.test(e.target.value)) {
+                            let changed = e.target.value.replace(/(^0+)/, '');
                             setAddOptions(options => {
                               const result = [...options];
-                              result[index].select[selectIndex].price = e.target.value;
+                              result[index].select[selectIndex].price = changed;
                               return result;
                             })
                           }
                         }}
                       />
                       <Button
-                        style={{ width: '19%', height: 55, color: '#666', borderColor: '#e5e5e5' }}
+                        style={{ height: 55, color: '#666', borderColor: '#e5e5e5' }}
                         variant="outlined"
                         color="secondary"
                         // startIcon={<HighlightOffIcon />}
