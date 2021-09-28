@@ -17,6 +17,7 @@ import MenuAdd from '../screens/MenuAdd'; // 메뉴 추가
 import Category from '../screens/Category'; // 카테고리
 import Reviews from '../screens/Reviews'; // 리뷰
 import StoreInfo from '../screens/StoreInfo'; // 매장소개
+import StoreSetting from '../screens/StoreSetting'; // 매장설정
 import Coupons from '../screens/Coupons'; // 쿠폰
 import CouponAdd from '../screens/CouponAdd'; // 쿠폰 등록
 import CouponEdit from '../screens/CouponEdit'; // 쿠폰 수정
@@ -42,6 +43,7 @@ export default function Routes() {
         <Route path='/menu_add' component={MenuAdd} />
         <Route path='/category' component={Category} />
         <Route path='/store_info' component={StoreInfo} />
+        <Route path='/store_setting' component={StoreSetting} />
         <Route path='/reviews' component={Reviews} />
         <Route path='/coupons' component={Coupons} />
         <Route path='/coupon_add' component={CouponAdd} />
