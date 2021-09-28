@@ -48,7 +48,8 @@ export default function StoreTimeTab01() {
   const [isLoading, setLoading] = React.useState(false);
   const [lists, setLists] = React.useState<IList[]>([]);
   const [id, setId] = React.useState('');
-  const [open, setOpen] = React.useState(false); // 모달 on/off
+  const [open, setOpen] = React.useState(false); // 영업시간 삭제 모달 on/off
+  const [openQuestion, setOpenQuestion] = React.useState(false); // 영업시간 적용 범위 질의 모달 on/off
   const [selectDay, setSelectDay] = React.useState<Array<string>>([]); // 선택 요일
   const [startTime, setStartTime] = React.useState<Date | null>(new Date()); // 시작 시간
   const [endTime, setEndTime] = React.useState<Date | null>(new Date()); // 마감 시간
@@ -184,6 +185,16 @@ export default function StoreTimeTab01() {
     });
   }
 
+  // 적용 범위 전 체크 핸들러
+  const checkHandler = () => {
+    if (selectDay.length < 1) {
+      setToastState({ msg: '영업 날짜를 지정해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else {
+      setOpenQuestion(true);
+    }
+  }
+
   // 추가 처리
   const addStoreTime = () => {
 
@@ -203,6 +214,7 @@ export default function StoreTimeTab01() {
         jumju_id: mt_id,
         jumju_code: mt_jumju_code,
         mode: 'update',
+        // mode2: 'all', // ''
         st_yoil: selectDayFormat,
         st_stime: startTimeFormat,
         st_etime: endTimeFormat
@@ -220,6 +232,7 @@ export default function StoreTimeTab01() {
           setSelectDay([]);
           setToastState({ msg: '영업시간을 추가하였습니다.', severity: 'success' });
           handleOpenAlert();
+          setOpenQuestion(false);
           getStoreTime();
           setLoading(false);
         } else {
@@ -227,6 +240,7 @@ export default function StoreTimeTab01() {
           setSelectDay([]);
           setToastState({ msg: '영업시간 추가시 오류가 발생하였습니다.', severity: 'error' });
           handleOpenAlert();
+          setOpenQuestion(false);
           setLoading(false);
         }
       });
@@ -264,6 +278,8 @@ export default function StoreTimeTab01() {
             </Alert>
           </Snackbar>
         </Box>
+
+        {/* 영업시간 삭제 모달 */}
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
@@ -287,6 +303,35 @@ export default function StoreTimeTab01() {
             </Box>
           </Fade>
         </Modal>
+        {/* // 영업시간 삭제 모달 */}
+
+        {/* 영업시간 적용 범위 질의 모달 */}
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          className={base.modal}
+          open={openQuestion}
+          // onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={openQuestion}>
+            <Box className={clsx(base.modalInner, base.colCenter)}>
+              <h2 id="transition-modal-title" className={base.modalTitle}>영업시간 적용 범위</h2>
+              <p id="transition-modal-description" className={base.modalDescription}>해당 영업시간을 전체 매장에 적용하시겠습니까?</p>
+              <ButtonGroup variant="text" color="inherit" aria-label="text primary button group">
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={deleteStoreTime}>전체적용</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={addStoreTime}>해당 매장만</ModalConfirmButton>
+                <ModalCancelButton variant="outlined" onClick={() => setOpenQuestion(false)}>닫기</ModalCancelButton>
+              </ButtonGroup>
+            </Box>
+          </Fade>
+        </Modal>
+        {/* // 영업시간 적용 범위 질의 모달 */}
+
         {lists !== null && lists.length > 0 ?
           <>
             <Box component="article" style={{ margin: '30px 0' }}>
@@ -390,7 +435,7 @@ export default function StoreTimeTab01() {
             )
             :
             (
-              <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={addStoreTime}>
+              <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff', height: 50 }} disableElevation onClick={checkHandler}>
                 저장하기
               </Button>
             )
