@@ -68,8 +68,8 @@ export const theme = createTheme({
     text: {
       primary: '#222',
       secondary: '#333',
-    },
-  },
+    }
+  }
 }, koKR);
 
 export const MainBox = styled(Box)({
@@ -216,7 +216,7 @@ export const baseStyles = makeStyles({
   },
   orderMenuWrap02: {
     display: 'grid',
-    gridTemplateRows: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateRows: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
     height: 'calc(100vh - 64px)',
     // paddingLeft: '15px !important'
   },
