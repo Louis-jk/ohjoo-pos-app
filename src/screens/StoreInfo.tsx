@@ -347,6 +347,7 @@ export default function StoreInfo(props: IProps) {
             {/* <Button variant="contained" color="primary" fullWidth>등록하기</Button> */}
           </Grid>
           <Box className={clsx(base.mb10, base.mt20)}></Box>
+          {/* 매장 설정 신규 페이지 생성으로 일단 주석처리
           <Grid item xs={12} md={6} mb={2}>
             <Typography fontWeight='bold'>알림 설정</Typography>
             <FormControl component="fieldset">
@@ -496,6 +497,7 @@ export default function StoreInfo(props: IProps) {
               </RadioGroup>
             </FormControl>
           </Grid>
+         */}
         </MainBox>
       }
     </Box>
