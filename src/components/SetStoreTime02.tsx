@@ -40,7 +40,8 @@ export default function StoreTimeTab01() {
 
   const [isLoading, setLoading] = React.useState(false);
   const [list, setList] = React.useState<IList>({});
-  const [open, setOpen] = React.useState(false); // 모달 on/off
+  const [open, setOpen] = React.useState(false); // 정기휴무일 삭제 모달 on/off
+  const [openQuestion, setOpenQuestion] = React.useState(false); // 영업시간 적용 범위 질의 모달 on/off
   const [selectDay, setSelectDay] = React.useState<Array<string>>([]); // 선택 요일
   const [selectWeek, setSelectWeek] = React.useState<Array<string>>([]); // 선택 주
 
@@ -157,9 +158,8 @@ export default function StoreTimeTab01() {
     });
   }
 
-  // 추가 처리
-  const addStoreClosingDay = () => {
-
+  // 
+  const checkHandler = () => {
     if (selectWeek.length < 1) {
       setToastState({ msg: '주를 지정해주세요.', severity: 'error' });
       handleOpenAlert();
@@ -167,49 +167,57 @@ export default function StoreTimeTab01() {
       setToastState({ msg: '요일을 지정해주세요.', severity: 'error' });
       handleOpenAlert();
     } else {
+      setOpenQuestion(true);
+    }
+  }
 
-      let sortSelectDay = selectDay.sort();
-      let sortSelectWeek = selectWeek.sort();
+  // 추가 처리
+  const addStoreClosingDay = () => {
 
-      let selectDayFormat = sortSelectDay.join();
-      let selectWeekFormat = sortSelectWeek.join();
+    let sortSelectDay = selectDay.sort();
+    let sortSelectWeek = selectWeek.sort();
 
+    let selectDayFormat = sortSelectDay.join();
+    let selectWeekFormat = sortSelectWeek.join();
+
+
+    setLoading(true);
+
+    const param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      mode: 'update',
+      st_yoil: selectDayFormat,
+      st_week: selectWeekFormat
+    };
+
+    Api.send('store_regular_hoilday', param, (args: any) => {
 
       setLoading(true);
 
-      const param = {
-        jumju_id: mt_id,
-        jumju_code: mt_jumju_code,
-        mode: 'update',
-        st_yoil: selectDayFormat,
-        st_week: selectWeekFormat
-      };
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
 
-      Api.send('store_regular_hoilday', param, (args: any) => {
+      if (resultItem.result === 'Y') {
+        handleClose();
+        setSelectDay([]);
+        setSelectWeek([]);
+        setToastState({ msg: '정기휴무일을 추가하였습니다.', severity: 'success' });
+        handleOpenAlert();
+        getStoreClosingDay();
+        setOpenQuestion(false);
+        setLoading(false);
+      } else {
+        handleClose();
+        setSelectDay([]);
+        setSelectWeek([]);
+        setToastState({ msg: '정기휴무일 추가시 오류가 발생하였습니다.', severity: 'error' });
+        handleOpenAlert();
+        setOpenQuestion(false);
+        setLoading(false);
+      }
+    });
 
-        setLoading(true);
-
-        let resultItem = args.resultItem;
-        let arrItems = args.arrItems;
-
-        if (resultItem.result === 'Y') {
-          handleClose();
-          setSelectDay([]);
-          setSelectWeek([]);
-          setToastState({ msg: '정기휴무일을 추가하였습니다.', severity: 'success' });
-          handleOpenAlert();
-          getStoreClosingDay();
-          setLoading(false);
-        } else {
-          handleClose();
-          setSelectDay([]);
-          setSelectWeek([]);
-          setToastState({ msg: '정기휴무일 추가시 오류가 발생하였습니다.', severity: 'error' });
-          handleOpenAlert();
-          setLoading(false);
-        }
-      });
-    }
   }
 
   useEffect(() => {
@@ -239,6 +247,8 @@ export default function StoreTimeTab01() {
             </Alert>
           </Snackbar>
         </Box>
+
+        {/* 정기휴무일 삭제 모달 */}
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
@@ -262,6 +272,35 @@ export default function StoreTimeTab01() {
             </Box>
           </Fade>
         </Modal>
+        {/* // 정기휴무일 삭제 모달 */}
+
+        {/* 정기휴무일 적용 범위 질의 모달 */}
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          className={base.modal}
+          open={openQuestion}
+          onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={openQuestion}>
+            <Box className={clsx(base.modalInner, base.colCenter)}>
+              <h2 id="transition-modal-title" className={base.modalTitle}>정기휴무일 적용 범위</h2>
+              <p id="transition-modal-description" className={base.modalDescription}>해당 정기휴무일을 전체 매장에 적용하시겠습니까?</p>
+              <ButtonGroup variant="text" color="inherit" aria-label="text primary button group">
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={addStoreClosingDay}>전체 매장에 적용</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={addStoreClosingDay}>해당 매장만</ModalConfirmButton>
+                <ModalCancelButton variant="outlined" onClick={() => setOpenQuestion(false)}>닫기</ModalCancelButton>
+              </ButtonGroup>
+            </Box>
+          </Fade>
+        </Modal>
+        {/* // 정기휴무일 적용 범위 질의 모달 */}
+
         {list !== null && list !== undefined && list.st_week !== null && list.st_yoil_txt !== null ?
           <Box component="article" style={{ margin: '30px 0' }}>
             <Box className={clsx(base.flexRowBetweenCenter)} style={{ margin: '10px 0' }}>
@@ -337,7 +376,7 @@ export default function StoreTimeTab01() {
             저장하기
           </Button>
           :
-          <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff' }} disableElevation onClick={addStoreClosingDay}>
+          <Button className={classes.button} variant="contained" style={{ backgroundColor: theme.palette.primary.main, color: '#fff' }} disableElevation onClick={checkHandler}>
             저장하기
           </Button>
         }

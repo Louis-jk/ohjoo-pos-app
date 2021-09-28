@@ -198,53 +198,47 @@ export default function StoreTimeTab01() {
   // 추가 처리
   const addStoreTime = () => {
 
-    if (selectDay.length < 1) {
-      setToastState({ msg: '영업 날짜를 지정해주세요.', severity: 'error' });
-      handleOpenAlert();
-    } else {
+    let sortSelectDay = selectDay.sort();
+    let selectDayFormat = sortSelectDay.join();
+    let startTimeFormat = moment(startTime, 'HH:mm').format('HH:mm');
+    let endTimeFormat = moment(endTime, 'HH:mm').format('HH:mm');
 
-      let sortSelectDay = selectDay.sort();
-      let selectDayFormat = sortSelectDay.join();
-      let startTimeFormat = moment(startTime, 'HH:mm').format('HH:mm');
-      let endTimeFormat = moment(endTime, 'HH:mm').format('HH:mm');
+    setLoading(true);
+
+    const param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      mode: 'update',
+      // mode2: 'all', // ''
+      st_yoil: selectDayFormat,
+      st_stime: startTimeFormat,
+      st_etime: endTimeFormat
+    };
+
+    Api.send('store_service_hour', param, (args: any) => {
 
       setLoading(true);
 
-      const param = {
-        jumju_id: mt_id,
-        jumju_code: mt_jumju_code,
-        mode: 'update',
-        // mode2: 'all', // ''
-        st_yoil: selectDayFormat,
-        st_stime: startTimeFormat,
-        st_etime: endTimeFormat
-      };
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
 
-      Api.send('store_service_hour', param, (args: any) => {
-
-        setLoading(true);
-
-        let resultItem = args.resultItem;
-        let arrItems = args.arrItems;
-
-        if (resultItem.result === 'Y') {
-          handleClose();
-          setSelectDay([]);
-          setToastState({ msg: '영업시간을 추가하였습니다.', severity: 'success' });
-          handleOpenAlert();
-          setOpenQuestion(false);
-          getStoreTime();
-          setLoading(false);
-        } else {
-          handleClose();
-          setSelectDay([]);
-          setToastState({ msg: '영업시간 추가시 오류가 발생하였습니다.', severity: 'error' });
-          handleOpenAlert();
-          setOpenQuestion(false);
-          setLoading(false);
-        }
-      });
-    }
+      if (resultItem.result === 'Y') {
+        handleClose();
+        setSelectDay([]);
+        setToastState({ msg: '영업시간을 추가하였습니다.', severity: 'success' });
+        handleOpenAlert();
+        setOpenQuestion(false);
+        getStoreTime();
+        setLoading(false);
+      } else {
+        handleClose();
+        setSelectDay([]);
+        setToastState({ msg: '영업시간 추가시 오류가 발생하였습니다.', severity: 'error' });
+        handleOpenAlert();
+        setOpenQuestion(false);
+        setLoading(false);
+      }
+    });
   }
 
   useEffect(() => {
@@ -323,7 +317,7 @@ export default function StoreTimeTab01() {
               <h2 id="transition-modal-title" className={base.modalTitle}>영업시간 적용 범위</h2>
               <p id="transition-modal-description" className={base.modalDescription}>해당 영업시간을 전체 매장에 적용하시겠습니까?</p>
               <ButtonGroup variant="text" color="inherit" aria-label="text primary button group">
-                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={deleteStoreTime}>전체적용</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={deleteStoreTime}>전체 매장에 적용</ModalConfirmButton>
                 <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={addStoreTime}>해당 매장만</ModalConfirmButton>
                 <ModalCancelButton variant="outlined" onClick={() => setOpenQuestion(false)}>닫기</ModalCancelButton>
               </ButtonGroup>
