@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Material UI Components
@@ -12,7 +12,12 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import UploadIcon from '@mui/icons-material/Upload';
+import PlusOneRoundedIcon from '@mui/icons-material/PlusOneRounded';
 
 // Local Component
 import Header from '../components/Header';
@@ -46,6 +51,8 @@ interface IStoreInfo {
   mt_print: string;
   mb_one_saving: string;
 }
+
+
 
 export default function StoreInfo(props: IProps) {
 
@@ -199,6 +206,79 @@ export default function StoreInfo(props: IProps) {
     });
   }
 
+  // 이미지 업로드
+  const [detailImgs, setDetailImgs] = useState<Array<any>>([]);
+
+  // 이미지 다중업로드
+  const handleImageUpload = (e: any) => {
+    const fileArr = e.target.files;
+
+    let fileURLs: any[] = [];
+
+    let file;
+    let filesLength = fileArr.length > 5 ? 5 : fileArr.length;
+
+    if (fileArr.length > 5) {
+      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다..', severity: 'warning' });
+      handleOpenAlert();
+    }
+
+    for (let i = 0; i < filesLength; i++) {
+      file = fileArr[i];
+
+      let reader = new FileReader();
+      reader.onload = () => {
+        console.log(reader.result);
+        fileURLs[i] = reader.result;
+        setDetailImgs([...fileURLs]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 이미지 추가 업로드
+  const handleImageAddUpload = (e: any) => {
+    const fileArr = e.target.files;
+
+    let fileURLs: any[] = [];
+
+    let file;
+    let enableArr = (5 - detailImgs.length);
+
+    let filesLength = fileArr.length > enableArr ? enableArr : fileArr.length;
+
+    if (fileArr.length > enableArr) {
+      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'warning' });
+      handleOpenAlert();
+    }
+
+    for (let i = 0; i < filesLength; i++) {
+      file = fileArr[i];
+
+      let reader = new FileReader();
+      reader.onload = () => {
+
+        fileURLs[i] = reader.result;
+
+        let newArr = detailImgs.filter(img => img === fileURLs[0]);
+        if (newArr && newArr.length > 0) {
+          setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'warning' });
+          handleOpenAlert();
+        } else {
+          setDetailImgs(prev => [...prev, ...fileURLs]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+  }
+
+  // 이미지 삭제
+  const deleteItemImg = (key: number) => {
+    let filteredArr = detailImgs.filter((img, index) => index !== key);
+    setDetailImgs(filteredArr);
+  }
+
   return (
     <Box component="div" className={base.root}>
       <Header type="storeInfo" action={updateStoreInfo} />
@@ -227,6 +307,77 @@ export default function StoreInfo(props: IProps) {
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box mt={3} />
           <Grid container spacing={3}>
+
+            {/* 대표 이미지 업로드 */}
+            <Grid item xs={12} md={12}>
+              <Box mb={0.5} style={{
+                display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',
+              }}>
+                <Typography variant='body1' mr={0.5}>매장 대표 이미지</Typography>
+                <Typography variant='body1' fontSize={12} color='#FFA400' mr={0.5}>(총 5장까지 업로드 가능)</Typography>
+                {/* <div onMouseOver={() => alert('hi')} onTouchStart={() => alert('are you Touched?')}>
+                  <img src='/images/ico_question_tooltip.png' style={{ width: 20, height: 20, objectFit: 'cover' }} alt='대표이미지 안내' title='대표이미지 안내' />
+                </div> */}
+              </Box>
+              <Box style={{
+                display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+              }}>
+                {detailImgs && detailImgs.length > 1 ? (
+                  <Box style={{
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                  }}>
+                    {detailImgs.map((itemImg, index) => (
+                      <Box style={{ position: 'relative', width: '20%', height: '150px', marginLeft: index === 0 ? 0 : '5px' }}>
+                        <img key={`item-image-${index}`} src={itemImg} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                        <Box className='delete-btn' onClick={() => deleteItemImg(index)}>
+                          <img key={`item-image-delete-${index}`} src='./images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                ) :
+                  detailImgs && detailImgs.length == 1 ? (
+                    <Box style={{ position: 'relative', width: '20%', height: '150px' }}>
+                      <img src={detailImgs[0]} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                      <Box className='delete-btn' onClick={() => deleteItemImg(0)}>
+                        <img src='/images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
+                      </Box>
+                    </Box>
+                  ) :
+                    new Array(5).fill(0).map((item, index) => (
+                      <Box onChange={handleImageUpload} style={{ position: 'relative', width: '20%', height: '150px', borderRadius: 5, marginLeft: index === 0 ? 0 : '5px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }}>
+                        <p style={{ color: '#aaa' }}>{`대표이미지 0${index + 1}`}</p>
+                      </Box>
+                    ))}
+              </Box>
+              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                <label className='custom-file-upload'>
+                  <input type='file' accept='image/*' multiple onChange={handleImageUpload} />
+                  <UploadIcon />
+                  연속 업로드
+                </label>
+                {detailImgs.length >= 5 ?
+                  (
+                    <Box className='custom-file-upload' style={{ backgroundColor: '#ececec' }}>
+                      <PlusOneRoundedIcon />
+                      추가
+                    </Box>
+                  ) :
+                  (
+                    <label className='custom-file-upload'>
+                      <input type='file' accept='image/*' onChange={handleImageAddUpload} />
+                      <PlusOneRoundedIcon />
+                      추가
+                    </label>
+                  )
+                }
+              </Box>
+            </Grid>
+            {/* // 대표 이미지 업로드 */}
+
             <Grid item xs={12} md={6}>
               <TextField
                 value={info.do_jumju_introduction === null || info.do_jumju_introduction === undefined ? '' : info.do_jumju_introduction}
@@ -338,6 +489,9 @@ export default function StoreInfo(props: IProps) {
                 InputLabelProps={{
                   shrink: true
                 }}
+                // InputProps={{
+                //   endAdornment: <InputAdornment position="end">분</InputAdornment>,
+                // }}
                 onChange={e => setInfo({
                   ...info,
                   do_delivery_time: e.target.value as string
@@ -500,6 +654,6 @@ export default function StoreInfo(props: IProps) {
          */}
         </MainBox>
       }
-    </Box>
+    </Box >
   );
 }

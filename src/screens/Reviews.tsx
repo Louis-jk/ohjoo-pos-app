@@ -24,7 +24,6 @@ import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
 import Stack from '@material-ui/core/Stack';
-import Rating from '@material-ui/core/Rating';
 import Pagination from '@material-ui/core/Pagination';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -33,9 +32,7 @@ import { styled } from '@mui/material/styles';
 
 // Material icons
 import AddCommentOutlinedIcon from '@material-ui/icons/AddCommentOutlined';
-import CancelIcon from '@material-ui/icons/Cancel';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import CloseIcon from '@material-ui/icons/Close';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 // Local Component
@@ -81,7 +78,7 @@ export default function Reviews(props: any) {
   const [rate, setRate] = useState<RateProp>({}); // 평점
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
-  const [postPerPage, setPostPerPage] = useState(3); // 페이지 API 호출 Limit
+  const [postPerPage, setPostPerPage] = useState(5); // 페이지 API 호출 Limit
   const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
   const [lists, setLists] = useState<IReview[]>([]); // 리뷰 리스트
   const [per01, setPer01] = useState(0); // 맛 퍼센트 (리뷰평점)
@@ -245,10 +242,15 @@ export default function Reviews(props: any) {
   const [reviewContent, setReviewContent] = useState(''); // 리뷰 컨텐츠(고객이 남긴 리뷰)
   const [reviewItId, setReviewItId] = useState(''); // 리뷰 메뉴 아이디
   const [reviewUserId, setReviewUserId] = useState(''); // 리뷰 유저 아이디
+  const [reviewUserNick, setReviewUserNick] = useState(''); // 리뷰 유저 닉네임
   const [reviewProfile, setRevieProfile] = useState(''); // 리뷰 유저 프로필
   const [reviewMenu, setRevieMenu] = useState(''); // 리뷰 선택 메뉴
-  const [reviewRating, setReRating] = useState(''); // 리뷰 평점
+  const [reviewScore01, setReScore01] = useState(''); // 리뷰 스코어01
+  const [reviewScore02, setReScore02] = useState(''); // 리뷰 스코어02
+  const [reviewScore03, setReScore03] = useState(''); // 리뷰 스코어03
+  const [reviewScore04, setReScore04] = useState(''); // 리뷰 스코어04
   const [reviewDatetime, setRDatetime] = useState(''); // 리뷰 작성일자
+  const [reviewPic, setReviewPic] = useState<string[]>([]); // 리뷰 포토
 
 
   const sendReply = () => {
@@ -290,15 +292,20 @@ export default function Reviews(props: any) {
     }
   }
 
-  const sendReplyHandler = (id: string, content: string, itId: string, userId: string, profile: string, menu: string, rating: string, datetime: string) => {
+  const sendReplyHandler = (id: string, nickname: string, content: string, itId: string, userId: string, profile: string, menu: string, score1: string, score2: string, score3: string, score4: string, datetime: string, pic: string[]) => {
     setReviewId(id);
     setReviewContent(content);
     setReviewItId(itId);
     setReviewUserId(userId);
+    setReviewUserNick(nickname);
     setRevieProfile(profile);
     setRevieMenu(menu);
-    setReRating(rating);
+    setReScore01(score1);
+    setReScore02(score2);
+    setReScore03(score3);
+    setReScore04(score4);
     setRDatetime(datetime);
+    setReviewPic(pic);
     handleOpen();
   }
 
@@ -358,37 +365,44 @@ export default function Reviews(props: any) {
             <IconButton color="primary" aria-label="upload picture" component="span" onClick={handleClose} style={{ position: 'absolute', top: -10, right: -10, width: 30, height: 30, color: '#fff', backgroundColor: theme.palette.primary.main }}>
               <CloseRoundedIcon />
             </IconButton>
-            <Box className={clsx(base.flexRow, base.mb10)}>
+            <Box className={clsx(base.flexRow, base.mb10)} justifyContent='flex-start' alignItems='center'>
               <Avatar alt={`유저아이디: ${reviewId} 님의 프로필 사진`} src={reviewProfile} className={clsx(base.large, base.mr10)} />
               <Box>
                 <Grid className={base.flexRow}>
                   <Grid className={clsx(base.title, base.mb05)}>
-                    <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{reviewMenu}</Typography>
-                    <Typography variant="body1" component="b" style={{ marginRight: 10 }}>|</Typography>
-                    <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{reviewUserId}</Typography>
+                    <Typography variant="body1" component="b" style={{ marginRight: 10 }}>{reviewUserNick}</Typography>
+                    <Typography variant="body1" component="b" color='#999'>{moment(reviewDatetime, 'YYYYMMDD').fromNow()}</Typography>
                   </Grid>
-                </Grid>
-                <Grid className={clsx(base.title, base.mb05)} style={{ display: 'flex', alignItems: 'center' }}>
-                  <Rating name="half-rating-read" size="small" value={Number(reviewRating)} readOnly />
-                  <Typography variant="body1" component="b" style={{ marginRight: 10 }}></Typography>
-                  <Typography variant="body1" component="b">{moment(reviewDatetime, 'YYYYMMDD').fromNow()}</Typography>
                 </Grid>
               </Box>
             </Box>
-            {/* <Box mb={3}> 고객 답글 확인
-              <TextField
-                value={reviewContent}
-                fullWidth
-                className={base.reviewMultiTxtField}
-                style={{ backgroundColor: '#f7f7f7' }}
-                multiline
-                rows={5}
-                contentEditable='false'
-                focused={false}
-                spellCheck={false}
-                variant='outlined'
-              />
-            </Box> */}
+            <Grid className={clsx(base.title, base.mb10)} display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' mt={2}>
+              <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: reviewScore01 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                <Typography fontSize={11} style={{ color: reviewScore01 === '1' ? '#222' : '#888888' }}>맛</Typography>
+                <Typography fontSize={9} style={{ backgroundColor: reviewScore01 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
+              </Box>
+              <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: reviewScore02 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                <Typography fontSize={11} style={{ color: reviewScore02 === '1' ? '#222' : '#888888' }}>또 주문</Typography>
+                <Typography fontSize={9} style={{ backgroundColor: reviewScore02 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
+              </Box>
+              <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: reviewScore03 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                <Typography fontSize={11} style={{ color: reviewScore03 === '1' ? '#222' : '#888888' }}>빠른배달</Typography>
+                <Typography fontSize={9} style={{ backgroundColor: reviewScore03 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
+              </Box>
+              <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' mx={0.5} style={{ width: '100%', borderWidth: 1, borderColor: reviewScore04 === '1' ? '#222' : '#E3E3E3', borderStyle: 'solid', borderRadius: 10, padding: '7px 10px' }}>
+                <Typography fontSize={11} style={{ color: reviewScore04 === '1' ? '#222' : '#888888' }}>가성비</Typography>
+                <Typography fontSize={9} style={{ backgroundColor: reviewScore04 === '1' ? '#222' : '#e3e3e3', color: '#fff', borderRadius: 5, padding: '1px 10px' }} ml={0.7}>BEST</Typography>
+              </Box>
+            </Grid>
+            {reviewPic.length > 0 ?
+              <Grid display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mt={2} mb={3}>
+                {reviewPic.map((image, index) =>
+                  <Box key={index} height={100} style={{ width: 'calc(100% / 5)', marginRight: index !== reviewPic.length - 1 ? 10 : 0 }}>
+                    <img src={image} style={{ width: '100%', height: '100%', margin: 0, padding: 0, borderRadius: 5, objectFit: 'cover' }} alt={image} />
+                  </Box>
+                )}
+              </Grid>
+              : null}
             <TextField
               value={comment}
               fullWidth
@@ -506,7 +520,22 @@ export default function Reviews(props: any) {
                                 aria-label="button"
                                 startIcon={<AddCommentOutlinedIcon />}
                                 // style={{ color: theme.palette.primary.dark }}
-                                onClick={() => sendReplyHandler(list.wr_id, list.content, list.it_id, list.wr_mb_id, list.profile, list.menu, list.rating, list.datetime)}
+                                onClick={
+                                  () => sendReplyHandler(
+                                    list.wr_id,
+                                    list.wr_mb_nickname,
+                                    list.content,
+                                    list.it_id,
+                                    list.wr_mb_id,
+                                    list.profile,
+                                    list.menu,
+                                    list.wr_score1,
+                                    list.wr_score2,
+                                    list.wr_score3,
+                                    list.wr_score4,
+                                    list.datetime,
+                                    list.pic
+                                  )}
                               >
                                 답글달기
                               </Button>
@@ -534,18 +563,18 @@ export default function Reviews(props: any) {
                       </Box>
                     </Grid>
                     {list.pic.length > 0 ?
-                      <Grid style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }} spacing={3} ml={7}>
+                      <Grid display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' mt={2} mb={3} ml={7}>
                         {list.pic.map((image, index) =>
-                          <Box key={index}>
+                          <Box key={index} height={140} style={{ width: 'calc(100% / 5)', marginRight: index !== list.pic.length - 1 ? 10 : 0 }}>
                             <Button
-                              style={{ margin: 0, padding: 0 }}
+                              style={{ width: '100%', height: '100%', margin: 0, padding: 0 }}
                               onClick={() => {
                                 setImages(list.pic);
                                 setImageOpen(true);
                               }
                               }
                             >
-                              <img src={image} style={{ width: 150, height: 150, borderRadius: 5, objectFit: 'cover' }} alt={image} />
+                              <img src={image} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} alt={image} />
                             </Button>
                           </Box>
                         )}

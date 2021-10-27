@@ -112,7 +112,7 @@ export default function Tips(props: any) {
     setCouponId(coupon_id);
     setOpen(true);
   }
-  
+
 
   // 쿠폰 삭제 핸들러
   const deleteCouponHandler = () => {
@@ -241,7 +241,7 @@ export default function Tips(props: any) {
         </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
-          <Box mt={3} />
+          <Box mt={1} />
           {lists && lists.length > 0 &&
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) => (
@@ -262,15 +262,15 @@ export default function Tips(props: any) {
                     </Box>
                     <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간</Typography>
                     <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
-                    
-                    <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{marginTop:10, width:'100%'}}>
-                      <Button color='primary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => history.push({
+
+                    <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 10, width: '100%' }}>
+                      <Button color='primary' variant='contained' style={{ flex: 1, boxShadow: 'none' }} onClick={() => history.push({
                         pathname: `/coupon_edit/${list.cz_no}`,
-                        state: {item: list}
+                        state: { item: list }
                       })}>수정</Button>
-                      <Button color='secondary' variant='contained' style={{flex: 1, boxShadow: 'none'}} onClick={() => deleteCouponConfirmHandler(list.cz_no)}>삭제</Button>
+                      <Button color='secondary' variant='contained' style={{ flex: 1, boxShadow: 'none' }} onClick={() => deleteCouponConfirmHandler(list.cz_no)}>삭제</Button>
                     </ButtonGroup>
-                    
+
                   </Paper>
                 </Grid>
               )
@@ -283,7 +283,7 @@ export default function Tips(props: any) {
             </Box>
             : null}
           {totalCount ?
-            <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+            <Box mt={3} display='flex' justifyContent='center' alignSelf="center">
               <Stack spacing={2}>
                 <Pagination
                   color="primary"

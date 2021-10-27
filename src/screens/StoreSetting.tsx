@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Material UI Components
@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Local Component
@@ -21,6 +22,7 @@ import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } fro
 import appRuntime from '../appRuntime';
 import clsx from 'clsx';
 import loginAction from '../redux/actions';
+import { ButtonGroup, Divider } from '@material-ui/core';
 
 interface IProps {
   props: object;
@@ -47,12 +49,15 @@ interface IStoreInfo {
   mb_one_saving: string;
 }
 
+type RangeType = 'all' | 'curr';
+
 export default function StoreInfo(props: IProps) {
 
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const base = baseStyles();
   const [isLoading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
+  const [range, setRange] = useState<RangeType>('curr');
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -375,6 +380,13 @@ export default function StoreInfo(props: IProps) {
                 />
               </RadioGroup>
             </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={6} mb={2} mt={7}>
+            <ButtonGroup variant='outlined'>
+              <Button variant={range === 'all' ? 'contained' : 'outlined'} sx={{ px: 5, py: 1.5, boxShadow: 'none !important' }} onClick={() => setRange('all')}>전체 매장 적용</Button>
+              <Button variant={range === 'curr' ? 'contained' : 'outlined'} sx={{ px: 5, py: 1.5, boxShadow: 'none !important' }} onClick={() => setRange('curr')}>해당 매장만 적용</Button>
+            </ButtonGroup>
           </Grid>
         </MainBox>
       }

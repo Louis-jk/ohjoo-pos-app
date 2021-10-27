@@ -143,3 +143,28 @@ button, label {
 .DayPicker-Day--today {
   color: #309975 !important;
 }
+
+/* input Custom Style */
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  font-size: 15px;
+  /* font-weight: bold; */
+  /* border: 1px solid #ffc739; */
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #ffc739;
+  color: #222;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right:10px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  cursor: pointer;
+}
