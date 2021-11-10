@@ -50,6 +50,7 @@ interface IStoreInfo {
   mt_sound: string;
   mt_print: string;
   mb_one_saving: string;
+  pic: string[];
 }
 
 
@@ -92,6 +93,7 @@ export default function StoreInfo(props: IProps) {
     mt_sound: '', // 알림 횟수
     mt_print: '', // 주문 접수시 자동프린트 유무 (1: true / 0: false)
     mb_one_saving: '', // 1인분 가능
+    pic: [] // 대표 이미지
   });
 
   const getStoreInfo = () => {
@@ -108,7 +110,9 @@ export default function StoreInfo(props: IProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-
+        console.log('====================================');
+        console.log('매장소개 arrItems', arrItems);
+        console.log('====================================');
         setStoreInit(true);
         setInfo({
           do_jumju_introduction: arrItems.do_jumju_introduction,
@@ -125,8 +129,15 @@ export default function StoreInfo(props: IProps) {
           do_end_state: arrItems.do_end_state,
           mt_sound: arrItems.mt_sound,
           mt_print: arrItems.mt_print,
-          mb_one_saving: arrItems.mb_one_saving
+          mb_one_saving: arrItems.mb_one_saving,
+          pic: arrItems.pic
         });
+
+        if (arrItems.pic && arrItems.pic.length > 0) {
+          arrItems.pic.map((pic: string, index: number) => {
+            setDetailImgs(prev => [...prev, pic]);
+          })
+        }
         setLoading(false);
       } else {
         setStoreInit(false);
@@ -145,7 +156,8 @@ export default function StoreInfo(props: IProps) {
           do_end_state: '',
           mt_sound: '',
           mt_print: '',
-          mb_one_saving: ''
+          mb_one_saving: '',
+          pic: []
         });
         setLoading(false);
       }
@@ -158,7 +170,7 @@ export default function StoreInfo(props: IProps) {
 
   const updateStoreInfo = () => {
 
-    const param = {
+    const param: any = {
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
       mode: storeInit ? 'update' : 'insert',
@@ -176,14 +188,30 @@ export default function StoreInfo(props: IProps) {
       do_end_state: info.do_end_state,
       mt_sound: info.mt_sound,
       mt_print: info.mt_print,
-      mb_one_saving: info.mb_one_saving
+      mb_one_saving: info.mb_one_saving,
     };
+
+    let isImg: any = {};
+    if (detailImgs && detailImgs.length > 0) {
+
+      isImg = detailImgs.reduce((a, v, i) => ({ ...a, [`bf_file[${i}]`]: v }), {});
+
+      // console.log('isImg', isImg);
+    }
+
+    Object.assign(param, isImg);
+    console.log('param', param);
+
+    // return false;
 
     Api.send('store_guide_update', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
+
+        // console.log('메뉴 수정 arrItems', arrItems);
+
         dispatch(loginAction.updateNotify(info.mt_sound));
         dispatch(loginAction.updateAutoPrint(info.mt_print));
         if (storeInit) {
@@ -236,6 +264,7 @@ export default function StoreInfo(props: IProps) {
     }
   };
 
+
   // 이미지 추가 업로드
   const handleImageAddUpload = (e: any) => {
     const fileArr = e.target.files;
@@ -278,6 +307,8 @@ export default function StoreInfo(props: IProps) {
     let filteredArr = detailImgs.filter((img, index) => index !== key);
     setDetailImgs(filteredArr);
   }
+
+  console.log('detailImgs', detailImgs);
 
   return (
     <Box component="div" className={base.root}>
