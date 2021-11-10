@@ -31,22 +31,8 @@ interface IOption {
   [key: string]: string
 }
 
-interface IStoreInfo {
-  do_jumju_introduction: string;
-  do_jumju_info: string;
-  do_jumju_guide: string;
-  do_jumju_menu_info: string;
-  do_major_menu: string;
-  do_jumju_origin: string;
-  do_jumju_origin_use: string;
-  do_take_out: string;
-  do_coupon_use: string;
-  do_delivery_guide: string;
-  do_delivery_time: string;
-  do_end_state: string;
-  mt_sound: string;
-  mt_print: string;
-  mb_one_saving: string;
+interface IStoreSetting {
+  [key: string]: string
 }
 
 type RangeType = 'all' | 'curr';
@@ -55,7 +41,7 @@ export default function StoreInfo(props: IProps) {
 
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const base = baseStyles();
-  const [isLoading, setLoading] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(true);
   const dispatch = useDispatch();
   const [range, setRange] = useState<RangeType>('curr');
 
@@ -74,76 +60,41 @@ export default function StoreInfo(props: IProps) {
 
   // 매장소개 정보
   const [storeInit, setStoreInit] = React.useState(false); // 매장 정보 초기값 유무
-  const [info, setInfo] = React.useState<IStoreInfo>({
-    do_jumju_introduction: '', // 매장소개
-    do_jumju_info: '', // ??
-    do_jumju_guide: '', // 안내 및 혜택
-    do_jumju_menu_info: '', // 메뉴 소개
-    do_major_menu: '', // 대표메뉴
-    do_jumju_origin: '', // 원산지 안내
-    do_jumju_origin_use: '', // 원산지 표시 유무
-    do_take_out: '', // 포장 가능 유무
-    do_coupon_use: '', // 쿠폰 사용 유무
-    do_delivery_guide: '', // 배달 안내
-    do_delivery_time: '', // 평균 배달 시간
-    do_end_state: '', // 주문마감
-    mt_sound: '', // 알림 횟수
-    mt_print: '', // 주문 접수시 자동프린트 유무 (1: true / 0: false)
-    mb_one_saving: '', // 1인분 가능
+  const [setting, setSetting] = React.useState<IStoreSetting>({
+    do_coupon_use: '', // 쿠폰 사용 가능 여부 'Y' | 'N'
+    do_take_out: '', // 포장 가능 여부 'Y' | 'N'
+    mt_print: '', // 자동출력 '1', 출력안함 '0'
+    mt_sound: '' // 사운드 울림 횟수
   });
 
-  const getStoreInfo = () => {
-
-    setLoading(true);
+  const getStoreSetting = () => {
 
     const param = {
       jumju_id: mt_id,
       jumju_code: mt_jumju_code
     };
 
-    Api.send('store_guide', param, (args: any) => {
+    Api.send('store_setting', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-
+        console.log("arrItems", arrItems);
         setStoreInit(true);
-        setInfo({
-          do_jumju_introduction: arrItems.do_jumju_introduction,
-          do_jumju_info: arrItems.do_jumju_info,
-          do_jumju_guide: arrItems.do_jumju_guide,
-          do_jumju_menu_info: arrItems.do_jumju_menu_info,
-          do_major_menu: arrItems.do_major_menu,
-          do_jumju_origin: arrItems.do_jumju_origin,
-          do_jumju_origin_use: arrItems.do_jumju_origin_use,
+        setSetting({
           do_take_out: arrItems.do_take_out,
           do_coupon_use: arrItems.do_coupon_use,
-          do_delivery_guide: arrItems.do_delivery_guide,
-          do_delivery_time: arrItems.do_delivery_time,
-          do_end_state: arrItems.do_end_state,
           mt_sound: arrItems.mt_sound,
-          mt_print: arrItems.mt_print,
-          mb_one_saving: arrItems.mb_one_saving
+          mt_print: arrItems.mt_print
         });
         setLoading(false);
       } else {
         setStoreInit(false);
-        setInfo({
-          do_jumju_introduction: '',
-          do_jumju_info: '',
-          do_jumju_guide: '',
-          do_jumju_menu_info: '',
-          do_major_menu: '',
-          do_jumju_origin: '',
-          do_jumju_origin_use: '',
+        setSetting({
           do_take_out: '',
           do_coupon_use: '',
-          do_delivery_guide: '',
-          do_delivery_time: '',
-          do_end_state: '',
           mt_sound: '',
-          mt_print: '',
-          mb_one_saving: ''
+          mt_print: ''
         });
         setLoading(false);
       }
@@ -151,53 +102,49 @@ export default function StoreInfo(props: IProps) {
   };
 
   React.useEffect(() => {
-    getStoreInfo();
+    getStoreSetting();
   }, [mt_id, mt_jumju_code])
 
-  const updateStoreInfo = () => {
+  console.log('setting', setting);
+  console.log('range', range);
+
+  const updateStoreSetting = () => {
 
     const param = {
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
       mode: storeInit ? 'update' : 'insert',
-      do_jumju_introduction: info.do_jumju_introduction,
-      do_jumju_info: info.do_jumju_info,
-      do_jumju_guide: info.do_jumju_guide,
-      do_jumju_menu_info: info.do_jumju_menu_info,
-      do_major_menu: info.do_major_menu,
-      do_jumju_origin: info.do_jumju_origin,
-      do_jumju_origin_use: info.do_jumju_origin_use,
-      do_take_out: info.do_take_out,
-      do_coupon_use: info.do_coupon_use,
-      do_delivery_guide: info.do_delivery_guide,
-      do_delivery_time: info.do_delivery_time,
-      do_end_state: info.do_end_state,
-      mt_sound: info.mt_sound,
-      mt_print: info.mt_print,
-      mb_one_saving: info.mb_one_saving
+      do_take_out: setting.do_take_out,
+      do_coupon_use: setting.do_coupon_use,
+      mt_sound: setting.mt_sound,
+      mt_print: setting.mt_print,
+      RangeType: range
     };
 
-    Api.send('store_guide_update', param, (args: any) => {
+    // console.log('param', param);
+    // return false;
+
+    Api.send('store_setting_update', param, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(loginAction.updateNotify(info.mt_sound));
-        dispatch(loginAction.updateAutoPrint(info.mt_print));
+        dispatch(loginAction.updateNotify(setting.mt_sound));
+        dispatch(loginAction.updateAutoPrint(setting.mt_print));
         if (storeInit) {
-          setToastState({ msg: '매장소개가 수정 되었습니다.', severity: 'success' });
+          setToastState({ msg: '매장설정이 수정 되었습니다.', severity: 'success' });
           handleOpenAlert();
         } else {
-          setToastState({ msg: '매장소개가 등록 되었습니다.', severity: 'success' });
+          setToastState({ msg: '매장설정이 등록 되었습니다.', severity: 'success' });
           handleOpenAlert();
         }
 
       } else {
         if (storeInit) {
-          setToastState({ msg: '매장소개를 수정하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
+          setToastState({ msg: '매장설정을 수정하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
           handleOpenAlert();
         } else {
-          setToastState({ msg: '매장소개를 등록하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
+          setToastState({ msg: '매장설정을 등록하는 중에 오류가 발생하였습니다.\n관리자에게 문의해주세요.', severity: 'error' });
           handleOpenAlert();
         }
       }
@@ -206,7 +153,7 @@ export default function StoreInfo(props: IProps) {
 
   return (
     <Box component="div" className={base.root}>
-      <Header type="storeSetting" action={updateStoreInfo} />
+      <Header type="storeSetting" action={updateStoreSetting} />
       <Box className={base.alert}>
         <Snackbar
           anchorOrigin={{
@@ -238,14 +185,14 @@ export default function StoreInfo(props: IProps) {
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
                   value={'1'}
-                  checked={info.mt_sound === '1' ? true : false}
+                  checked={setting.mt_sound === '1' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="1회 알림"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
-                    setInfo({
-                      ...info,
+                    setSetting({
+                      ...setting,
                       mt_sound: '1'
                     });
                     appRuntime.send('sound_count', '1');
@@ -253,14 +200,14 @@ export default function StoreInfo(props: IProps) {
                 />
                 <FormControlLabel
                   value={'2'}
-                  checked={info.mt_sound === '2' ? true : false}
+                  checked={setting.mt_sound === '2' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="2회 알림"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
-                    setInfo({
-                      ...info,
+                    setSetting({
+                      ...setting,
                       mt_sound: '2'
                     });
                     appRuntime.send('sound_count', '2');
@@ -268,14 +215,14 @@ export default function StoreInfo(props: IProps) {
                 />
                 <FormControlLabel
                   value={'3'}
-                  checked={info.mt_sound === '3' ? true : false}
+                  checked={setting.mt_sound === '3' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="3회 알림"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
-                    setInfo({
-                      ...info,
+                    setSetting({
+                      ...setting,
                       mt_sound: '3'
                     });
                     appRuntime.send('sound_count', '3');
@@ -285,33 +232,33 @@ export default function StoreInfo(props: IProps) {
             </FormControl>
           </Grid>
           <Grid item xs={12} md={6} mb={2}>
-            <Typography fontWeight='bold'>주문 접수시 자동 프린트 여부</Typography>
+            <Typography fontWeight='bold'>주문 접수시 자동 프린트 출력 여부</Typography>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
                   value={'1'}
-                  checked={info.mt_print === '1' ? true : false}
+                  checked={setting.mt_print === '1' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="자동출력"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
-                    setInfo({
-                      ...info,
+                    setSetting({
+                      ...setting,
                       mt_print: '1'
                     });
                   }}
                 />
                 <FormControlLabel
                   value={'0'}
-                  checked={info.mt_print === '0' ? true : false}
+                  checked={setting.mt_print === '0' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="출력안함"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
-                    setInfo({
-                      ...info,
+                    setSetting({
+                      ...setting,
                       mt_print: '0'
                     });
                   }}
@@ -325,25 +272,25 @@ export default function StoreInfo(props: IProps) {
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
                   value={'Y'}
-                  checked={info.do_take_out === 'Y' ? true : false}
+                  checked={setting.do_take_out === 'Y' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="포장가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
-                  onChange={e => setInfo({
-                    ...info,
+                  onChange={e => setSetting({
+                    ...setting,
                     do_take_out: 'Y'
                   })}
                 />
                 <FormControlLabel
                   value={'N'}
-                  checked={info.do_take_out === 'N' ? true : false}
+                  checked={setting.do_take_out === 'N' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="포장불가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
-                  onChange={e => setInfo({
-                    ...info,
+                  onChange={e => setSetting({
+                    ...setting,
                     do_take_out: 'N'
                   })}
                 />
@@ -356,25 +303,25 @@ export default function StoreInfo(props: IProps) {
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
                 <FormControlLabel
                   value={'Y'}
-                  checked={info.do_coupon_use === 'Y' ? true : false}
+                  checked={setting.do_coupon_use === 'Y' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="쿠폰 사용 가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
-                  onChange={e => setInfo({
-                    ...info,
+                  onChange={e => setSetting({
+                    ...setting,
                     do_coupon_use: 'Y'
                   })}
                 />
                 <FormControlLabel
                   value={'N'}
-                  checked={info.do_coupon_use === 'N' ? true : false}
+                  checked={setting.do_coupon_use === 'N' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="쿠폰 사용 불가능"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
-                  onChange={e => setInfo({
-                    ...info,
+                  onChange={e => setSetting({
+                    ...setting,
                     do_coupon_use: 'N'
                   })}
                 />
