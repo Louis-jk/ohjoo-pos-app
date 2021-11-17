@@ -135,7 +135,15 @@ export default function StoreInfo(props: IProps) {
 
         if (arrItems.pic && arrItems.pic.length > 0) {
           arrItems.pic.map((pic: string, index: number) => {
-            setDetailImgs(prev => [...prev, pic]);
+
+            let mime = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+            let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
+
+            setDetailImgs(prev => [...prev, {
+              uri: pic,
+              mime,
+              name,
+            }]);
           })
         }
         setLoading(false);
@@ -191,20 +199,36 @@ export default function StoreInfo(props: IProps) {
       mb_one_saving: info.mb_one_saving,
     };
 
-    let isImg: any = {};
+    // let isImg: any = {};
+    // if (detailImgs && detailImgs.length > 0) {
+
+    //   isImg = detailImgs.reduce((a, v, i) => ({ ...a, [`bf_file[${i}]`]: v }), {});
+
+    //   // console.log('isImg', isImg);
+    // }
+
+    // 대표 이미지가 있을 경우
+    let params2: any = {};
+
     if (detailImgs && detailImgs.length > 0) {
-
-      isImg = detailImgs.reduce((a, v, i) => ({ ...a, [`bf_file[${i}]`]: v }), {});
-
-      // console.log('isImg', isImg);
+      detailImgs.map((arr, index) => {
+        if (index === 4) {
+          params2.rt_img5 = arr;
+        } else if (index === 3) {
+          params2.rt_img4 = arr;
+        } else if (index === 2) {
+          params2.rt_img3 = arr;
+        } else if (index === 1) {
+          params2.rt_img2 = arr;
+        } else {
+          params2.rt_img1 = arr;
+        }
+      });
     }
-
-    Object.assign(param, isImg);
-    console.log('param', param);
 
     // return false;
 
-    Api.send('store_guide_update', param, (args: any) => {
+    Api.send3('store_guide_update', param, params2, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
@@ -362,7 +386,7 @@ export default function StoreInfo(props: IProps) {
                   }}>
                     {detailImgs.map((itemImg, index) => (
                       <Box style={{ position: 'relative', width: '20%', height: '150px', marginLeft: index === 0 ? 0 : '5px' }}>
-                        <img key={`item-image-${index}`} src={itemImg} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                        <img key={`item-image-${index}`} src={itemImg.uri} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
                         <Box className='delete-btn' onClick={() => deleteItemImg(index)}>
                           <img key={`item-image-delete-${index}`} src='./images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                         </Box>
