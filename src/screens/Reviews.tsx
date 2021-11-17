@@ -141,10 +141,10 @@ export default function Reviews(props: any) {
       let totalPage = Math.ceil(toTotalCount / postPerPage);
 
       setTotalCount(totalPage);
-      console.log("reviews resultItem", resultItem);
+
 
       if (resultItem.result === 'Y') {
-        console.log('review arrItems', arrItems);
+
         setRate(arrItems.rate);
         setLists(arrItems.review);
         setPer01(arrItems.rate.rating_per1 * 100);
@@ -164,8 +164,7 @@ export default function Reviews(props: any) {
     getReviewListHandler();
   }, [mt_id, mt_jumju_code, startOfIndex])
 
-  console.log("rate", rate);
-  console.log("lists", lists);
+
 
   // 리뷰 삭제 핸들러
   const deleteReviewHandler = (it_id: string, wr_id: string) => {
@@ -269,8 +268,6 @@ export default function Reviews(props: any) {
         wr_name: mt_store,
       };
 
-      console.log("review param", param);
-
       Api.send('store_review_comment', param, (args: any) => {
         let resultItem = args.resultItem;
         let arrItems = args.arrItems;
@@ -308,7 +305,6 @@ export default function Reviews(props: any) {
     setReviewPic(pic);
     handleOpen();
   }
-
 
   return (
     <Box component="div" className={base.root}>
@@ -570,6 +566,7 @@ export default function Reviews(props: any) {
                               style={{ width: '100%', height: '100%', margin: 0, padding: 0 }}
                               onClick={() => {
                                 setImages(list.pic);
+                                setPhotoIndex(index);
                                 setImageOpen(true);
                               }
                               }
