@@ -145,8 +145,14 @@ export default function Reviews(props: any) {
 
       if (resultItem.result === 'Y') {
 
+        console.log('arrItems', arrItems);
+
         setRate(arrItems.rate);
-        setLists(arrItems.review);
+        if (arrItems.review && arrItems.review.length > 0) {
+          setLists(arrItems.review);
+        } else {
+          setLists([]);
+        }
         setPer01(arrItems.rate.rating_per1 * 100);
         setPer02(arrItems.rate.rating_per2 * 100);
         setPer03(arrItems.rate.rating_per3 * 100);
