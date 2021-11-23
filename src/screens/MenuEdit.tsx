@@ -395,7 +395,8 @@ export default function MenuEdit(props: IProps) {
               setToastState({ msg: '기본옵션에 세부옵션이 없습니다.', severity: 'error' });
               handleOpenAlert();
               isExistDefaultDetailOption = false;
-              return false;
+            } else {
+              isExistDefaultDetailOption = true;
             }
           })
         })
@@ -418,17 +419,18 @@ export default function MenuEdit(props: IProps) {
               setToastState({ msg: '추가옵션에 세부옵션이 없습니다.', severity: 'error' });
               handleOpenAlert();
               isExistAddDetailOption = false;
-              return false;
+            } else {
+              isExistAddDetailOption = true;
             }
           })
         })
       }
 
       let filterNameArr: string[] = []; // 기본옵션 name값을 담을 새 배열
-      let isExistSameValue: boolean = true; // 기본옵션 같은 옵션명 있는지 체크
+      let isExistSameValue: boolean = false; // 기본옵션 같은 옵션명 있는지 체크
 
       let filterNameArr02: string[] = []; // 추가옵션 name값을 담을 새 배열
-      let isExistSameValue02: boolean = true; // 추가옵션 같은 옵션명 있는지 체크
+      let isExistSameValue02: boolean = false; // 추가옵션 같은 옵션명 있는지 체크
 
       options?.map((option: any, i: number) => {
         console.log('option은?', option);
@@ -450,8 +452,7 @@ export default function MenuEdit(props: IProps) {
             if (filterNameArr[i] === filterNameArr[j]) {
               setToastState({ msg: '기본옵션명에 같은 옵션명이 있습니다.', severity: 'error' });
               handleOpenAlert();
-
-              return false;
+              isExistSameValue = true;
             } else {
               isExistSameValue = false;
             }
@@ -469,8 +470,7 @@ export default function MenuEdit(props: IProps) {
             if (filterNameArr02[i] === filterNameArr02[j]) {
               setToastState({ msg: '추가옵션명에 같은 옵션명이 있습니다.', severity: 'error' });
               handleOpenAlert();
-
-              return false;
+              isExistSameValue02 = true;
             } else {
               isExistSameValue02 = false;
             }
