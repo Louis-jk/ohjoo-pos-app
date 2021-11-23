@@ -102,7 +102,8 @@ export default function StoreInfo(props: IProps) {
 
     const param = {
       jumju_id: mt_id,
-      jumju_code: mt_jumju_code
+      jumju_code: mt_jumju_code,
+      act: 'pos'
     };
 
     Api.send('store_guide', param, (args: any) => {
@@ -136,14 +137,19 @@ export default function StoreInfo(props: IProps) {
         if (arrItems.pic && arrItems.pic.length > 0) {
           arrItems.pic.map((pic: string, index: number) => {
 
-            let mime = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-            let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
+            // let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+            // let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
 
-            setDetailImgs(prev => [...prev, {
-              uri: pic,
-              mime,
-              name,
-            }]);
+            let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+            let name = pic.slice(pic.lastIndexOf('/'));
+
+            // setDetailImgs(prev => [...prev, {
+            //   uri: pic,
+            //   type,
+            //   name,
+            // }]);
+
+            setDetailImgs(prev => [...prev, pic]);
           })
         }
         setLoading(false);
@@ -182,6 +188,7 @@ export default function StoreInfo(props: IProps) {
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
       mode: storeInit ? 'update' : 'insert',
+      act: 'pos',
       do_jumju_introduction: info.do_jumju_introduction,
       do_jumju_info: info.do_jumju_info,
       do_jumju_guide: info.do_jumju_guide,
@@ -199,13 +206,8 @@ export default function StoreInfo(props: IProps) {
       mb_one_saving: info.mb_one_saving,
     };
 
-    // let isImg: any = {};
-    // if (detailImgs && detailImgs.length > 0) {
 
-    //   isImg = detailImgs.reduce((a, v, i) => ({ ...a, [`bf_file[${i}]`]: v }), {});
-
-    //   // console.log('isImg', isImg);
-    // }
+    // console.log('paramparam', param);
 
     // 대표 이미지가 있을 경우
     let params2: any = {};
@@ -228,9 +230,13 @@ export default function StoreInfo(props: IProps) {
 
     // return false;
 
+    console.log("params2", params2);
+
     Api.send3('store_guide_update', param, params2, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
+
+      console.log("resultItemresultItem", resultItem);
 
       if (resultItem.result === 'Y') {
 
@@ -270,24 +276,128 @@ export default function StoreInfo(props: IProps) {
     let file;
     let filesLength = fileArr.length > 5 ? 5 : fileArr.length;
 
-    if (fileArr.length > 5) {
+    if (fileArr.length + detailImgs.length > 5) {
       setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다..', severity: 'warning' });
       handleOpenAlert();
+    } else {
+
     }
 
     for (let i = 0; i < filesLength; i++) {
+
       file = fileArr[i];
 
       let reader = new FileReader();
+
       reader.onload = () => {
         console.log(reader.result);
         fileURLs[i] = reader.result;
-        setDetailImgs([...fileURLs]);
+
+        let testArr: any = [];
+
+        console.log("fileURLs", fileURLs);
+        console.log("fileURLs[0]", fileURLs[0]);
+
+        // handlingDataForm(fileURLs[0]);
+
+
+
+        fileURLs.map((pic: string, index: number) => {
+          let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+          let name = pic.slice(pic.lastIndexOf('/'));
+          // let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
+
+
+          // testArr.push({
+          //   uri: pic,
+          //   type,
+          //   name,
+          // })
+          testArr.push(pic)
+
+          // setDetailImgs(prev => [...prev, {
+          //   uri: pic,
+          //   type,
+          //   name,
+          // }]);
+        })
+
+        setDetailImgs(testArr);
+
+        console.log('testArr', testArr);
+
+        const compareArray = (a: any, b: any) => {
+          for (let i = 0; i < a.length; i++) {
+            for (let j = 0; j < b.length; j++) {
+              if (a[i].name === b[j].name) {
+                console.log('중복 값', a[i])
+                return true;
+              } else {
+                console.log('중복 값 없음')
+                return false;
+              }
+            }
+          }
+        };
+
+        let checkArr = compareArray(detailImgs, testArr);
+
+        if (!checkArr) {
+          // setDetailImgs(prev => [...prev, testArr]);
+          let addArr = detailImgs.concat(testArr);
+          setDetailImgs(addArr);
+        }
+        // setDetailImgs([...fileURLs]);
       };
+
+
       reader.readAsDataURL(file);
     }
   };
 
+  // const handlingDataForm = async (dataURI: any) => {
+  //   // dataURL 값이 data:image/jpeg:base64,~~~~~~~ 이므로 ','를 기점으로 잘라서 ~~~~~인 부분만 다시 인코딩
+  //   // const byteString = atob(dataURI.split(",")[1]);
+  //   // const byteString = dataURI.split(",")[1];
+  //   const byteString = dataURI;
+
+  //   console.log('byteString', byteString);
+  //   // return false;
+
+  //   // Blob를 구성하기 위한 준비, 이 내용은 저도 잘 이해가 안가서 기술하지 않았습니다.
+  //   const ab = new ArrayBuffer(byteString.length);
+  //   const ia = new Uint8Array(ab);
+
+  //   console.log('ia ???', ia);
+
+  //   for (let i = 0; i < byteString.length; i++) {
+  //     ia[i] = byteString.charCodeAt(i);
+  //   }
+  //   const blob = new Blob([ia], {
+  //     type: "image/jpeg"
+  //   });
+  //   const file = new File([blob], "image.jpg");
+
+  //   console.log('file ???', file);
+
+  //   // 위 과정을 통해 만든 image폼을 FormData에 넣어줍니다.
+  //   // 서버에서는 이미지를 받을 때, FormData가 아니면 받지 않도록 세팅해야합니다.
+  //   const formData = new FormData();
+  //   formData.append("representative_avatar", file);
+
+  //   console.log('formData ???', formData);
+
+  //   // // 필요시 더 추가합니다.
+  //   // formData.append("name", "nkh");
+  //   // formData.append("email", "noh5524@gmail.com");
+
+  //   // try {
+  //   //   const changeAvatar = await apis.auth.changeUserAccount(formData);
+  //   //   alert(changeAvatar.status);
+  //   // } catch (error: any) {
+  //   //   alert(error.response.data.errors);
+  //   // }
+  // };
 
   // 이미지 추가 업로드
   const handleImageAddUpload = (e: any) => {
@@ -318,7 +428,21 @@ export default function StoreInfo(props: IProps) {
           setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'warning' });
           handleOpenAlert();
         } else {
-          setDetailImgs(prev => [...prev, ...fileURLs]);
+          console.log("fileURLs", fileURLs);
+          fileURLs.map((pic: string, index: number) => {
+            let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+            let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
+
+            // setDetailImgs(prev => [...prev, {
+            //   uri: pic,
+            //   type,
+            //   name,
+            // }]);
+
+            setDetailImgs(prev => [...prev, pic]);
+          })
+
+          // setDetailImgs(prev => [...prev, ...fileURLs]);
         }
       };
       reader.readAsDataURL(file);
@@ -386,7 +510,7 @@ export default function StoreInfo(props: IProps) {
                   }}>
                     {detailImgs.map((itemImg, index) => (
                       <Box style={{ position: 'relative', width: '20%', height: '150px', marginLeft: index === 0 ? 0 : '5px' }}>
-                        <img key={`item-image-${index}`} src={itemImg.uri} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                        <img key={`item-image-${index}`} src={itemImg} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
                         <Box className='delete-btn' onClick={() => deleteItemImg(index)}>
                           <img key={`item-image-delete-${index}`} src='./images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                         </Box>
@@ -409,24 +533,33 @@ export default function StoreInfo(props: IProps) {
                     ))}
               </Box>
               <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
-                <label className='custom-file-upload'>
-                  <input type='file' accept='image/*' multiple onChange={handleImageUpload} />
-                  <UploadIcon />
-                  연속 업로드
-                </label>
+
                 {detailImgs.length >= 5 ?
                   (
-                    <Box className='custom-file-upload' style={{ backgroundColor: '#ececec' }}>
-                      <PlusOneRoundedIcon />
-                      추가
-                    </Box>
+                    <>
+                      <Box className='custom-file-upload' style={{ backgroundColor: '#ececec' }}>
+                        <UploadIcon />
+                        연속 업로드
+                      </Box>
+                      <Box className='custom-file-upload' style={{ backgroundColor: '#ececec' }}>
+                        <PlusOneRoundedIcon />
+                        추가
+                      </Box>
+                    </>
                   ) :
                   (
-                    <label className='custom-file-upload'>
-                      <input type='file' accept='image/*' onChange={handleImageAddUpload} />
-                      <PlusOneRoundedIcon />
-                      추가
-                    </label>
+                    <>
+                      <label className='custom-file-upload'>
+                        <input type='file' accept='image/*' multiple onChange={handleImageUpload} />
+                        <UploadIcon />
+                        연속 업로드
+                      </label>
+                      <label className='custom-file-upload'>
+                        <input type='file' accept='image/*' onChange={handleImageAddUpload} />
+                        <PlusOneRoundedIcon />
+                        추가
+                      </label>
+                    </>
                   )
                 }
               </Box>
@@ -442,7 +575,7 @@ export default function StoreInfo(props: IProps) {
                 label="매장소개"
                 multiline
                 rows={5}
-                defaultValue="매장소개를 작성해주세요."
+                placeholder="매장소개를 작성해주세요."
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true
@@ -462,7 +595,7 @@ export default function StoreInfo(props: IProps) {
                 label="배달팁 안내"
                 multiline
                 rows={5}
-                defaultValue="배달팁 안내를 작성해주세요."
+                placeholder="배달팁 안내를 작성해주세요."
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true
@@ -482,7 +615,7 @@ export default function StoreInfo(props: IProps) {
                 label="메뉴소개"
                 multiline
                 rows={9}
-                defaultValue="메뉴소개를 작성해주세요."
+                placeholder="메뉴소개를 작성해주세요."
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true
@@ -502,7 +635,7 @@ export default function StoreInfo(props: IProps) {
                 label="대표메뉴"
                 multiline
                 rows={2}
-                defaultValue="대표메뉴를 작성해주세요."
+                placeholder="대표메뉴를 작성해주세요."
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true
@@ -522,7 +655,7 @@ export default function StoreInfo(props: IProps) {
                 label="원산지 안내"
                 multiline
                 rows={4}
-                defaultValue="원산지 안내를 작성해주세요."
+                placeholder="원산지 안내를 작성해주세요."
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true
@@ -540,7 +673,7 @@ export default function StoreInfo(props: IProps) {
                 id="outlined-basic"
                 label="평균 배달시간"
                 variant="outlined"
-                defaultValue="평균 배달시간을 입력해주세요."
+                placeholder="평균 배달시간을 입력해주세요."
                 InputLabelProps={{
                   shrink: true
                 }}
