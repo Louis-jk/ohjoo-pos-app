@@ -375,8 +375,54 @@ export default function MenuEdit(props: IProps) {
       handleOpenAlert();
     } else {
 
-      // console.log('메뉴 수정 options', options);
-      // console.log('메뉴 수정 addOptions', addOptions);
+      let isExistDefaultDetailOption: boolean = true; // 기본옵션 - 세부옵션 유무
+      let isExistAddDetailOption: boolean = true; // 추가옵션 - 세부옵션 유무
+
+      // 기본옵션 - 세부옵션 유무 체크
+      if (options && options.length > 0) {
+        options.map((option) => {
+
+          if (option.name === '' || option.name === null) {
+            setToastState({ msg: '기본옵션에 옵션명이 없습니다.', severity: 'error' });
+            handleOpenAlert();
+            isExistDefaultDetailOption = false;
+            return false;
+          }
+
+          option.select.map((item) => {
+
+            if (item.value === '' || item.value === null) {
+              setToastState({ msg: '기본옵션에 세부옵션이 없습니다.', severity: 'error' });
+              handleOpenAlert();
+              isExistDefaultDetailOption = false;
+              return false;
+            }
+          })
+        })
+      }
+
+      // 추가옵션 - 세부옵션 유무 체크
+      if (addOptions && addOptions.length > 0) {
+        addOptions.map((option) => {
+
+          if (option.name === '' || option.name === null) {
+            setToastState({ msg: '추가옵션에 옵션명이 없습니다.', severity: 'error' });
+            handleOpenAlert();
+            isExistDefaultDetailOption = false;
+            return false;
+          }
+
+          option.select.map((item) => {
+
+            if (item.value === '' || item.value === null) {
+              setToastState({ msg: '추가옵션에 세부옵션이 없습니다.', severity: 'error' });
+              handleOpenAlert();
+              isExistAddDetailOption = false;
+              return false;
+            }
+          })
+        })
+      }
 
       let filterNameArr: string[] = []; // 기본옵션 name값을 담을 새 배열
       let isExistSameValue: boolean = true; // 기본옵션 같은 옵션명 있는지 체크
@@ -434,7 +480,7 @@ export default function MenuEdit(props: IProps) {
 
 
 
-      if (!isExistSameValue && !isExistSameValue02) {
+      if (!isExistSameValue && !isExistSameValue02 && isExistDefaultDetailOption && isExistAddDetailOption) {
         let param = {
           jumju_id: mt_id,
           jumju_code: mt_jumju_code,

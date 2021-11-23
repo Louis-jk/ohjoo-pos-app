@@ -332,19 +332,68 @@ export default function MenuAdd(props: any) {
       handleOpenAlert();
     } else {
 
+      let isExistDefaultDetailOption: boolean = true; // 기본옵션 - 세부옵션 유무
+      let isExistAddDetailOption: boolean = true; // 추가옵션 - 세부옵션 유무
+
+      // 기본옵션 - 세부옵션 유무 체크
+      if (options && options.length > 0) {
+        options.map((option) => {
+
+          if (option.name === '' || option.name === null) {
+            setToastState({ msg: '기본옵션에 옵션명이 없습니다.', severity: 'error' });
+            handleOpenAlert();
+            isExistDefaultDetailOption = false;
+            return false;
+          }
+
+          option.select.map((item) => {
+
+            if (item.value === '' || item.value === null) {
+              setToastState({ msg: '기본옵션에 세부옵션명이 없습니다.', severity: 'error' });
+              handleOpenAlert();
+              isExistDefaultDetailOption = false;
+            } else {
+              isExistDefaultDetailOption = true;
+            }
+          })
+        })
+      }
+
+      // 추가옵션 - 세부옵션 유무 체크
+      if (addOptions && addOptions.length > 0) {
+        addOptions.map((option) => {
+
+          if (option.name === '' || option.name === null) {
+            setToastState({ msg: '추가옵션에 옵션명이 없습니다.', severity: 'error' });
+            handleOpenAlert();
+            isExistDefaultDetailOption = false;
+            return false;
+          }
+
+          option.select.map((item) => {
+
+            if (item.value === '' || item.value === null) {
+              setToastState({ msg: '추가옵션에 세부옵션명이 없습니다.', severity: 'error' });
+              handleOpenAlert();
+              isExistAddDetailOption = false;
+            } else {
+              isExistAddDetailOption = true;
+            }
+          })
+        })
+      }
+
       let filterNameArr: string[] = []; // 기본옵션 name값을 담을 새 배열
-      let isExistSameValue: boolean = true; // 기본옵션 같은 옵션명 있는지 체크
+      let isExistSameValue: boolean = false; // 기본옵션 같은 옵션명 있는지 체크
 
       let filterNameArr02: string[] = []; // 추가옵션 name값을 담을 새 배열
-      let isExistSameValue02: boolean = true; // 추가옵션 같은 옵션명 있는지 체크
+      let isExistSameValue02: boolean = false; // 추가옵션 같은 옵션명 있는지 체크
 
       options?.map((option: any, i: number) => {
-        console.log('option은?', option);
         filterNameArr.push(option.name);
       })
 
       addOptions?.map((option: any, i: number) => {
-        console.log('addOption은?', option);
         filterNameArr02.push(option.name);
       })
 
@@ -358,8 +407,7 @@ export default function MenuAdd(props: any) {
             if (filterNameArr[i] === filterNameArr[j]) {
               setToastState({ msg: '기본옵션명에 같은 옵션명이 있습니다.', severity: 'error' });
               handleOpenAlert();
-
-              return false;
+              isExistSameValue = true;
             } else {
               isExistSameValue = false;
             }
@@ -377,8 +425,7 @@ export default function MenuAdd(props: any) {
             if (filterNameArr02[i] === filterNameArr02[j]) {
               setToastState({ msg: '추가옵션명에 같은 옵션명이 있습니다.', severity: 'error' });
               handleOpenAlert();
-
-              return false;
+              isExistSameValue02 = true;
             } else {
               isExistSameValue02 = false;
             }
@@ -386,7 +433,14 @@ export default function MenuAdd(props: any) {
         }
       }
 
-      if (!isExistSameValue && !isExistSameValue02) {
+      console.log('이까지 오나');
+      console.log('isExistSameValue', isExistSameValue);
+      console.log('isExistSameValue02', isExistSameValue02);
+      console.log('isExistDefaultDetailOption', isExistDefaultDetailOption);
+      console.log('isExistAddDetailOption', isExistAddDetailOption);
+      if (!isExistSameValue && !isExistSameValue02 && isExistDefaultDetailOption && isExistAddDetailOption) {
+
+
         let param = {
           jumju_id: mt_id,
           jumju_code: mt_jumju_code,
@@ -407,6 +461,9 @@ export default function MenuAdd(props: any) {
 
           let resultItem = args.resultItem;
           let arrItems = args.arrItems;
+
+          console.log('메뉴 등록 resultItem', resultItem);
+          console.log('메뉴 등록 arrItems', arrItems);
 
           if (resultItem.result === 'Y') {
             setToastState({ msg: '메뉴가 등록되었습니다.', severity: 'success' });
