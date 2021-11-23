@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom'
 import Draggable from 'react-draggable';
@@ -36,6 +36,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import QueueIcon from '@material-ui/icons/Queue';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 // Local Component
@@ -99,38 +100,63 @@ export default function MenuEdit(props: IProps) {
 
   const { id } = useParams<{ id?: string }>();
   const history = useHistory();
-  const [isLoading, setLoading] = React.useState(false);
-  const [details, setDetails] = React.useState<IDetails>({});
-  const [category, setCategory] = React.useState(''); // 카테고리 지정값
-  const [options, setOptions] = React.useState<MenuOption[]>([]);
-  const [addOptions, setAddOptions] = React.useState<MenuOption[]>([]);
-  const [open, setOpen] = React.useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [details, setDetails] = useState<IDetails>({});
+  const [category, setCategory] = useState(''); // 카테고리 지정값
+  const [options, setOptions] = useState<MenuOption[]>([]);
+  const [addOptions, setAddOptions] = useState<MenuOption[]>([]);
+  const [open, setOpen] = useState(false); // 세부 옵션 삭제전 모달 on/off
+  const [delModalOpen, setDelModalOpen] = useState(false); // 대옵션 삭제전 모달 on/off
+  const [delImageModalOpen, setDelImageModalOpen] = useState(false); // 메뉴 이미지 삭제전 모달 on/off
 
-  const [optionType, setOptionType] = React.useState<OptionType>("default");
-  const [parentIndex, setParentIndex] = React.useState(0);
-  const [childIndex, setChildIndex] = React.useState(0);
-  const [image, setImage] = React.useState(''); // 메뉴 이미지 URL
+  const [mainOptionType, setMainOptionType] = useState<OptionType>("default"); // 메인 옵션 타입
+  const [mainIndex, setMainIndex] = useState(0); // 메인 옵션 인덱스
+  const [optionType, setOptionType] = useState<OptionType>("default"); // 세부 옵션 타입
+  const [parentIndex, setParentIndex] = useState(0); // 부모 인덱스
+  const [childIndex, setChildIndex] = useState(0); // 세부 옵션 인덱스
+  const [image, setImage] = useState(''); // 메뉴 이미지 URL
 
 
   // 이미지 업로드
   const [source, setSource] = React.useState({});
+  const [imageDeleteReq, setImageDeleteReq] = React.useState(false); // 이미지 삭제 요청 값
+  const [imageUsable, setImageUsable] = React.useState(true); // 이미지 사용가능 여부
 
   const onChange = (evt: any) => {
 
     const img = evt.target.files[0];
 
-    setSource(img);
-
-    if (evt.target.files.length) {
-      let file = (evt.target.files)[0];
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e: any) => {
-        setImage(e.target.result);
-      }
-    } else {
+    console.log('img detail', img);
+    let typeArr: string[] = img.type.split('/');
+    console.log('img typeArr', typeArr);
+    if (typeArr[0] !== 'image') {
+      setToastState({ msg: '이미지 파일만 업로드 하실 수 있습니다.', severity: 'error' });
+      handleOpenAlert();
       setImage('');
+      setSource({});
+      return false;
+    } else if (typeArr[1] !== 'jpg' && typeArr[1] !== 'jpeg' && typeArr[1] !== 'gif' && typeArr[1] !== 'png' && typeArr[1] !== 'bmp') {
+      setToastState({ msg: '이미지 확장자를 확인해주세요.', severity: 'error' });
+      handleOpenAlert();
+      setImageUsable(false);
+      setImage('');
+      setSource({});
+    } else {
+      setImageUsable(true);
+      setSource(img);
+      setImageDeleteReq(false);
+
+      if (evt.target.files.length) {
+        let file = (evt.target.files)[0];
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e: any) => {
+          setImage(e.target.result);
+        }
+      } else {
+        setImage('');
+      }
     }
   }
 
@@ -186,6 +212,55 @@ export default function MenuEdit(props: IProps) {
     setOpen(false);
   };
 
+  // 메인 이미지 삭제 전 실행
+  const delImageHandler = () => {
+    setDelImageModalOpen(!delImageModalOpen);
+  }
+
+  // 메인 이미지 '삭제하기' 버튼 클릭시
+  const deleteMainImage = () => {
+    setImageDeleteReq(true);
+    setSource({});
+    setImage('');
+    setDelImageModalOpen(false);
+  }
+
+  // 메인 옵션 삭제시 실행 기능
+  const handleClickOpen02 = (type: OptionType, index: number) => {
+    setMainOptionType(type);
+    setMainIndex(index);
+    setDelModalOpen(true);
+  };
+
+  // 메인 옵션 삭제 취소
+  const handleClose02 = () => {
+    setDelModalOpen(false);
+  }
+
+  // 메인 옵션 삭제 실행
+  const deleteMainOption = () => {
+
+    console.log('mainOptionType', mainOptionType);
+    console.log('mainIndex', mainIndex);
+    setDelModalOpen(!delModalOpen);
+    // return false;
+
+    if (mainOptionType === 'default') {
+      setOptions(options => {
+        const result = [...options];
+        result.splice(mainIndex, 1);
+        return result;
+      })
+    } else {
+      setAddOptions(options => {
+        const result = [...options];
+        result.splice(mainIndex, 1);
+        return result;
+      })
+    }
+  }
+
+  // 세부 옵션 삭제시 실행 기능
   const handleClickOpen = (type: OptionType, parent: number, child: number) => {
     setOptionType(type);
     setParentIndex(parent);
@@ -299,37 +374,107 @@ export default function MenuEdit(props: IProps) {
       setToastState({ msg: '판매가격을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
     } else {
-      let param = {
-        jumju_id: mt_id,
-        jumju_code: mt_jumju_code,
-        it_id: id,
-        mode: 'update',
-        ca_id2: category,
-        menuName: details.menuName,
-        menuInfo: details.menuInfo,
-        menuPrice: details.menuPrice,
-        menuDescription: details.menuDescription,
-        it_type1: details.it_type1,
-        it_use: details.it_use,
-        menuOption: JSON.stringify(options),
-        menuAddOption: JSON.stringify(addOptions),
-        it_img1: source
-      };
-      Api.send2('store_item_update', param, (args: any) => {
-        let resultItem = args.resultItem;
-        let arrItems = args.arrItems;
 
-        if (resultItem.result === 'Y') {
-          setToastState({ msg: '메뉴가 수정되었습니다.', severity: 'success' });
-          handleOpenAlert();
-          setTimeout(() => {
-            history.push('/menu');
-          }, 700);
-        } else {
-          setToastState({ msg: `메뉴를 수정중에 오류가 발생되었습니다.\n다시 한번 시도해주세요.`, severity: 'error' });
-          handleOpenAlert();
+      // console.log('메뉴 수정 options', options);
+      // console.log('메뉴 수정 addOptions', addOptions);
+
+      let filterNameArr: string[] = []; // 기본옵션 name값을 담을 새 배열
+      let isExistSameValue: boolean = true; // 기본옵션 같은 옵션명 있는지 체크
+
+      let filterNameArr02: string[] = []; // 추가옵션 name값을 담을 새 배열
+      let isExistSameValue02: boolean = true; // 추가옵션 같은 옵션명 있는지 체크
+
+      options?.map((option: any, i: number) => {
+        console.log('option은?', option);
+        filterNameArr.push(option.name);
+      })
+
+      addOptions?.map((option: any, i: number) => {
+        console.log('addOption은?', option);
+        filterNameArr02.push(option.name);
+      })
+
+      // 기본옵션 같은 값 찾기
+      for (let i = 0; i < filterNameArr.length; i++) {
+        for (let j = 0; j < filterNameArr.length; j++) {
+          if (i !== j) {
+            console.log('filterNameArr[i]', filterNameArr[i]);
+            console.log('filterNameArr[j]', filterNameArr[j]);
+
+            if (filterNameArr[i] === filterNameArr[j]) {
+              setToastState({ msg: '기본옵션명에 같은 옵션명이 있습니다.', severity: 'error' });
+              handleOpenAlert();
+
+              return false;
+            } else {
+              isExistSameValue = false;
+            }
+          }
         }
-      });
+      }
+
+      // 추가옵션 같은 값 찾기
+      for (let i = 0; i < filterNameArr02.length; i++) {
+        for (let j = 0; j < filterNameArr02.length; j++) {
+          if (i !== j) {
+            console.log('filterNameArr02[i]', filterNameArr02[i]);
+            console.log('filterNameArr02[j]', filterNameArr02[j]);
+
+            if (filterNameArr02[i] === filterNameArr02[j]) {
+              setToastState({ msg: '추가옵션명에 같은 옵션명이 있습니다.', severity: 'error' });
+              handleOpenAlert();
+
+              return false;
+            } else {
+              isExistSameValue02 = false;
+            }
+          }
+        }
+      }
+
+
+
+      if (!isExistSameValue && !isExistSameValue02) {
+        let param = {
+          jumju_id: mt_id,
+          jumju_code: mt_jumju_code,
+          it_id: id,
+          mode: 'update',
+          ca_id2: category,
+          menuName: details.menuName,
+          menuInfo: details.menuInfo,
+          menuPrice: details.menuPrice,
+          menuDescription: details.menuDescription,
+          it_type1: details.it_type1,
+          it_use: details.it_use,
+          menuOption: JSON.stringify(options),
+          menuAddOption: JSON.stringify(addOptions),
+          it_img1: source,
+          it_img_del1: imageDeleteReq ? '1' : '0' // '1' 삭제요청 : '0' 삭제요청 아님
+        };
+
+        // it_img1: source 
+
+        console.log("메뉴 수정 param", param);
+
+        Api.send2('store_item_update', param, (args: any) => {
+          let resultItem = args.resultItem;
+          let arrItems = args.arrItems;
+
+          if (resultItem.result === 'Y') {
+            setToastState({ msg: '메뉴가 수정되었습니다.', severity: 'success' });
+            handleOpenAlert();
+            // setTimeout(() => {
+            //   history.push('/menu');
+            // }, 700);
+          } else {
+            setToastState({ msg: `메뉴를 수정중에 오류가 발생되었습니다.\n다시 한번 시도해주세요.`, severity: 'error' });
+            handleOpenAlert();
+          }
+        });
+      }
+
+
     }
   }
 
@@ -381,11 +526,23 @@ export default function MenuEdit(props: IProps) {
                   // onChange={handleUploadClick}
                   />
                 </form>
-                <label htmlFor="contained-button-file" style={{ position: 'absolute', right: 0, bottom: 10 }}>
-                  <Fab component="span" variant="circular" color="primary" style={{ color: theme.palette.primary.contrastText }} className={menu.photoSelectIcon}>
+                <label htmlFor="contained-button-file" >
+                  <Fab component="span" variant="circular" color="primary" style={{ position: 'absolute', right: 70, bottom: 10, color: theme.palette.primary.contrastText }} className={menu.photoSelectIcon}>
                     <AddPhotoAlternateOutlinedIcon />
                   </Fab>
                 </label>
+                <Fab component="span" variant="circular" color='default' style={{ position: 'absolute', right: 5, bottom: 10, color: theme.palette.primary.contrastText }} className={menu.photoSelectIcon} onClick={delImageHandler}>
+                  <DeleteOutlineOutlinedIcon />
+                </Fab>
+              </Box>
+              <Box mb={3}>
+                <small>업로드 가능한 이미지 확장자는 <mark>jpg, jpeg, gif, png, bmp</mark>입니다.</small>
+                {!imageUsable && (
+                  <>
+                    <br />
+                    <small style={{ color: 'red' }}>※이미지 확장자가 업로드 불가능한 확장자입니다.</small>
+                  </>
+                )}
               </Box>
               <FormControl component="fieldset">
                 <RadioGroup row aria-label="position" name="position" defaultValue="0">
@@ -496,6 +653,7 @@ export default function MenuEdit(props: IProps) {
                   value={details.menuName === null || details.menuName === undefined ? '' : details.menuName}
                   id="outlined-basic"
                   label="메뉴명"
+                  required
                   variant="outlined"
                   onChange={e => setDetails({
                     ...details,
@@ -518,6 +676,7 @@ export default function MenuEdit(props: IProps) {
                   value={details.menuPrice === null || details.menuPrice === undefined ? '0' : details.menuPrice}
                   id="outlined-basic"
                   label="판매가격"
+                  required
                   variant="outlined"
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
@@ -544,7 +703,7 @@ export default function MenuEdit(props: IProps) {
                   label="메뉴상세설명"
                   multiline
                   rows={10}
-                  defaultValue="메뉴 상세설명을 작성해주세요."
+                  placeholder='메뉴 상세설명을 작성해주세요.'
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -603,13 +762,14 @@ export default function MenuEdit(props: IProps) {
                       variant="outlined"
                       color="secondary"
                       startIcon={<HighlightOffIcon />}
-                      onClick={() =>
-                        setOptions(options => {
-                          const result = [...options];
-                          result.splice(index, 1);
-                          return result;
-                        })
-                      }
+                      // onClick={() =>
+                      //   setOptions(options => {
+                      //     const result = [...options];
+                      //     result.splice(index, 1);
+                      //     return result;
+                      //   })
+                      // }
+                      onClick={() => handleClickOpen02('default', index)}
                     >
                       삭제
                     </Button>
@@ -739,13 +899,14 @@ export default function MenuEdit(props: IProps) {
                       variant="outlined"
                       color="secondary"
                       startIcon={<HighlightOffIcon />}
-                      onClick={() =>
-                        setAddOptions(options => {
-                          const result = [...options];
-                          result.splice(index, 1);
-                          return result;
-                        })
-                      }
+                      // onClick={() =>
+                      //   setAddOptions(options => {
+                      //     const result = [...options];
+                      //     result.splice(index, 1);
+                      //     return result;
+                      //   })
+                      // }
+                      onClick={() => handleClickOpen02('add', index)}
                     >
                       삭제
                     </Button>
@@ -834,6 +995,60 @@ export default function MenuEdit(props: IProps) {
               )}
             </Grid>
           </Grid>
+
+          {/* 메뉴 이미지 삭제전 모달 */}
+          <Dialog
+            open={delImageModalOpen}
+            onClose={delImageHandler}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+            <DialogTitle style={{ cursor: 'move', width: 500 }} id="draggable-dialog-title">
+              메뉴 이미지 삭제
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                메뉴 이미지를 삭제하시겠습니까?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={delImageHandler} color="primary">
+                취소
+              </Button>
+              <Button onClick={deleteMainImage} color="primary">
+                삭제하기
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* // 메뉴 이미지 삭제전 모달 */}
+
+          {/* 메인옵션 삭제전 모달 */}
+          <Dialog
+            open={delModalOpen}
+            onClose={handleClose02}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+            <DialogTitle style={{ cursor: 'move', width: 500 }} id="draggable-dialog-title">
+              정말 삭제하시겠습니까?
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {`선택하신 ${mainOptionType === 'default' ? '기본옵션' : '추가옵션'}을 삭제하시겠습니까?`}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleClose02} color="primary">
+                취소
+              </Button>
+              <Button onClick={deleteMainOption} color="primary">
+                삭제하기
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* // 메인옵션 삭제전 모달 */}
+
+          {/* 세부옵션 삭제전 모달 */}
           <Dialog
             open={open}
             onClose={handleClose}
@@ -857,6 +1072,7 @@ export default function MenuEdit(props: IProps) {
               </Button>
             </DialogActions>
           </Dialog>
+          {/* // 세부옵션 삭제전 모달 */}
         </MainBox>
       }
     </Box>
