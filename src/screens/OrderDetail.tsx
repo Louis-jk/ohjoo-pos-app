@@ -42,6 +42,10 @@ interface IDetails {
   [key: string]: string;
 }
 
+interface IMenus {
+  [key: string]: any[];
+}
+
 export default function OrdersDetail(od_id: string) {
 
   const { mt_id, mt_jumju_code, mt_store } = useSelector((state: any) => state.login);
@@ -58,7 +62,7 @@ export default function OrdersDetail(od_id: string) {
 
   const [detailStore, setDetailStore] = React.useState<IDetails>({});
   const [detailOrder, setDetailOrder] = React.useState<IDetails>({});
-  const [detailProduct, setDetailProduct] = React.useState<IDetails[]>([]);
+  const [detailProduct, setDetailProduct] = React.useState<IMenus[]>([]);
   const [deliveryTime, setDeliveryTime] = React.useState(''); // 신규 주문 -> 배달시간 입력
   const [rejectValue, setRejectValue] = React.useState(''); // 신규 주문 -> 주문 거부 사유 선택
   const [rejectEtc, setRejectEtc] = React.useState(''); // 신규 주문 -> 주문 거부 사유 '기타' 직접 입력 값
@@ -115,7 +119,7 @@ export default function OrdersDetail(od_id: string) {
         dispatch(orderDetailAction.updateOrderDetail(JSON.stringify(arrItems)));
         setDetailStore(arrItems.store);
         setDetailOrder(arrItems.order);
-        setDetailProduct(arrItems.product);
+        setDetailProduct(arrItems.orderDetail);
       } else {
         console.log("faild?", arrItems)
         alert('주문 정보를 받아올 수 없습니다.')
@@ -352,7 +356,7 @@ export default function OrdersDetail(od_id: string) {
             detailOrder.od_process_status === '신규주문' ? 'order_new'
               : detailOrder.od_process_status === '접수완료' ? 'order_check'
                 : detailOrder.od_process_status === '배달중' ? 'order_delivery'
-                  : detailOrder.od_process_status === '배달완료' ? 'order_done'
+                  : detailOrder.od_process_status === '배달완료' || '포장완료' ? 'order_done'
                     : null}
           action={
             detailOrder.od_process_status === '신규주문' ? () => newFn()
@@ -467,17 +471,17 @@ export default function OrdersDetail(od_id: string) {
             <Grid item xs={12} md={6}>
               <Paper className={orderStyle.orderPaper}>
                 <Typography variant="h6" component="h6" mb={2} className={orderStyle.orderTitle}>주문정보</Typography>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>주문매장 : </Typography>
-                  <Typography variant="body1">{detailStore.mb_company}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailStore.mb_company}</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>주문일시 : </Typography>
-                  <Typography variant="body1">{moment(detailOrder.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY년 M월 D일, HH시 mm분')}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{moment(detailOrder.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY년 M월 D일, HH시 mm분')}</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>주문방법 : </Typography>
-                  <Typography variant="body1">{detailOrder.od_type} 주문</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.od_type} 주문</Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -491,9 +495,9 @@ export default function OrdersDetail(od_id: string) {
                     <Typography variant="body1">{detailOrder.order_addr3}</Typography>
                   </Box>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>전화번호 : </Typography>
-                  <Typography variant="body1">{Api.phoneFomatter(detailOrder.order_hp)}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.phoneFomatter(detailOrder.order_hp)}</Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -501,10 +505,38 @@ export default function OrdersDetail(od_id: string) {
               <Paper className={orderStyle.orderPaper}>
                 <Typography variant="h6" component="h6" className={orderStyle.orderTitle}>메뉴정보</Typography>
                 <Box fontSize={14} className={orderStyle.orderBox}>
-                  {detailProduct.map((menu, index) => (
+                  {detailProduct && detailProduct.length > 0 && detailProduct.map((menu, index) => (
                     <Box className={orderStyle.orderMenuBox} key={index}>
-                      <Typography variant="body1" style={{ marginRight: 10 }}>메뉴 : {menu.it_name}</Typography>
-                      <Typography variant="body1">옵션 - {menu.ct_option}</Typography>
+                      <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb={0.5}>
+                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{menu.it_name}</Typography>
+                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{Api.comma(menu.sum_price)}원</Typography>
+                      </Box>
+                      <Box mb={menu.cart_add_option && menu.cart_add_option.length > 0 ? 1 : 0}>
+                        {menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption, key) => (
+                          <Box mb={key === menu.cart_option.length - 1 ? 0 : 1} key={`defaultOption-${key}`}>
+                            <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                              <Typography variant="body1" color='#666' mr={0.5}>└ </Typography>
+                              <Typography variant="body1" color='#666'>기본옵션: {defaultOption.ct_option}</Typography>
+                            </Box>
+                            <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                              <Typography variant="body1" color='#666' mr={0.5}>└ </Typography>
+                              <Typography variant="body1" color='#666'>옵션금액: {Api.comma(defaultOption.io_price)}원</Typography>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                      {menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption, key) => (
+                        <Box mb={key === menu.cart_add_option.length - 1 ? 0 : 1} key={`addOption-${key}`}>
+                          <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                            <Typography variant="body1" color='#666' mr={0.5}>└ </Typography>
+                            <Typography variant="body1" color='#666'>추가옵션: {addOption.ct_option}</Typography>
+                          </Box>
+                          <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                            <Typography variant="body1" color='#666' mr={0.5}>└ </Typography>
+                            <Typography variant="body1" color='#666'>옵션금액: {Api.comma(addOption.io_price)}원</Typography>
+                          </Box>
+                        </Box>
+                      ))}
                     </Box>
                   ))}
                 </Box>
@@ -513,47 +545,51 @@ export default function OrdersDetail(od_id: string) {
             <Grid item xs={12} md={6}>
               <Paper className={orderStyle.orderPaper}>
                 <Typography variant="h6" component="h6" mb={2} className={orderStyle.orderTitle}>요청사항</Typography>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>사장님께 : </Typography>
-                  <Typography variant="body1">{detailOrder.order_seller !== '' ? detailOrder.order_seller : '요청사항이 없습니다.'}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.order_seller !== '' ? detailOrder.order_seller : '요청사항이 없습니다.'}</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>배달기사님께 : </Typography>
-                  <Typography variant="body1">{detailOrder.order_officer !== '' ? detailOrder.order_officer : '요청사항이 없습니다.'}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.order_officer !== '' ? detailOrder.order_officer : '요청사항이 없습니다.'}</Typography>
+                </Box>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
+                  <Typography variant="body1" className={orderStyle.orderSubtitle02}>일회용 수저, 포크 : </Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.od_no_spoon == '1' ? '필요없음' : '필요함'}</Typography>
                 </Box>
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper className={orderStyle.orderPaper}>
                 <Typography variant="h6" component="h6" mb={2} className={orderStyle.orderTitle}>결제정보</Typography>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>총 주문금액 : </Typography>
-                  <Typography variant="body1">{Api.comma(detailOrder.odder_cart_price)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.odder_cart_price)} 원</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>배달팁 : </Typography>
-                  <Typography variant="body1">{Api.comma(detailOrder.order_cost)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_cost)} 원</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>오주 포인트 : </Typography>
-                  <Typography variant="body1">{Api.comma(detailOrder.order_point)} P</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_point)} P</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>오주 쿠폰 할인 : </Typography>
-                  <Typography variant="body1">{Api.comma(detailOrder.order_coupon_ohjoo)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_coupon_ohjoo)} 원</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>상점 쿠폰 할인 : </Typography>
-                  <Typography variant="body1">{Api.comma(detailOrder.order_coupon_store)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_coupon_store)} 원</Typography>
                 </Box>
                 <Divider style={{ marginTop: 20, marginBottom: 20 }} />
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>결제방법 : </Typography>
-                  <Typography variant="body1">{detailOrder.od_settle_case}</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.od_settle_case}</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
-                  <Typography variant="subtitle1" className={orderStyle.orderSubtitle} style={{ fontWeight: 'bold' }}>총 결제금액 : </Typography>
-                  <Typography variant="h6">{Api.comma(detailOrder.order_sumprice)} 원</Typography>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
+                  <Typography variant="h6" className={orderStyle.orderSubtitle} style={{ fontWeight: 'bold' }}>총 결제금액 : </Typography>
+                  <Typography variant="h6" fontWeight='bold' className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_sumprice)} 원</Typography>
                 </Box>
               </Paper>
             </Grid>

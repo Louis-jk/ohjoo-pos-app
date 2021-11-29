@@ -60,6 +60,8 @@ export default function CouponAdd() {
     setType(event.target.value as string);
   };
 
+  console.log('사용범위 type', type);
+
 
   // 할인금액, 할인율 change 핸들러
   const onDiscountHandler = (type: string) => {
@@ -178,7 +180,7 @@ export default function CouponAdd() {
     } else if (Number(minPrice) > Number(maxPrice)) {
       setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
       handleOpenAlert();
-    }  else {
+    } else {
       addCouponHandler();
     }
   }
@@ -277,9 +279,9 @@ export default function CouponAdd() {
                 label="사용범위"
                 onChange={handleChange}
               >
-                <MenuItem value={10}>모두 사용가능</MenuItem>
-                <MenuItem value={20}>포장용 쿠폰</MenuItem>
-                <MenuItem value={30}>배달용 쿠폰</MenuItem>
+                <MenuItem value={'0'}>모두 사용가능</MenuItem>
+                <MenuItem value={'1'}>포장용 쿠폰</MenuItem>
+                <MenuItem value={'2'}>배달용 쿠폰</MenuItem>
               </Select>
             </FormControl>
           </Grid>

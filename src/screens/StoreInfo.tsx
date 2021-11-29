@@ -276,82 +276,71 @@ export default function StoreInfo(props: IProps) {
     let file;
     let filesLength = fileArr.length > 5 ? 5 : fileArr.length;
 
-    if (fileArr.length + detailImgs.length > 5) {
-      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다..', severity: 'warning' });
+    if (filesLength + detailImgs.length > 5) {
+      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
       handleOpenAlert();
+      return false;
     } else {
+      for (let i = 0; i < filesLength; i++) {
 
-    }
+        file = fileArr[i];
 
-    for (let i = 0; i < filesLength; i++) {
+        let reader = new FileReader();
 
-      file = fileArr[i];
+        reader.onload = () => {
+          console.log(reader.result);
+          fileURLs[i] = reader.result;
 
-      let reader = new FileReader();
+          let testArr: any = [];
 
-      reader.onload = () => {
-        console.log(reader.result);
-        fileURLs[i] = reader.result;
+          console.log("fileURLs", fileURLs);
+          console.log("fileURLs[0]", fileURLs[0]);
 
-        let testArr: any = [];
-
-        console.log("fileURLs", fileURLs);
-        console.log("fileURLs[0]", fileURLs[0]);
-
-        // handlingDataForm(fileURLs[0]);
+          // handlingDataForm(fileURLs[0]);
 
 
 
-        fileURLs.map((pic: string, index: number) => {
-          let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-          let name = pic.slice(pic.lastIndexOf('/'));
-          // let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
+          fileURLs.map((pic: string, index: number) => {
+            let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+            let name = pic.slice(pic.lastIndexOf('/'));
 
+            testArr.push(pic)
 
-          // testArr.push({
-          //   uri: pic,
-          //   type,
-          //   name,
-          // })
-          testArr.push(pic)
+          })
 
-          // setDetailImgs(prev => [...prev, {
-          //   uri: pic,
-          //   type,
-          //   name,
-          // }]);
-        })
+          // setDetailImgs(prev => [...prev, testArr]);
 
-        setDetailImgs(testArr);
+          console.log('testArr', testArr);
 
-        console.log('testArr', testArr);
-
-        const compareArray = (a: any, b: any) => {
-          for (let i = 0; i < a.length; i++) {
-            for (let j = 0; j < b.length; j++) {
-              if (a[i].name === b[j].name) {
-                console.log('중복 값', a[i])
-                return true;
-              } else {
-                console.log('중복 값 없음')
-                return false;
+          const compareArray = (a: any, b: any) => {
+            for (let i = 0; i < a.length; i++) {
+              for (let j = 0; j < b.length; j++) {
+                if (a[i].name === b[j].name) {
+                  console.log('중복 값', a[i])
+                  console.log('중복값이 있습니다.');
+                  setToastState({ msg: '이미 동일한 이미지가 있습니다.', severity: 'error' });
+                  handleOpenAlert();
+                  return true;
+                } else {
+                  console.log('중복 값 없음')
+                  return false;
+                }
               }
             }
+          };
+
+          let checkArr = compareArray(detailImgs, testArr);
+
+          if (!checkArr) {
+            // setDetailImgs(prev => [...prev, testArr]);
+            let addArr = detailImgs.concat(testArr);
+            setDetailImgs(addArr);
           }
+
         };
 
-        let checkArr = compareArray(detailImgs, testArr);
-
-        if (!checkArr) {
-          // setDetailImgs(prev => [...prev, testArr]);
-          let addArr = detailImgs.concat(testArr);
-          setDetailImgs(addArr);
-        }
-        // setDetailImgs([...fileURLs]);
-      };
-
-
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -411,7 +400,7 @@ export default function StoreInfo(props: IProps) {
     let filesLength = fileArr.length > enableArr ? enableArr : fileArr.length;
 
     if (fileArr.length > enableArr) {
-      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'warning' });
+      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
       handleOpenAlert();
     }
 
@@ -425,7 +414,7 @@ export default function StoreInfo(props: IProps) {
 
         let newArr = detailImgs.filter(img => img === fileURLs[0]);
         if (newArr && newArr.length > 0) {
-          setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'warning' });
+          setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'error' });
           handleOpenAlert();
         } else {
           console.log("fileURLs", fileURLs);
@@ -494,6 +483,7 @@ export default function StoreInfo(props: IProps) {
               }}>
                 <Typography variant='body1' mr={0.5}>매장 대표 이미지</Typography>
                 <Typography variant='body1' fontSize={12} color='#FFA400' mr={0.5}>(총 5장까지 업로드 가능)</Typography>
+                <Typography variant='body1' fontSize={12} color='#FFA400' mr={0.5}>※ 이미지는 4:3 비율을 권장합니다.</Typography>
                 {/* <div onMouseOver={() => alert('hi')} onTouchStart={() => alert('are you Touched?')}>
                   <img src='/images/ico_question_tooltip.png' style={{ width: 20, height: 20, objectFit: 'cover' }} alt='대표이미지 안내' title='대표이미지 안내' />
                 </div> */}
@@ -511,8 +501,8 @@ export default function StoreInfo(props: IProps) {
                     {detailImgs.map((itemImg, index) => (
                       <Box style={{ position: 'relative', width: '20%', height: '150px', marginLeft: index === 0 ? 0 : '5px' }}>
                         <img key={`item-image-${index}`} src={itemImg} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
-                        <Box className='delete-btn' onClick={() => deleteItemImg(index)}>
-                          <img key={`item-image-delete-${index}`} src='./images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
+                        <Box key={`item-image-delete-${index}`} className='delete-btn' onClick={() => deleteItemImg(index)}>
+                          <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                         </Box>
                       </Box>
                     ))}
@@ -522,7 +512,7 @@ export default function StoreInfo(props: IProps) {
                     <Box style={{ position: 'relative', width: '20%', height: '150px' }}>
                       <img src={detailImgs[0]} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
                       <Box className='delete-btn' onClick={() => deleteItemImg(0)}>
-                        <img src='/images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
+                        <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                       </Box>
                     </Box>
                   ) :

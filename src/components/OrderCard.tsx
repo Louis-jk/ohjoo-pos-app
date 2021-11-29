@@ -37,8 +37,8 @@ export default function OrderCard(props: OrderProps) {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const [odId, setOdId] = React.useState('');
-  const [odType, setOdType] = React.useState('');
+  const [odId, setOdId] = React.useState(''); // 주문 id
+  const [odType, setOdType] = React.useState(''); // 주문 타입 (배달 | 포장)  
 
   // 신규주문 상태 -> 접수(배달/포장 시간 입력) 모달 핸들러
   const [open, setOpen] = React.useState(false);
@@ -89,8 +89,9 @@ export default function OrderCard(props: OrderProps) {
   const handleDeliveryClose = () => {
     setDeliveryOpen(false);
   };
-  const deliveryOrderHandler = (id: string) => {
+  const deliveryOrderHandler = (id: string, type: string) => {
     setOdId(id);
+    setOdType(type);
     handleDeliveryOpen();
   }
 
@@ -123,36 +124,48 @@ export default function OrderCard(props: OrderProps) {
     cancelModalOpenHandler();
   }
 
+  console.log('신규 주문 orders', orders);
+
   const renderList = (): JSX.Element[] => {
     return orders.map((order, index) =>
       <Grid xs={12} key={order.od_id + index}>
         {/* <Link to={`/details/${order.od_id}`}> */}
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" py={1}>
+        <Box display="flex" flexDirection="row" justifyContent={type === 'done' ? 'flex-start' : 'space-between'} alignItems="center" py={1}>
           <Box flex={1} style={{ minWidth: 155 }} display="flex" flexDirection="column" justifyContent="center" alignItems="center" mr={1}>
             <Typography mb={0.3}>주문일시</Typography>
             <Typography style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD(dd)')}</Typography>
             <Typography fontSize={34} fontWeight='bold' style={{ margin: 0 }}>{moment(order.od_time, 'YYYY-MM-DD HH:mm:ss').format('HH:mm')}</Typography>
           </Box>
-          <Box flex={7} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center">
+          <Box flex={type === 'done' ? 2 : 7} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="center">
             <Box>
-              <Typography fontSize={18} fontWeight="bold" mb={1}>[메뉴] {order.od_good_name}</Typography>
+              <Typography fontSize={18} fontWeight="bold" mb={1} style={{ width: '100%', maxWidth: '250px', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>[메뉴] {order.od_good_name}</Typography>
               <Box display="flex" flexDirection="row" mb={1}>
                 <Typography mr={1}>{order.od_settle_case}</Typography>
                 <Typography>{Api.comma(order.od_receipt_price)}원</Typography>
               </Box>
-              <Typography style={{ margin: 0 }}>{order.od_addr1 + order.od_addr2}</Typography>
-              <Typography style={{ margin: 0 }}>{order.od_addr3}</Typography>
+              <Typography style={{ margin: 0, width: '100%', maxWidth: '250px', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{order.od_addr1 + order.od_addr2}</Typography>
+              <Typography style={{ margin: 0, width: '100%', maxWidth: '250px', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{order.od_addr3}</Typography>
             </Box>
           </Box>
+          {
+            type === 'done' &&
+            <Box display='flex' flex={1} justifyContent='center' alignSelf='center'>
+              <Box style={{ padding: '5px 20px', borderRadius: 5, backgroundColor: order.od_type === '배달' ? theme.palette.primary.main : theme.palette.info.main }}>
+                <Typography variant='body1' fontWeight='bold' color={order.od_type === '배달' ? theme.palette.primary.contrastText : theme.palette.info.contrastText}>{order.od_type === '배달' ? '배달주문' : '포장주문'}</Typography>
+              </Box>
+            </Box>
+          }
           <Box flex={type === 'new' || type === 'check' ? 3 : 1}>
-            <ButtonGroup variant="text" color="primary" style={{ color: theme.palette.info.contrastText }} aria-label="text primary button group">
+            <ButtonGroup variant="text" color="primary" style={{ float: 'right', color: theme.palette.info.contrastText }} aria-label="text primary button group">
               <Button variant='contained' style={{ backgroundColor: '#edecf3', color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
               {
                 type === 'new' ?
                   <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
-                  : type === 'check' ?
-                    <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id)}>배달처리</Button>
-                    : null
+                  : type === 'check' && order.od_type === '배달' ?
+                    <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.od_type)}>배달처리</Button>
+                    : type === 'check' && order.od_type === '포장' ?
+                      <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.od_type)}>포장완료</Button>
+                      : null
               }
               {
                 type === 'new' ?
@@ -163,7 +176,7 @@ export default function OrderCard(props: OrderProps) {
             </ButtonGroup>
           </Box>
         </Box>
-        <Divider style={{ marginTop: 20 }} />
+        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
       </Grid >
     )
   }
@@ -173,7 +186,7 @@ export default function OrderCard(props: OrderProps) {
       <>
         <OrderCheckModal isOpen={open} od_id={odId} od_type={odType} handleClose={handleClose} />
         <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} />
-        <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} handleClose={handleDeliveryClose} />
+        <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} od_type={odType} handleClose={handleDeliveryClose} />
         <OrderCancelModal isOpen={cancelModalOpen} od_id={odId} handleClose={cancelModalCloseHandler} />
         <Box>
           {renderList()}

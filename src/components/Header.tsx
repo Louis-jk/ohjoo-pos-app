@@ -309,10 +309,29 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   // 매장 선택 핸들러
   const setStoreHandler = async (store: any, id: string, jumju_id: string, jumju_code: string, storeName: string, addr: string) => {
     try {
-      // console.log("select store", store);
+      console.log("select store", store);
       await dispatch(storeAction.selectStore(id, jumju_id, jumju_code, storeName, addr));
       await dispatch(loginAction.updateLogin(JSON.stringify(store)));
       await dispatch(loginAction.updateToken(mt_app_token));
+
+      let param = {
+        mt_id: jumju_id,
+        mt_device: 'pos',
+        mt_pos_token: mt_app_token,
+      };
+
+      Api.send('store_login_token', param, (args: any) => {
+        let resultItem = args.resultItem;
+        let arrItems = args.arrItems;
+        console.log('토큰 업데이트 실행시 resultItem::: ', resultItem);
+        console.log('토큰 업데이트 실행시  arrItems::: ', arrItems);
+        if (resultItem.result === 'Y') {
+          console.log('토큰 업데이트 실행 결과값 ::: ', arrItems);
+        } else {
+          console.log('토큰 업데이트 실패');
+        }
+      });
+
     } catch (err) {
       console.error('에러 발생 ::', err);
     }
@@ -429,7 +448,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
             <Typography className='count' component='h3' variant='h4' style={{ color: (deliveryOrder.length > 0 && curPathName !== 'order_delivery' && props.detail !== 'order_delivery') ? '#ffc739' : (deliveryOrder.length > 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : (deliveryOrder.length == 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : '#fff' }}>{deliveryOrder.length > 99 ? '99+' : deliveryOrder.length}</Typography>
           </ListItem>
           <ListItem className={base.orderMenu} component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? '#fff' : 'transparent' }}>
-            <Typography component='label' variant='body1' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>배달완료</Typography>
+            <Typography component='label' variant='body1' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>배달/포장완료</Typography>
             <Typography className='count' component='h3' variant='h4' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>{doneOrder.length > 99 ? '99+' : doneOrder.length}</Typography>
           </ListItem>
         </List>

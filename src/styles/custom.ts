@@ -211,8 +211,17 @@ export const OrderStyles = makeStyles({
     textAlign: 'left',
   },
   orderSubtitle: {
-    width: 120,
+    width: 140,
     textAlign: 'left',
+  },
+  orderSubtitle02: {
+    width: 180,
+    textAlign: 'left',
+  },
+  orderSubDescription: {
+    textAlign: 'right',
+    width: '90%',
+    marginLeft: 20,
   },
   orderBox: {
     // display: 'flex',

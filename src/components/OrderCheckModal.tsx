@@ -46,6 +46,8 @@ export default function OrderCheckModal(props: IProps) {
 
   const { order, product, store } = useSelector((state: any) => state.orderDetail);
 
+  console.log("checkbox props", props);
+
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -65,7 +67,7 @@ export default function OrderCheckModal(props: IProps) {
     return new Promise((res, rej) => {
       if (order !== null && product !== null && store !== null) {
 
-      const htmlFormat = `
+        const htmlFormat = `
         <style>
           @page { margin: 0; margin-bottom: 20px; }
           @media print {
@@ -147,7 +149,7 @@ export default function OrderCheckModal(props: IProps) {
               <col width='25%' />
             </colgroup>
             ${product?.map((item: any, index: number) => (
-              `<tr key=${item.it_name + index}>
+            `<tr key=${item.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
@@ -157,7 +159,7 @@ export default function OrderCheckModal(props: IProps) {
                 <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
                 <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
               </tr>`
-            )).join('')}
+          )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -205,7 +207,7 @@ export default function OrderCheckModal(props: IProps) {
             </tr>
           </table>
           ${do_jumju_origin_use === 'Y' ?
-          `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
+            `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>원산지</td>
@@ -214,12 +216,12 @@ export default function OrderCheckModal(props: IProps) {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${store.do_jumju_origin}</td>
             </tr>
           </table>`
-          : `<p>&nbsp;</p>` }
+            : `<p>&nbsp;</p>`}
           <p>&nbsp;</p>
           <hr style='margin: 0 5px;' />
         </div>
       `
-      res(appRuntime.send('pos_print', htmlFormat));
+        res(appRuntime.send('pos_print', htmlFormat));
       } else {
         alert('주문 디테일이 없습니다.');
       }
@@ -231,7 +233,7 @@ export default function OrderCheckModal(props: IProps) {
     return new Promise((res, rej) => {
       if (order !== null && product !== null && store !== null) {
 
-      const htmlFormat02 = `
+        const htmlFormat02 = `
         <style>
           @page { margin: 0; margin-bottom: 20px; }
           @media print {
@@ -313,7 +315,7 @@ export default function OrderCheckModal(props: IProps) {
               <col width='25%' />
             </colgroup>
             ${product?.map((item: any, index: number) => (
-              `<tr key=${item.it_name + index}>
+            `<tr key=${item.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
@@ -323,7 +325,7 @@ export default function OrderCheckModal(props: IProps) {
                 <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
                 <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
               </tr>`
-            )).join('')}
+          )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -371,7 +373,7 @@ export default function OrderCheckModal(props: IProps) {
             </tr>
           </table>
           ${do_jumju_origin_use === 'Y' ?
-          `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
+            `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>원산지</td>
@@ -380,7 +382,7 @@ export default function OrderCheckModal(props: IProps) {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${store.do_jumju_origin}</td>
             </tr>
           </table>`
-          : `<p>&nbsp;</p>` }
+            : `<p>&nbsp;</p>`}
           <p>&nbsp;</p>
           <hr style='margin: 0 5px;' />
         </div>
@@ -475,6 +477,7 @@ export default function OrderCheckModal(props: IProps) {
           handleOpenAlert();
           props.handleClose();
           getNewOrderHandler();
+          setDeliveryTime('');
 
           if (mt_print === '1') {
             // 주문 접수시 자동 출력일 경우
@@ -489,6 +492,7 @@ export default function OrderCheckModal(props: IProps) {
           handleOpenAlert();
           props.handleClose();
           getNewOrderHandler();
+          setDeliveryTime('');
         }
       });
     }

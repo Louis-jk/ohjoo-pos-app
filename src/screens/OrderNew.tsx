@@ -60,6 +60,8 @@ export default function OrderNew() {
     getOrderListHandler();
   }, [mt_id, mt_jumju_code, newOrder]);
 
+  console.log("주문 리스트", list);
+
 
   return (
     <Box component="div" className={base.root}>

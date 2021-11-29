@@ -102,38 +102,51 @@ const PrintModal = (props: any) => {
             <tr>
               <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>배달 : ${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
             </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>일회용 수저, 포크 : ${order.od_no_spoon == '1' ? '필요없음' : '필요함'}</td>
+            </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
+              <col width='75%' />
               <col width='25%' />
             </colgroup>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
-              <td style='text-align: center; font-size: 8pt; letter-spacing: -1;'>수량</td>
               <td style='text-align: right; font-size: 8pt; letter-spacing: -1;'>금액</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
+              <col width='75%' />
               <col width='25%' />
             </colgroup>
-            ${product?.map((item: any, index: number) => (
-            `<tr key=${item.it_name + index}>
-                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
-                <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
-                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
+            ${product?.map((menu: any, index: number) => (
+            `<tr key=${menu.it_name + index}>
+                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${menu.it_name}</td>
+                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(menu.sum_price)}원</td>
               </tr>
-              <tr key=${item.io_id + index}>
-                <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션 : ${item.io_id}</td>
-                <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
-                <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
-              </tr>`
+              ${menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
+              `<tr key=${'defaultOption-name-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 기본옵션 : ${defaultOption.ct_option}</td>
+                </tr>
+                <tr key=${'defaultOption-price-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(defaultOption.io_price)}원</td>
+                </tr>
+                `
+            ))}
+            ${menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
+              `<tr key=${'addOption-name-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 추가옵션 : ${addOption.ct_option}</td>
+                </tr>
+                <tr key=${'addOption-price-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(addOption.io_price)}원</td>
+                </tr>
+                `
+            ))}
+            `
           )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -144,6 +157,10 @@ const PrintModal = (props: any) => {
             </colgroup>
             <tr colspan='2'>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>결제정보</td>
+            </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>총 주문금액</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.odder_cart_price)}원</td>
             </tr>
             <tr>
               <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달 팁</td>
@@ -272,6 +289,9 @@ const PrintModal = (props: any) => {
             <tr>
               <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>배달 : ${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
             </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>일회용 수저, 포크 : ${order.od_no_spoon == '1' ? '필요없음' : '필요함'}</td>
+            </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -293,17 +313,30 @@ const PrintModal = (props: any) => {
               <col width='10%' />
               <col width='25%' />
             </colgroup>
-            ${product?.map((item: any, index: number) => (
-            `<tr key=${item.it_name + index}>
-                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
-                <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
-                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
-              </tr>
-              <tr key=${item.io_id + index}>
-                <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션 : ${item.io_id}</td>
-                <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
-                <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
-              </tr>`
+            ${product?.map((menu: any, index: number) => (
+            `<tr key=${menu.it_name + index}>
+                  <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${menu.it_name}</td>
+                  <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(menu.sum_price)}원</td>
+                </tr>
+                ${menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
+              `<tr key=${'defaultOption-name-' + key}>
+                    <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 기본옵션 : ${defaultOption.ct_option}</td>
+                  </tr>
+                  <tr key=${'defaultOption-price-' + key}>
+                    <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(defaultOption.io_price)}원</td>
+                  </tr>
+                  `
+            ))}
+              ${menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
+              `<tr key=${'addOption-name-' + key}>
+                    <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 추가옵션 : ${addOption.ct_option}</td>
+                  </tr>
+                  <tr key=${'addOption-price-' + key}>
+                    <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(addOption.io_price)}원</td>
+                  </tr>
+                  `
+            ))}
+              `
           )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -456,7 +489,8 @@ const PrintModal = (props: any) => {
                 <Box mt={1} mb={2}>
                   <Typography mb={0.5} fontSize="10pt">요청사항</Typography>
                   <Typography fontSize="11pt" fontWeight="bold">가게 : {order.order_seller ? order.order_seller : "요청사항이 없습니다."}</Typography>
-                  <Typography mb={1} fontSize="11pt" fontWeight="bold">배달 : {order.order_officer ? order.order_officer : "요청사항이 없습니다."}</Typography>
+                  <Typography fontSize="11pt" fontWeight="bold">배달 : {order.order_officer ? order.order_officer : "요청사항이 없습니다."}</Typography>
+                  <Typography mb={1} fontSize="11pt" fontWeight="bold">일회용 수저, 포크 : {order.od_no_spoon == '1' ? '필요없음' : '필요함'}</Typography>
                   {/* <Box display="flex" flexDirection="row" mb={0.5}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={3}>가게</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={10} textAlign="right">{order.order_seller ? order.order_seller : "요청사항이 없습니다."}</Typography>
@@ -473,9 +507,9 @@ const PrintModal = (props: any) => {
                     <Box flex="5">
                       <Typography textAlign="left" fontSize="10pt">메뉴명</Typography>
                     </Box>
-                    <Box flex="1">
+                    {/* <Box flex="1">
                       <Typography textAlign="center" fontSize="10pt">수량</Typography>
-                    </Box>
+                    </Box> */}
                     <Box flex="2">
                       <Typography textAlign="right" fontSize="10pt">금액</Typography>
                     </Box>
@@ -483,10 +517,40 @@ const PrintModal = (props: any) => {
                 </Box>
                 <Divider />
                 <Box my={1}>
-                  {product?.map((item: any, index: number) => (
+                  {product?.map((menu: any, index: number) => (
                     <>
-                      <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" my={1}>
-                        <Box flex="5">
+                      <Box key={index} mb={1}>
+                        <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mt={1} mb={0.5}>
+                          <Typography variant="body1" style={{ marginRight: 10, fontSize: 15, fontWeight: 'bold' }}>{menu.it_name}</Typography>
+                          <Typography variant="body1" style={{ fontSize: 15, fontWeight: 'bold' }}>{Api.comma(menu.sum_price)}원</Typography>
+                        </Box>
+                        <Box mb={menu.cart_add_option && menu.cart_add_option.length > 0 ? 1 : 0}>
+                          {menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
+                            <Box mb={key === menu.cart_option.length - 1 ? 0 : 1} key={`defaultOption-${key}`}>
+                              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                                <Typography variant="body1" fontSize={13} color='#222' mr={0.5}>└ </Typography>
+                                <Typography variant="body1" fontSize={13} color='#222'>기본옵션: {defaultOption.ct_option}</Typography>
+                              </Box>
+                              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                                <Typography variant="body1" fontSize={13} color='#222' mr={0.5}>└ </Typography>
+                                <Typography variant="body1" fontSize={13} color='#222'>옵션금액: {Api.comma(defaultOption.io_price)}원</Typography>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
+                        {menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
+                          <Box mb={key === menu.cart_add_option.length - 1 ? 0 : 1} key={`addOption-${key}`}>
+                            <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                              <Typography variant="body1" fontSize={13} color='#222' mr={0.5}>└ </Typography>
+                              <Typography variant="body1" fontSize={13} color='#222'>추가옵션: {addOption.ct_option}</Typography>
+                            </Box>
+                            <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
+                              <Typography variant="body1" fontSize={13} color='#222' mr={0.5}>└ </Typography>
+                              <Typography variant="body1" fontSize={13} color='#222'>옵션금액: {Api.comma(addOption.io_price)}원</Typography>
+                            </Box>
+                          </Box>
+                        ))}
+                        {/* <Box flex="5">
                           <Typography textAlign="left" fontSize="11pt" fontWeight="bold">{item.it_name}</Typography>
                           <Typography textAlign="left" fontSize="9pt">└ 옵션 : {item.io_id}</Typography>
                         </Box>
@@ -495,9 +559,9 @@ const PrintModal = (props: any) => {
                           <Typography textAlign="left" fontSize="9pt"></Typography>
                         </Box>
                         <Box flex="2">
-                          <Typography textAlign="right" fontSize="11pt" fontWeight="bold">{Api.comma(item.ct_price)}</Typography>
+                          <Typography textAlign="right" fontSize="11pt" fontWeight="bold">{Api.comma(item.sum_price)}원</Typography>
                           <Typography textAlign="right" fontSize="9pt">{Api.comma(item.io_price)}</Typography>
-                        </Box>
+                        </Box> */}
                       </Box>
                       {index !== product.length - 1 ?
                         <Divider style={{ borderStyle: 'dotted' }} />
@@ -509,10 +573,10 @@ const PrintModal = (props: any) => {
                 <Divider />
                 <Box mt={1.5} mb={1}>
                   <Typography mb={0.5} fontSize="10pt">결제정보</Typography>
-                  {/* <Box display="flex" flexDirection="row" mb={0.5}>
+                  <Box display="flex" flexDirection="row" mb={0.5}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>총 주문금액</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.odder_cart_price)}원</Typography>
-                  </Box> */}
+                  </Box>
                   <Box display="flex" flexDirection="row" mb={0.5}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>배달 팁</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_cost)}원</Typography>

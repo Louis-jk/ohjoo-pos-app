@@ -24,6 +24,7 @@ import orderAction from '../redux/actions';
 interface IProps {
   isOpen: boolean;
   od_id: string;
+  od_type: string;
   handleClose: () => void;
 }
 
@@ -105,7 +106,7 @@ export default function OrderCheckModal(props: IProps) {
       od_id: props.od_id,
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
-      od_process_status: '배달중',
+      od_process_status: props.od_type === '배달' ? '배달중' : '포장완료',
     };
 
     Api.send('store_order_status_update', param, (args: any) => {
@@ -159,10 +160,10 @@ export default function OrderCheckModal(props: IProps) {
       >
         <Fade in={props.isOpen}>
           <Box className={clsx(base.modalInner, base.colCenter)}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>배달처리</Typography>
-            <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>배달처리를 하시겠습니까?</Typography>
+            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>{props.od_type === '배달' ? '배달처리' : '포장완료'}</Typography>
+            <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>{props.od_type === '배달' ? '배달처리' : '포장완료 처리'}를 하시겠습니까?</Typography>
             <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
+              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendDeliveryHandler}>{props.od_type === '배달' ? '배달처리' : '포장완료'}</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
             </ButtonGroup>
           </Box>

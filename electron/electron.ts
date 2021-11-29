@@ -27,7 +27,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: true,
-      preload: path.join(app.getAppPath(), '/build/preload.js'), // 빌드시 /build/preload.js 로 변경 필요
+      preload: path.join(app.getAppPath(), '/preload.js'), // 빌드시 /build/preload.js 로 변경 필요
     },
   });
 
@@ -35,7 +35,7 @@ function createWindow() {
 
   indexPath = url.format({
     protocol: 'file:',
-    pathname: path.join(app.getAppPath(), '/build/index.html'), // 빌드시 /build/index.html 로 변경 필요
+    pathname: path.join(app.getAppPath(), '/index.html'), // 빌드시 /build/index.html 로 변경 필요
     slashes: true,
   });
   mainWindow.loadURL(indexPath);

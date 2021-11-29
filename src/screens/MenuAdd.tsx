@@ -530,7 +530,7 @@ export default function MenuAdd(props: any) {
 
             {/* <div className={base.mb20}></div> */}
             <Box mb={3}>
-              <small>업로드 가능한 이미지 확장자는 <mark>jpg, jpeg, gif, png, bmp</mark>입니다.</small>
+              <small>업로드 가능한 이미지 확장자는 <mark>jpg, jpeg, png, bmp</mark>입니다.</small>
               {!imageUsable && (
                 <>
                   <br />
