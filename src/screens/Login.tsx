@@ -149,7 +149,7 @@ export default function Login() {
   }
 
   React.useEffect(() => {
-    // getToken(setToken);
+    getToken(setToken);
     // getElectronToken(); // 일렉트론 빌드시 토큰 가져오기 : web 테스트시 끄기
   }, []);
 

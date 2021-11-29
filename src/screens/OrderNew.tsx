@@ -22,9 +22,9 @@ export default function OrderNew() {
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
-  const refreshPage = () => {
-    window.location.reload();
-  }
+  // const refreshPage = () => {
+  //   window.location.reload();
+  // }
 
   const getOrderListHandler = () => {
 
@@ -56,7 +56,7 @@ export default function OrderNew() {
   }
 
   useEffect(() => {
-    refreshPage();
+    // refreshPage();
     getOrderListHandler();
   }, [mt_id, mt_jumju_code, newOrder]);
 

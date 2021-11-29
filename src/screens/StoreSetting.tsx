@@ -78,6 +78,9 @@ export default function StoreInfo(props: IProps) {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
+      console.log("매장소개 resultItem", resultItem);
+      console.log("매장소개 arrItems", arrItems);
+
       if (resultItem.result === 'Y') {
         console.log("arrItems", arrItems);
         setStoreInit(true);
@@ -102,6 +105,10 @@ export default function StoreInfo(props: IProps) {
   };
 
   React.useEffect(() => {
+    // window.addEventListener('getStoreSettings', getStoreSetting());
+    // return () => {
+    //   window.removeEventListener('getStoreSettings', getStoreSetting);
+    // }
     getStoreSetting();
   }, [mt_id, mt_jumju_code])
 
@@ -121,7 +128,7 @@ export default function StoreInfo(props: IProps) {
       RangeType: range
     };
 
-    // console.log('param', param);
+    console.log('매장설정 업데이트 param', param);
     // return false;
 
     Api.send('store_setting_update', param, (args: any) => {
@@ -178,6 +185,8 @@ export default function StoreInfo(props: IProps) {
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box mt={3} />
+          <p>{mt_id}</p>
+          <p>{mt_jumju_code}</p>
           <Box className={clsx(base.mb10, base.mt20)}></Box>
           <Grid item xs={12} md={6} mb={2}>
             <Typography fontWeight='bold'>알림 설정</Typography>

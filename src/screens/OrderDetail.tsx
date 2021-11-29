@@ -535,12 +535,16 @@ export default function OrdersDetail(od_id: string) {
                   <Typography variant="body1">{Api.comma(detailOrder.order_cost)} 원</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
-                  <Typography variant="body1" className={orderStyle.orderSubtitle}>포인트 : </Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubtitle}>오주 포인트 : </Typography>
                   <Typography variant="body1">{Api.comma(detailOrder.order_point)} P</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
-                  <Typography variant="body1" className={orderStyle.orderSubtitle}>쿠폰할인 : </Typography>
-                  <Typography variant="body1">{Api.comma(detailOrder.order_coupon)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubtitle}>오주 쿠폰 할인 : </Typography>
+                  <Typography variant="body1">{Api.comma(detailOrder.order_coupon_ohjoo)} 원</Typography>
+                </Box>
+                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>
+                  <Typography variant="body1" className={orderStyle.orderSubtitle}>상점 쿠폰 할인 : </Typography>
+                  <Typography variant="body1">{Api.comma(detailOrder.order_coupon_store)} 원</Typography>
                 </Box>
                 <Divider style={{ marginTop: 20, marginBottom: 20 }} />
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" className={orderStyle.orderBox}>

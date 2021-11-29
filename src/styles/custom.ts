@@ -1,37 +1,36 @@
-import {  Theme, createStyles } from '@material-ui/core/styles';
+import { Theme, createStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import {theme} from './base';
-
+import { theme } from './base';
 
 export const StoreTimeStyles = makeStyles({
   container: {
-      display: 'flex',
-      flexWrap: 'wrap',
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   textField: {
-      // marginLeft: theme.spacing(1),
-      // marginRight: theme.spacing(1),
-      width: '100%',
+    // marginLeft: theme.spacing(1),
+    // marginRight: theme.spacing(1),
+    width: '100%',
   },
   paper: {
-      // padding: theme.spacing(2),
-      marginTop: 20,
-      textAlign: 'left',
-      background: '#fefefe',
-      color: theme.palette.text.secondary,
-      boxShadow: 'none'
+    // padding: theme.spacing(2),
+    marginTop: 20,
+    textAlign: 'left',
+    background: '#fefefe',
+    color: theme.palette.text.secondary,
+    boxShadow: 'none',
   },
   button: {
-      marginTop: 50,
-      padding: theme.spacing(2),
-      width: '100%',
-      height: 50,
-      fontSize: 16,
-      fontWeight: 'bold'
+    marginTop: 50,
+    padding: theme.spacing(2),
+    width: '100%',
+    height: 50,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   pointTxt: {
-      color: theme.palette.primary.main
-  }
+    color: theme.palette.primary.main,
+  },
 });
 
 export const CouponStyles = makeStyles({
@@ -50,14 +49,14 @@ export const CouponStyles = makeStyles({
   },
   couponConfirmBtn: {
     width: 120,
-    boxShadow: 'none'
+    boxShadow: 'none',
   },
   couponPaper: {
     padding: theme.spacing(3),
     textAlign: 'left',
     color: theme.palette.text.secondary,
     backgroundColor: '#fff',
-    boxShadow: '0px 0px 10px 2px #f1f1f1 !important'
+    boxShadow: '0px 0px 10px 2px #f1f1f1 !important',
   },
   couponBox: {
     position: 'relative',
@@ -70,15 +69,15 @@ export const CouponStyles = makeStyles({
     textAlign: 'center',
     color: '#fff',
     fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 10,
   },
   couponPrice: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
   },
   gradient: {
-    background: "linear-gradient(45deg, #f9f9f9, #fff9ea)"
+    background: 'linear-gradient(45deg, #f9f9f9, #fff9ea)',
   },
-})
+});
 
 export const MenuStyles = makeStyles({
   menuListPaper: {
@@ -86,14 +85,14 @@ export const MenuStyles = makeStyles({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     backgroundColor: '#fff',
-    boxShadow: '0px 0px 10px 2px #f1f1f1 !important'
+    boxShadow: '0px 0px 10px 2px #f1f1f1 !important',
   },
   menuListWrap: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    color: '#222'
+    color: '#222',
   },
   menuListTextWrap: {
     display: 'flex',
@@ -102,7 +101,7 @@ export const MenuStyles = makeStyles({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    margin: 0
+    margin: 0,
   },
   menuListTitle: {
     display: 'flex',
@@ -111,11 +110,11 @@ export const MenuStyles = makeStyles({
     alignItems: 'center',
     fontWeight: 'bold',
     color: '#222',
-    margin: 0
+    margin: 0,
   },
   menuListCategory: {
     marginRight: 5,
-    color: '#222'
+    color: '#222',
   },
   menuListLabel01: {
     justifyContent: 'center',
@@ -127,7 +126,7 @@ export const MenuStyles = makeStyles({
     color: theme.palette.primary.contrastText,
     padding: 2,
     paddingRight: 5,
-    paddingLeft: 5
+    paddingLeft: 5,
   },
   menuListLabel02: {
     justifyContent: 'center',
@@ -139,7 +138,7 @@ export const MenuStyles = makeStyles({
     color: theme.palette.success.contrastText,
     padding: 2,
     paddingRight: 5,
-    paddingLeft: 5
+    paddingLeft: 5,
   },
   menuListLabel03: {
     justifyContent: 'center',
@@ -150,7 +149,7 @@ export const MenuStyles = makeStyles({
     color: '#999',
     padding: 2,
     paddingRight: 5,
-    paddingLeft: 5
+    paddingLeft: 5,
   },
   menuListName: {
     fontSize: 18,
@@ -163,21 +162,21 @@ export const MenuStyles = makeStyles({
     height: 120,
     borderRadius: 5,
     marginRight: 20,
-    objectFit: 'cover'
+    objectFit: 'cover',
   },
   menuListPrice: {
     fontSize: 16,
     color: '#222',
-    margin: 0
+    margin: 0,
   },
   menuImg: {
     borderRadius: 5,
     width: '100%',
     height: 350,
-    objectFit: 'cover'
+    objectFit: 'cover',
   },
   menuInput: {
-    display: 'none'
+    display: 'none',
   },
   photoSelectIcon: {
     position: 'absolute',
@@ -190,10 +189,10 @@ export const MenuStyles = makeStyles({
     '& img': {
       width: 35,
       height: 35,
-      objectFit: 'cover'
-    }
+      objectFit: 'cover',
+    },
   },
-})
+});
 
 export const OrderStyles = makeStyles({
   orderPaper: {
@@ -205,22 +204,22 @@ export const OrderStyles = makeStyles({
     borderColor: theme.palette.primary.main,
     borderStyle: 'dotted',
     WebkitBoxShadow: 'none',
-    boxShadow: 'none !important'
+    boxShadow: 'none !important',
   },
   orderTitle: {
     marginBottom: 30,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   orderSubtitle: {
-    width: 100,
-    textAlign: 'left'
+    width: 120,
+    textAlign: 'left',
   },
   orderBox: {
     // display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    marginBottom: 10
+    marginBottom: 10,
   },
   orderMenuBox: {
     display: 'flex',
@@ -241,8 +240,7 @@ export const OrderStyles = makeStyles({
 
     '& p': {
       fontSize: 15,
-      fontWeight: 'bold'
-    }
-
-  }
-})
+      fontWeight: 'bold',
+    },
+  },
+});

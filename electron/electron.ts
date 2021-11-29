@@ -8,48 +8,48 @@ const { setup: setupPushReceiver } = require('electron-push-receiver');
 let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
-    mainWindow = new BrowserWindow({
-      titleBarStyle: 'customButtonsOnHover',
-      roundedCorners: false,
-      vibrancy: 'fullscreen-ui',
-      transparent: true,
-      frame: false,
-      resizable: false,
-      autoHideMenuBar: true,
-      width: 1024,
-      height: 768,
-      backgroundColor: '#2e2c29',
-      kiosk: false, // 키오스크 모드(실행시 전체 화면 fixed)
-      center: true,
-      title: '오늘의주문',
-      icon: path.join(app.getAppPath(), '/build/icons/png/64x64.png'),
-      webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: true, 
-        enableRemoteModule: true, 
-        preload: path.join(app.getAppPath(), '/preload.js'), // 빌드시 /build/preload.js 로 변경 필요
-      }
-    });
+  mainWindow = new BrowserWindow({
+    titleBarStyle: 'customButtonsOnHover',
+    roundedCorners: false,
+    vibrancy: 'fullscreen-ui',
+    transparent: true,
+    frame: false,
+    resizable: false,
+    autoHideMenuBar: true,
+    width: 1024,
+    height: 768,
+    backgroundColor: '#2e2c29',
+    kiosk: false, // 키오스크 모드(실행시 전체 화면 fixed)
+    center: true,
+    title: '오늘의주문',
+    icon: path.join(app.getAppPath(), '/build/icons/png/64x64.png'),
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: true,
+      preload: path.join(app.getAppPath(), '/build/preload.js'), // 빌드시 /build/preload.js 로 변경 필요
+    },
+  });
 
-    let indexPath;
-    
-    indexPath = url.format({
-      protocol: 'file:',
-      pathname: path.join(app.getAppPath(), '/index.html'), // 빌드시 /build/index.html 로 변경 필요
-      slashes: true
-    })
-    mainWindow.loadURL( indexPath );
-    setupPushReceiver(mainWindow.webContents);
-    
-    // 기본 메뉴 숨기기
-    mainWindow.setMenuBarVisibility(false);
+  let indexPath;
 
-    // 개발자 툴 오픈
-    mainWindow.webContents.openDevTools();
+  indexPath = url.format({
+    protocol: 'file:',
+    pathname: path.join(app.getAppPath(), '/build/index.html'), // 빌드시 /build/index.html 로 변경 필요
+    slashes: true,
+  });
+  mainWindow.loadURL(indexPath);
+  setupPushReceiver(mainWindow.webContents);
 
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
+  // 기본 메뉴 숨기기
+  mainWindow.setMenuBarVisibility(false);
+
+  // 개발자 툴 오픈
+  // mainWindow.webContents.openDevTools(); // 빌드시 해제 필요
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 }
 
 // 브라우저 메뉴창 없애기
@@ -57,16 +57,17 @@ Menu.setApplicationMenu(null);
 
 // 프린트 기능
 ipcMain.on('pos_print', (event, data) => {
-
-  let win = new BrowserWindow({ width: 302, height: 793, show: false});
+  let win = new BrowserWindow({ width: 302, height: 793, show: false });
   win.once('ready-to-show', () => win.hide());
-  fs.writeFile(path.join(os.tmpdir(), '/printme.html'), data, function() {
-  win.loadURL(`file://${path.join(os.tmpdir(), 'printme.html')}`);
+  fs.writeFile(path.join(os.tmpdir(), '/printme.html'), data, function () {
+    win.loadURL(`file://${path.join(os.tmpdir(), 'printme.html')}`);
 
-  win.webContents.on('did-finish-load', () => {
+    win.webContents.on('did-finish-load', () => {
       // Finding Default Printer name
       let printerInfo = win.webContents.getPrinters();
-      let printer = printerInfo.filter(printer => printer.isDefault === true)[0];
+      let printer = printerInfo.filter(
+        (printer) => printer.isDefault === true
+      )[0];
 
       console.log('printer info', printer);
 
@@ -78,14 +79,14 @@ ipcMain.on('pos_print', (event, data) => {
         scaleFactor: 100,
         silent: true,
         deviceName: printer.name,
-        pageSize: {height: 301000, width: 72000}
-      }
+        pageSize: { height: 301000, width: 72000 },
+      };
 
       win.webContents.print(options, () => {
         win = null;
       });
     });
-  })
+  });
   event.returnValue = true;
 });
 
@@ -115,14 +116,14 @@ ipcMain.on('callToken', (event, data) => {
 // 사운드 카운트 받기
 ipcMain.on('sound_count', (event, data) => {
   event.sender.send('get_sound_count', data);
-})
+});
 
 // 프린트 정보 열기
 ipcMain.on('openPrint', (event, data) => {
   const printerInfo = mainWindow.webContents.getPrinters();
   console.log('printerInfo ??', printerInfo);
   event.sender.send('printInfo', printerInfo);
-})
+});
 
 // 메인프로세서 종료
 ipcMain.on('closeWindow', (event, data) => {
@@ -130,10 +131,9 @@ ipcMain.on('closeWindow', (event, data) => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
- });
+});
 
-if (process.platform === 'win32')
-{
+if (process.platform === 'win32') {
   app.setAppUserModelId('오늘의 주문');
 }
 
@@ -143,15 +143,14 @@ ipcMain.handle('quit-app', () => {
 
 app.on('ready', createWindow);
 
-
 app.on('window-all-closed', () => {
-    if(process.platform !== 'darwin') {
-        app.quit();
-    }
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('activate', () => {
-    if(mainWindow === null) {
-        createWindow();
-    }
+  if (mainWindow === null) {
+    createWindow();
+  }
 });

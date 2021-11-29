@@ -42,7 +42,7 @@ const PrintModal = (props: any) => {
     return new Promise((res, rej) => {
       if (order !== null && product !== null && store !== null) {
 
-      const htmlFormat = `
+        const htmlFormat = `
         <style>
           @page { margin: 0; margin-bottom: 20px; }
           @media print {
@@ -124,7 +124,7 @@ const PrintModal = (props: any) => {
               <col width='25%' />
             </colgroup>
             ${product?.map((item: any, index: number) => (
-              `<tr key=${item.it_name + index}>
+            `<tr key=${item.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
@@ -134,7 +134,7 @@ const PrintModal = (props: any) => {
                 <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
                 <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
               </tr>`
-            )).join('')}
+          )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -155,7 +155,11 @@ const PrintModal = (props: any) => {
             </tr>
             <tr>
               <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 쿠폰</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon)}원</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_ohjoo)}원</td>
+            </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>상점 쿠폰</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_store)}원</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -182,7 +186,7 @@ const PrintModal = (props: any) => {
             </tr>
           </table>
           ${do_jumju_origin_use === 'Y' ?
-          `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
+            `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>원산지</td>
@@ -191,12 +195,12 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${store.do_jumju_origin}</td>
             </tr>
           </table>`
-          : `<p>&nbsp;</p>` }
+            : `<p>&nbsp;</p>`}
           <p>&nbsp;</p>
           <hr style='margin: 0 5px;' />
         </div>
       `
-      res(appRuntime.send('pos_print', htmlFormat));
+        res(appRuntime.send('pos_print', htmlFormat));
       } else {
         alert('주문 디테일이 없습니다.');
       }
@@ -208,7 +212,7 @@ const PrintModal = (props: any) => {
     return new Promise((res, rej) => {
       if (order !== null && product !== null && store !== null) {
 
-      const htmlFormat02 = `
+        const htmlFormat02 = `
         <style>
           @page { margin: 0; margin-bottom: 20px; }
           @media print {
@@ -290,7 +294,7 @@ const PrintModal = (props: any) => {
               <col width='25%' />
             </colgroup>
             ${product?.map((item: any, index: number) => (
-              `<tr key=${item.it_name + index}>
+            `<tr key=${item.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
                 <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
@@ -300,7 +304,7 @@ const PrintModal = (props: any) => {
                 <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
                 <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
               </tr>`
-            )).join('')}
+          )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -321,7 +325,11 @@ const PrintModal = (props: any) => {
             </tr>
             <tr>
               <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 쿠폰</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon)}원</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_ohjoo)}원</td>
+            </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>상점 쿠폰</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_store)}원</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -348,7 +356,7 @@ const PrintModal = (props: any) => {
             </tr>
           </table>
           ${do_jumju_origin_use === 'Y' ?
-          `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
+            `<div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>원산지</td>
@@ -357,7 +365,7 @@ const PrintModal = (props: any) => {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>${store.do_jumju_origin}</td>
             </tr>
           </table>`
-          : `<p>&nbsp;</p>` }
+            : `<p>&nbsp;</p>`}
           <p>&nbsp;</p>
           <hr style='margin: 0 5px;' />
         </div>
@@ -476,26 +484,26 @@ const PrintModal = (props: any) => {
                 <Divider />
                 <Box my={1}>
                   {product?.map((item: any, index: number) => (
-                  <>
-                  <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" my={1}>
-                    <Box flex="5">
-                      <Typography textAlign="left" fontSize="11pt" fontWeight="bold">{item.it_name}</Typography>
-                      <Typography textAlign="left" fontSize="9pt">└ 옵션 : {item.io_id}</Typography>
-                    </Box>
-                    <Box flex="1">
-                      <Typography textAlign="center" fontSize="11pt" fontWeight="bold">{item.ct_qty}</Typography>
-                      <Typography textAlign="left" fontSize="9pt"></Typography>
-                    </Box>
-                    <Box flex="2">
-                      <Typography textAlign="right" fontSize="11pt" fontWeight="bold">{Api.comma(item.ct_price)}</Typography>
-                      <Typography textAlign="right" fontSize="9pt">{Api.comma(item.io_price)}</Typography>
-                    </Box>
-                  </Box>
-                  {index !== product.length -1 ? 
-                    <Divider style={{borderStyle:'dotted'}} />
-                    : null
-                  }
-                  </>
+                    <>
+                      <Box key={index} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" my={1}>
+                        <Box flex="5">
+                          <Typography textAlign="left" fontSize="11pt" fontWeight="bold">{item.it_name}</Typography>
+                          <Typography textAlign="left" fontSize="9pt">└ 옵션 : {item.io_id}</Typography>
+                        </Box>
+                        <Box flex="1">
+                          <Typography textAlign="center" fontSize="11pt" fontWeight="bold">{item.ct_qty}</Typography>
+                          <Typography textAlign="left" fontSize="9pt"></Typography>
+                        </Box>
+                        <Box flex="2">
+                          <Typography textAlign="right" fontSize="11pt" fontWeight="bold">{Api.comma(item.ct_price)}</Typography>
+                          <Typography textAlign="right" fontSize="9pt">{Api.comma(item.io_price)}</Typography>
+                        </Box>
+                      </Box>
+                      {index !== product.length - 1 ?
+                        <Divider style={{ borderStyle: 'dotted' }} />
+                        : null
+                      }
+                    </>
                   ))}
                 </Box>
                 <Divider />
@@ -513,9 +521,13 @@ const PrintModal = (props: any) => {
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>오주 포인트</Typography>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_point)}원</Typography>
                   </Box>
-                  <Box display="flex" flexDirection="row" mb={1}>
+                  <Box display="flex" flexDirection="row" mb={0.5}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>오주 쿠폰</Typography>
-                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_coupon)}원</Typography>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_coupon_ohjoo)}원</Typography>
+                  </Box>
+                  <Box display="flex" flexDirection="row" mb={1}>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>상점 쿠폰</Typography>
+                    <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={7} textAlign="right">{Api.comma(order.order_coupon_store)}원</Typography>
                   </Box>
                   {/* <Box display="flex" flexDirection="row" mb={2}>
                     <Typography fontSize="11pt" fontWeight="bold" lineHeight={1.2} flex={4}>결제방법</Typography>
@@ -537,13 +549,13 @@ const PrintModal = (props: any) => {
                 </Box>
                 {do_jumju_origin_use === 'Y' ?
                   <>
-                  <Divider />
-                  <Box my={1}>
-                    <Typography fontSize="10pt">원산지</Typography>
-                    <Typography fontSize="10pt">{store.do_jumju_origin}</Typography>
-                  </Box>
+                    <Divider />
+                    <Box my={1}>
+                      <Typography fontSize="10pt">원산지</Typography>
+                      <Typography fontSize="10pt">{store.do_jumju_origin}</Typography>
+                    </Box>
                   </>
-                  : null 
+                  : null
                 }
               </Box>
               : <Typography>주문 디테일을 불러오고 있습니다.</Typography>}

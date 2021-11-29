@@ -77,6 +77,11 @@
   "build": {
     "productName": "오늘의주문",
     "appId": "com.ohjoostore.electron",
+    "files": [
+      "build/**/*",
+      "icon.png",
+      "electron.js"
+    ],
     "asar": true,
     "mac": {
       "target": [
@@ -89,9 +94,7 @@
       "icon": "build/icons/mac/icon.icns"
     },
     "win": {
-      "target": [
-        "nsis"
-      ],
+      "target": "nsis",
       "icon": "build/icons/win/icon.ico"
     },
     "nsis": {
