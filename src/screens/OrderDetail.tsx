@@ -508,7 +508,7 @@ export default function OrdersDetail(od_id: string) {
                   {detailProduct && detailProduct.length > 0 && detailProduct.map((menu, index) => (
                     <Box className={orderStyle.orderMenuBox} key={index}>
                       <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb={0.5}>
-                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{menu.it_name}</Typography>
+                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{menu.it_name} {menu.ct_qty}개</Typography>
                         <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{Api.comma(menu.sum_price)}원</Typography>
                       </Box>
                       <Box mb={menu.cart_add_option && menu.cart_add_option.length > 0 ? 1 : 0}>

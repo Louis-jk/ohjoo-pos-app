@@ -120,7 +120,7 @@ export default function MenuAdd(props: any) {
       handleOpenAlert();
       setImage('');
       return false;
-    } else if (typeArr[1] !== 'jpg' && typeArr[1] !== 'jpeg' && typeArr[1] !== 'gif' && typeArr[1] !== 'png' && typeArr[1] !== 'bmp') {
+    } else if (typeArr[1] !== 'jpg' && typeArr[1] !== 'jpeg' && typeArr[1] !== 'png' && typeArr[1] !== 'bmp') {
       setToastState({ msg: '이미지 확장자를 확인해주세요.', severity: 'error' });
       handleOpenAlert();
       setImageUsable(false);
@@ -479,6 +479,8 @@ export default function MenuAdd(props: any) {
       }
     }
   }
+
+  console.log('image ??', image);
 
   return (
     <Box component="div" className={base.root}>

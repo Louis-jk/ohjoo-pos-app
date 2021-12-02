@@ -53,19 +53,6 @@ class Api {
     this.state.option.body = formdata;
   }
 
-  //formdata 로 변경 jwt없이
-  makeFormData2(method = '', datas) {
-    let formdata = new FormData();
-    formdata.append('method', method);
-    formdata.append('secretKey', '1111882EAD94E9C493CEF089E1B023A2122BA778');
-    for (let [key, value] of Object.entries(datas)) {
-      formdata.append(key, value);
-    }
-
-    this.state.path = '/api/proc_' + method + '.php';
-    this.state.option.body = formdata;
-  }
-
   //기본
   send(method, datas, callback) {
     const jwt = require('jwt-encode');
@@ -134,13 +121,37 @@ class Api {
       });
   }
 
+  //formdata 로 변경 jwt없이
+  makeFormData2(method = '', datas) {
+    let formdata = new FormData();
+    formdata.append('method', method);
+    formdata.append('secretKey', '1111882EAD94E9C493CEF089E1B023A2122BA778');
+    for (let [key, value] of Object.entries(datas)) {
+      formdata.append(key, value);
+      // console.log('form key', key);
+      // console.log('form value', value);
+    }
+
+    this.state.path = '/api/proc_' + method + '.php';
+    this.state.option.body = formdata;
+  }
+
   //기본02
   send2(method, datas, callback) {
     this.makeFormData2(method, datas);
 
+    // console.log('api method', method);
+    // console.log('api datas', datas);
+
     this.state.isLoading = true;
 
-    // console.log("all >>>>>>>>>", this.state.url + this.state.path, this.state.option.body, this.state.option.headers);
+    // console.log(
+    //   'this.state.url + this.state.path,',
+    //   this.state.url + this.state.path
+    // );
+    // console.log('  this.state.option.body', this.state.option.body);
+    // console.log('this.state.option.headers', this.state.option.headers);
+
     return Axios.post(
       this.state.url + this.state.path,
       this.state.option.body,
@@ -151,6 +162,11 @@ class Api {
         let message = response.data.resultItem.message;
         let sql = response.data.resultItem.sql;
         let arrItems = response.data.arrItems;
+
+        console.log('api resultItem', resultItem);
+        console.log('api message', message);
+        console.log('api sql', sql);
+        console.log('api arrItems', arrItems);
 
         let returnJson = {
           resultItem: {
@@ -180,6 +196,8 @@ class Api {
       })
       .catch(function (error) {
         console.log('Axios catch!!!>>', method, error);
+        console.log('Axios catch!!! error >>', error);
+        console.log('Axios catch!!! method >>', method);
       });
   }
 

@@ -103,7 +103,6 @@ export default function StoreInfo(props: IProps) {
     const param = {
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
-      act: 'pos'
     };
 
     Api.send('store_guide', param, (args: any) => {
@@ -134,24 +133,12 @@ export default function StoreInfo(props: IProps) {
           pic: arrItems.pic
         });
 
-        if (arrItems.pic && arrItems.pic.length > 0) {
-          arrItems.pic.map((pic: string, index: number) => {
+        setDetailImgs01(arrItems.pic[0].img);
+        setDetailImgs02(arrItems.pic[1].img);
+        setDetailImgs03(arrItems.pic[2].img);
+        setDetailImgs04(arrItems.pic[3].img);
+        setDetailImgs05(arrItems.pic[4].img);
 
-            // let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-            // let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
-
-            let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-            let name = pic.slice(pic.lastIndexOf('/'));
-
-            // setDetailImgs(prev => [...prev, {
-            //   uri: pic,
-            //   type,
-            //   name,
-            // }]);
-
-            setDetailImgs(prev => [...prev, pic]);
-          })
-        }
         setLoading(false);
       } else {
         setStoreInit(false);
@@ -184,11 +171,11 @@ export default function StoreInfo(props: IProps) {
 
   const updateStoreInfo = () => {
 
-    const param: any = {
+    const param = {
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
       mode: storeInit ? 'update' : 'insert',
-      act: 'pos',
+      // act: 'pos',
       do_jumju_introduction: info.do_jumju_introduction,
       do_jumju_info: info.do_jumju_info,
       do_jumju_guide: info.do_jumju_guide,
@@ -204,39 +191,32 @@ export default function StoreInfo(props: IProps) {
       mt_sound: info.mt_sound,
       mt_print: info.mt_print,
       mb_one_saving: info.mb_one_saving,
+      rt_img_del1: detailImgs01 !== '' ? 0 : 1,
+      rt_img_del2: detailImgs02 !== '' ? 0 : 1,
+      rt_img_del3: detailImgs03 !== '' ? 0 : 1,
+      rt_img_del4: detailImgs04 !== '' ? 0 : 1,
+      rt_img_del5: detailImgs05 !== '' ? 0 : 1
     };
 
+    const param2 = {
+      rt_img1: fileImgs01 !== null ? fileImgs01 : '',
+      rt_img2: fileImgs02 !== null ? fileImgs02 : '',
+      rt_img3: fileImgs03 !== null ? fileImgs03 : '',
+      rt_img4: fileImgs04 !== null ? fileImgs04 : '',
+      rt_img5: fileImgs05 !== null ? fileImgs05 : '',
+    };
+    console.log("param", param);
+    console.log("param2", param2);
 
-    // console.log('paramparam', param);
+    Api.send3('store_guide_update', param, param2, (args: any) => {
 
-    // 대표 이미지가 있을 경우
-    let params2: any = {};
+      console.log('response args ::', args);
 
-    if (detailImgs && detailImgs.length > 0) {
-      detailImgs.map((arr, index) => {
-        if (index === 4) {
-          params2.rt_img5 = arr;
-        } else if (index === 3) {
-          params2.rt_img4 = arr;
-        } else if (index === 2) {
-          params2.rt_img3 = arr;
-        } else if (index === 1) {
-          params2.rt_img2 = arr;
-        } else {
-          params2.rt_img1 = arr;
-        }
-      });
-    }
-
-    // return false;
-
-    console.log("params2", params2);
-
-    Api.send3('store_guide_update', param, params2, (args: any) => {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
       console.log("resultItemresultItem", resultItem);
+      console.log("resultItem arrItems >>>", arrItems);
 
       if (resultItem.result === 'Y') {
 
@@ -265,84 +245,159 @@ export default function StoreInfo(props: IProps) {
   }
 
   // 이미지 업로드
+  const [sources, setSources] = useState<Array<any>>([]);
   const [detailImgs, setDetailImgs] = useState<Array<any>>([]);
 
+  const [fileImgs01, setFileImgs01] = useState(null); //File 대표이미지01
+  const [fileImgs02, setFileImgs02] = useState(null); //File 대표이미지02
+  const [fileImgs03, setFileImgs03] = useState(null); //File 대표이미지03
+  const [fileImgs04, setFileImgs04] = useState(null); //File 대표이미지04
+  const [fileImgs05, setFileImgs05] = useState(null); //File 대표이미지05
+
+  const [detailImgs01, setDetailImgs01] = useState(''); //base64 대표이미지01
+  const [detailImgs02, setDetailImgs02] = useState(''); //base64 대표이미지02
+  const [detailImgs03, setDetailImgs03] = useState(''); //base64 대표이미지03
+  const [detailImgs04, setDetailImgs04] = useState(''); //base64 대표이미지04
+  const [detailImgs05, setDetailImgs05] = useState(''); //base64 대표이미지05
+
+  const setImageIndex = (index: number) => {
+    console.log('setImageIndex', index);
+  }
+
   // 이미지 다중업로드
-  const handleImageUpload = (e: any) => {
-    const fileArr = e.target.files;
+  const handleImageUpload = (evt: any, index: number) => {
 
-    let fileURLs: any[] = [];
+    console.log('이미지 업로드 evt', evt);
+    console.log('setImageIndex >>>', index);
 
-    let file;
-    let filesLength = fileArr.length > 5 ? 5 : fileArr.length;
+    const img: any = evt.target.files[0];
 
-    if (filesLength + detailImgs.length > 5) {
-      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
-      handleOpenAlert();
-      return false;
+    // sources[index] = img;
+
+    if (index === 0) {
+      setFileImgs01(img);
+    } else if (index === 1) {
+      setFileImgs02(img);
+    } else if (index === 2) {
+      setFileImgs03(img);
+    } else if (index === 3) {
+      setFileImgs04(img);
+    } else if (index === 4) {
+      setFileImgs05(img);
     } else {
-      for (let i = 0; i < filesLength; i++) {
-
-        file = fileArr[i];
-
-        let reader = new FileReader();
-
-        reader.onload = () => {
-          console.log(reader.result);
-          fileURLs[i] = reader.result;
-
-          let testArr: any = [];
-
-          console.log("fileURLs", fileURLs);
-          console.log("fileURLs[0]", fileURLs[0]);
-
-          // handlingDataForm(fileURLs[0]);
-
-
-
-          fileURLs.map((pic: string, index: number) => {
-            let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-            let name = pic.slice(pic.lastIndexOf('/'));
-
-            testArr.push(pic)
-
-          })
-
-          // setDetailImgs(prev => [...prev, testArr]);
-
-          console.log('testArr', testArr);
-
-          const compareArray = (a: any, b: any) => {
-            for (let i = 0; i < a.length; i++) {
-              for (let j = 0; j < b.length; j++) {
-                if (a[i].name === b[j].name) {
-                  console.log('중복 값', a[i])
-                  console.log('중복값이 있습니다.');
-                  setToastState({ msg: '이미 동일한 이미지가 있습니다.', severity: 'error' });
-                  handleOpenAlert();
-                  return true;
-                } else {
-                  console.log('중복 값 없음')
-                  return false;
-                }
-              }
-            }
-          };
-
-          let checkArr = compareArray(detailImgs, testArr);
-
-          if (!checkArr) {
-            // setDetailImgs(prev => [...prev, testArr]);
-            let addArr = detailImgs.concat(testArr);
-            setDetailImgs(addArr);
-          }
-
-        };
-
-        reader.readAsDataURL(file);
-      }
+      return false;
     }
+
+    if (evt.target.files.length) {
+      let file = (evt.target.files)[0];
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      let base64Img = '';
+      reader.onload = (e: any) => {
+        if (index === 0) {
+          setDetailImgs01(e.target.result);
+        } else if (index === 1) {
+          setDetailImgs02(e.target.result);
+        } else if (index === 2) {
+          setDetailImgs03(e.target.result);
+        } else if (index === 3) {
+          setDetailImgs04(e.target.result);
+        } else if (index === 4) {
+          setDetailImgs05(e.target.result);
+        } else {
+          return false;
+        }
+        // detailImgs[index] = (e.target.result);
+        // setDetailImgs(detailImgs);
+      }
+    } else {
+      return false;
+    }
+
   };
+
+  console.log('detailImgs01', detailImgs01);
+  console.log('detailImgs02', detailImgs02);
+  console.log('detailImgs03', detailImgs03);
+  console.log('detailImgs04', detailImgs04);
+  console.log('detailImgs05', detailImgs05);
+
+  // const handleImageUpload = (e: any) => {
+  //   const fileArr = e.target.files;
+
+  //   let fileURLs: any[] = [];
+
+  //   let file;
+  //   let filesLength = fileArr.length > 5 ? 5 : fileArr.length;
+
+  //   if (filesLength + detailImgs.length > 5) {
+  //     setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
+  //     handleOpenAlert();
+  //     return false;
+  //   } else {
+  //     for (let i = 0; i < filesLength; i++) {
+
+  //       file = fileArr[i];
+
+  //       let reader = new FileReader();
+
+  //       reader.onload = () => {
+  //         console.log(reader.result);
+  //         fileURLs[i] = reader.result;
+
+  //         let testArr: any = [];
+
+  //         console.log("fileURLs", fileURLs);
+  //         console.log("fileURLs[0]", fileURLs[0]);
+
+  //         // handlingDataForm(fileURLs[0]);
+
+
+
+  //         fileURLs.map((pic: string, index: number) => {
+  //           let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+  //           let name = pic.slice(pic.lastIndexOf('/'));
+
+  //           testArr.push(pic)
+
+  //         })
+
+  //         // setDetailImgs(prev => [...prev, testArr]);
+
+  //         console.log('testArr', testArr);
+
+  //         const compareArray = (a: any, b: any) => {
+  //           for (let i = 0; i < a.length; i++) {
+  //             for (let j = 0; j < b.length; j++) {
+  //               if (a[i].name === b[j].name) {
+  //                 console.log('중복 값', a[i])
+  //                 console.log('중복값이 있습니다.');
+  //                 setToastState({ msg: '이미 동일한 이미지가 있습니다.', severity: 'error' });
+  //                 handleOpenAlert();
+  //                 return true;
+  //               } else {
+  //                 console.log('중복 값 없음')
+  //                 return false;
+  //               }
+  //             }
+  //           }
+  //         };
+
+  //         let checkArr = compareArray(detailImgs, testArr);
+
+  //         if (!checkArr) {
+  //           // setDetailImgs(prev => [...prev, testArr]);
+  //           let addArr = detailImgs.concat(testArr);
+  //           setDetailImgs(addArr);
+  //         }
+
+  //       };
+
+  //       reader.readAsDataURL(file);
+  //     }
+  //   }
+  // };
 
   // const handlingDataForm = async (dataURI: any) => {
   //   // dataURL 값이 data:image/jpeg:base64,~~~~~~~ 이므로 ','를 기점으로 잘라서 ~~~~~인 부분만 다시 인코딩
@@ -389,60 +444,112 @@ export default function StoreInfo(props: IProps) {
   // };
 
   // 이미지 추가 업로드
-  const handleImageAddUpload = (e: any) => {
-    const fileArr = e.target.files;
+  const handleImageAddUpload = (evt: any) => {
 
-    let fileURLs: any[] = [];
+    const img = evt.target.files[0];
 
-    let file;
-    let enableArr = (5 - detailImgs.length);
+    let typeArr: string[] = img.type.split('/');
 
-    let filesLength = fileArr.length > enableArr ? enableArr : fileArr.length;
-
-    if (fileArr.length > enableArr) {
-      setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
+    if (typeArr[0] !== 'image') {
+      setToastState({ msg: '이미지 파일만 업로드 하실 수 있습니다.', severity: 'error' });
       handleOpenAlert();
-    }
+      return false;
+    } else if (typeArr[1] !== 'jpg' && typeArr[1] !== 'jpeg' && typeArr[1] !== 'png' && typeArr[1] !== 'bmp') {
+      setToastState({ msg: '이미지 확장자를 확인해주세요.', severity: 'error' });
+      handleOpenAlert();
+    } else {
+      setSources(prev => [...prev, img]);
 
-    for (let i = 0; i < filesLength; i++) {
-      file = fileArr[i];
+      if (evt.target.files.length) {
+        let file = (evt.target.files)[0];
 
-      let reader = new FileReader();
-      reader.onload = () => {
-
-        fileURLs[i] = reader.result;
-
-        let newArr = detailImgs.filter(img => img === fileURLs[0]);
-        if (newArr && newArr.length > 0) {
-          setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'error' });
-          handleOpenAlert();
-        } else {
-          console.log("fileURLs", fileURLs);
-          fileURLs.map((pic: string, index: number) => {
-            let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-            let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
-
-            // setDetailImgs(prev => [...prev, {
-            //   uri: pic,
-            //   type,
-            //   name,
-            // }]);
-
-            setDetailImgs(prev => [...prev, pic]);
-          })
-
-          // setDetailImgs(prev => [...prev, ...fileURLs]);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e: any) => {
+          setDetailImgs(prev => [...prev, e.target.result]);
         }
-      };
-      reader.readAsDataURL(file);
+      } else {
+        return false;
+      }
     }
-
   }
 
+  console.log('이미지 소스 ::: ', sources);
+  console.log('이미지 재구성 ::: ', detailImgs);
+
+  // const handleImageAddUpload = (e: any) => {
+  //   const fileArr = e.target.files;
+
+  //   let fileURLs: any[] = [];
+
+  //   let file;
+  //   let enableArr = (5 - detailImgs.length);
+
+  //   let filesLength = fileArr.length > enableArr ? enableArr : fileArr.length;
+
+  //   if (fileArr.length > enableArr) {
+  //     setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
+  //     handleOpenAlert();
+  //   }
+
+  //   for (let i = 0; i < filesLength; i++) {
+  //     file = fileArr[i];
+
+  //     let reader = new FileReader();
+  //     reader.onload = () => {
+
+  //       fileURLs[i] = reader.result;
+
+  //       let newArr = detailImgs.filter(img => img === fileURLs[0]);
+  //       if (newArr && newArr.length > 0) {
+  //         setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'error' });
+  //         handleOpenAlert();
+  //       } else {
+  //         console.log("fileURLs", fileURLs);
+  //         fileURLs.map((pic: string, index: number) => {
+  //           let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
+  //           let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
+
+  //           // setDetailImgs(prev => [...prev, {
+  //           //   uri: pic,
+  //           //   type,
+  //           //   name,
+  //           // }]);
+
+  //           setDetailImgs(prev => [...prev, pic]);
+  //         })
+
+  //         // setDetailImgs(prev => [...prev, ...fileURLs]);
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+
+  // }
+
   // 이미지 삭제
-  const deleteItemImg = (key: number) => {
-    let filteredArr = detailImgs.filter((img, index) => index !== key);
-    setDetailImgs(filteredArr);
+  const deleteItemImg = (index: number) => {
+
+    // sources[index] = null;
+
+    if (index === 0) {
+      setDetailImgs01('');
+      setFileImgs01(null);
+    } else if (index === 1) {
+      setDetailImgs02('');
+      setFileImgs02(null);
+    } else if (index === 2) {
+      setDetailImgs03('');
+      setFileImgs03(null);
+    } else if (index === 3) {
+      setDetailImgs04('');
+      setFileImgs04(null);
+    } else if (index === 4) {
+      setDetailImgs05('');
+      setFileImgs05(null);
+    } else {
+      return false;
+    }
   }
 
   console.log('detailImgs', detailImgs);
@@ -473,7 +580,7 @@ export default function StoreInfo(props: IProps) {
         </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
-          <Box mt={3} />
+          <Box mt={1.5} />
           <Grid container spacing={3}>
 
             {/* 대표 이미지 업로드 */}
@@ -491,65 +598,79 @@ export default function StoreInfo(props: IProps) {
               <Box style={{
                 display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
               }}>
-                {detailImgs && detailImgs.length > 1 ? (
-                  <Box style={{
-                    display: 'flex',
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center'
-                  }}>
-                    {detailImgs.map((itemImg, index) => (
-                      <Box style={{ position: 'relative', width: '20%', height: '150px', marginLeft: index === 0 ? 0 : '5px' }}>
-                        <img key={`item-image-${index}`} src={itemImg} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
-                        <Box key={`item-image-delete-${index}`} className='delete-btn' onClick={() => deleteItemImg(index)}>
-                          <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
-                ) :
-                  detailImgs && detailImgs.length == 1 ? (
-                    <Box style={{ position: 'relative', width: '20%', height: '150px' }}>
-                      <img src={detailImgs[0]} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                {
+                  detailImgs01 ? (
+                    <Box style={{ position: 'relative', width: '20%', height: '120px', marginLeft: 0 }}>
+                      <img src={detailImgs01} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
                       <Box className='delete-btn' onClick={() => deleteItemImg(0)}>
                         <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                       </Box>
                     </Box>
-                  ) :
-                    new Array(5).fill(0).map((item, index) => (
-                      <Box onChange={handleImageUpload} style={{ position: 'relative', width: '20%', height: '150px', borderRadius: 5, marginLeft: index === 0 ? 0 : '5px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }}>
-                        <p style={{ color: '#aaa' }}>{`대표이미지 0${index + 1}`}</p>
+                  ) : (
+                    <Box display='flex' justifyContent='center' alignItems='center' style={{ width: '20%', height: '120px', borderRadius: 5, backgroundColor: '#efefef', marginLeft: '5px' }}>
+                      <label htmlFor={`upload_img01`} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{`대표이미지 01`}</label>
+                      <input id={`upload_img01`} accept='image/*' type='file' onChange={e => handleImageUpload(e, 0)} />
+                    </Box>
+                  )
+                }
+                {
+                  detailImgs02 ? (
+                    <Box style={{ position: 'relative', width: '20%', height: '120px', marginLeft: 5 }}>
+                      <img src={detailImgs02} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                      <Box className='delete-btn' onClick={() => deleteItemImg(1)}>
+                        <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                       </Box>
-                    ))}
-              </Box>
-              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
-
-                {detailImgs.length >= 5 ?
-                  (
-                    <>
-                      <Box className='custom-file-upload' style={{ backgroundColor: '#ececec' }}>
-                        <UploadIcon />
-                        연속 업로드
+                    </Box>
+                  ) : (
+                    <Box display='flex' justifyContent='center' alignItems='center' style={{ width: '20%', height: '120px', borderRadius: 5, backgroundColor: '#efefef', marginLeft: '5px' }}>
+                      <label htmlFor={`upload_img02`} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{`대표이미지 02`}</label>
+                      <input id={`upload_img02`} accept='image/*' type='file' onChange={e => handleImageUpload(e, 1)} />
+                    </Box>
+                  )
+                }
+                {
+                  detailImgs03 ? (
+                    <Box style={{ position: 'relative', width: '20%', height: '120px', marginLeft: 5 }}>
+                      <img src={detailImgs03} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                      <Box className='delete-btn' onClick={() => deleteItemImg(2)}>
+                        <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                       </Box>
-                      <Box className='custom-file-upload' style={{ backgroundColor: '#ececec' }}>
-                        <PlusOneRoundedIcon />
-                        추가
+                    </Box>
+                  ) : (
+                    <Box display='flex' justifyContent='center' alignItems='center' style={{ width: '20%', height: '120px', borderRadius: 5, backgroundColor: '#efefef', marginLeft: '5px' }}>
+                      <label htmlFor={`upload_img03`} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{`대표이미지 03`}</label>
+                      <input id={`upload_img03`} accept='image/*' type='file' onChange={e => handleImageUpload(e, 2)} />
+                    </Box>
+                  )
+                }
+                {
+                  detailImgs04 ? (
+                    <Box style={{ position: 'relative', width: '20%', height: '120px', marginLeft: 5 }}>
+                      <img src={detailImgs04} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                      <Box className='delete-btn' onClick={() => deleteItemImg(3)}>
+                        <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
                       </Box>
-                    </>
-                  ) :
-                  (
-                    <>
-                      <label className='custom-file-upload'>
-                        <input type='file' accept='image/*' multiple onChange={handleImageUpload} />
-                        <UploadIcon />
-                        연속 업로드
-                      </label>
-                      <label className='custom-file-upload'>
-                        <input type='file' accept='image/*' onChange={handleImageAddUpload} />
-                        <PlusOneRoundedIcon />
-                        추가
-                      </label>
-                    </>
+                    </Box>
+                  ) : (
+                    <Box display='flex' justifyContent='center' alignItems='center' style={{ width: '20%', height: '120px', borderRadius: 5, backgroundColor: '#efefef', marginLeft: '5px' }}>
+                      <label htmlFor={`upload_img04`} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{`대표이미지 04`}</label>
+                      <input id={`upload_img04`} accept='image/*' type='file' onChange={e => handleImageUpload(e, 3)} />
+                    </Box>
+                  )
+                }
+                {
+                  detailImgs05 ? (
+                    <Box style={{ position: 'relative', width: '20%', height: '120px', marginLeft: 5 }}>
+                      <img src={detailImgs05} style={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover' }} />
+                      <Box className='delete-btn' onClick={() => deleteItemImg(4)}>
+                        <img src='images/close_wh.png' style={{ position: 'absolute', top: 5, right: 5, width: 12, height: 12, objectFit: 'scale-down', padding: 5, backgroundColor: '#222', borderRadius: 20 }} />
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Box display='flex' justifyContent='center' alignItems='center' style={{ width: '20%', height: '120px', borderRadius: 5, backgroundColor: '#efefef', marginLeft: '5px' }}>
+                      <label htmlFor={`upload_img05`} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{`대표이미지 05`}</label>
+                      <input id={`upload_img05`} accept='image/*' type='file' onChange={e => handleImageUpload(e, 4)} />
+                    </Box>
                   )
                 }
               </Box>

@@ -196,7 +196,7 @@ export default function StoreTimeTab01() {
   }
 
   // 추가 처리
-  const addStoreTime = () => {
+  const addStoreTime = (type: string) => {
 
     let sortSelectDay = selectDay.sort();
     let selectDayFormat = sortSelectDay.join();
@@ -212,7 +212,8 @@ export default function StoreTimeTab01() {
       // mode2: 'all', // ''
       st_yoil: selectDayFormat,
       st_stime: startTimeFormat,
-      st_etime: endTimeFormat
+      st_etime: endTimeFormat,
+      RangeType: type
     };
 
     Api.send('store_service_hour', param, (args: any) => {
@@ -317,8 +318,8 @@ export default function StoreTimeTab01() {
               <h2 id="transition-modal-title" className={base.modalTitle}>영업시간 적용 범위</h2>
               <p id="transition-modal-description" className={base.modalDescription}>해당 영업시간을 전체 매장에 적용하시겠습니까?</p>
               <ButtonGroup variant="text" color="inherit" aria-label="text primary button group">
-                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={deleteStoreTime}>전체 매장에 적용</ModalConfirmButton>
-                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={addStoreTime}>해당 매장만</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={() => addStoreTime('all')}>전체 매장에 적용</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={() => addStoreTime('curr')}>해당 매장만</ModalConfirmButton>
                 <ModalCancelButton variant="outlined" onClick={() => setOpenQuestion(false)}>닫기</ModalCancelButton>
               </ButtonGroup>
             </Box>

@@ -172,7 +172,7 @@ export default function StoreTimeTab01() {
   }
 
   // 추가 처리
-  const addStoreClosingDay = () => {
+  const addStoreClosingDay = (type: string) => {
 
     let sortSelectDay = selectDay.sort();
     let sortSelectWeek = selectWeek.sort();
@@ -188,7 +188,8 @@ export default function StoreTimeTab01() {
       jumju_code: mt_jumju_code,
       mode: 'update',
       st_yoil: selectDayFormat,
-      st_week: selectWeekFormat
+      st_week: selectWeekFormat,
+      RangeType: type
     };
 
     Api.send('store_regular_hoilday', param, (args: any) => {
@@ -292,8 +293,8 @@ export default function StoreTimeTab01() {
               <h2 id="transition-modal-title" className={base.modalTitle}>정기휴무일 적용 범위</h2>
               <p id="transition-modal-description" className={base.modalDescription}>해당 정기휴무일을 전체 매장에 적용하시겠습니까?</p>
               <ButtonGroup variant="text" color="inherit" aria-label="text primary button group">
-                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={addStoreClosingDay}>전체 매장에 적용</ModalConfirmButton>
-                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={addStoreClosingDay}>해당 매장만</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }} onClick={() => addStoreClosingDay('all')}>전체 매장에 적용</ModalConfirmButton>
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none', backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }} onClick={() => addStoreClosingDay('curr')}>해당 매장만</ModalConfirmButton>
                 <ModalCancelButton variant="outlined" onClick={() => setOpenQuestion(false)}>닫기</ModalCancelButton>
               </ButtonGroup>
             </Box>

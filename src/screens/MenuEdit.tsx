@@ -135,7 +135,7 @@ export default function MenuEdit(props: IProps) {
       setImage('');
       setSource({});
       return false;
-    } else if (typeArr[1] !== 'jpg' && typeArr[1] !== 'jpeg' && typeArr[1] !== 'gif' && typeArr[1] !== 'png' && typeArr[1] !== 'bmp') {
+    } else if (typeArr[1] !== 'jpg' && typeArr[1] !== 'jpeg' && typeArr[1] !== 'png' && typeArr[1] !== 'bmp') {
       setToastState({ msg: '이미지 확장자를 확인해주세요.', severity: 'error' });
       handleOpenAlert();
       setImageUsable(false);
@@ -159,6 +159,9 @@ export default function MenuEdit(props: IProps) {
       }
     }
   }
+
+  console.log('이미지 소스 ::: ', source);
+  console.log('이미지 재구성 ::: ', image);
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -501,6 +504,7 @@ export default function MenuEdit(props: IProps) {
 
         // it_img1: source 
 
+        console.log("메뉴 수정 이미지 source", source);
         console.log("메뉴 수정 param", param);
 
         Api.send2('store_item_update', param, (args: any) => {
