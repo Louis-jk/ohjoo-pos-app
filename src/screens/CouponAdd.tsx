@@ -157,10 +157,12 @@ export default function CouponAdd() {
     } else if (minPrice === null || minPrice === '') {
       setToastState({ msg: '최소주문금액을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else if (maxPrice === null || maxPrice === '') {
-      setToastState({ msg: '최대주문금액을 입력해주세요.', severity: 'error' });
-      handleOpenAlert();
-    } else if (discountPrice === null || discountPrice === '' || discountPrice === '0') {
+    }
+    // else if (maxPrice === null || maxPrice === '') {
+    //   setToastState({ msg: '최대주문금액을 입력해주세요.', severity: 'error' });
+    //   handleOpenAlert();
+    // } 
+    else if (discountPrice === null || discountPrice === '' || discountPrice === '0') {
       if (discountType === 'currency') {
         setToastState({ msg: '할인금액 입력해주세요.', severity: 'error' });
         handleOpenAlert();
@@ -177,10 +179,12 @@ export default function CouponAdd() {
     } else if (duration === null || duration === '') {
       setToastState({ msg: '쿠폰사용기한을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else if (Number(minPrice) > Number(maxPrice)) {
-      setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
-      handleOpenAlert();
-    } else {
+    }
+    // else if (Number(minPrice) > Number(maxPrice)) {
+    //   setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
+    //   handleOpenAlert();
+    // } 
+    else {
       addCouponHandler();
     }
   }
@@ -315,7 +319,7 @@ export default function CouponAdd() {
               }}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <TextField
               value={maxPrice}
               fullWidth
@@ -333,8 +337,8 @@ export default function CouponAdd() {
                 endAdornment: <InputAdornment position="end">원</InputAdornment>,
               }}
             />
-          </Grid>
-          <Grid item xs={12} md={12}>
+          </Grid> */}
+          <Grid item xs={12} md={6}>
             <TextField
               inputRef={discountRef}
               value={discountPrice}
@@ -342,7 +346,7 @@ export default function CouponAdd() {
               label={discountType === 'currency' ? '할인금액' : '할인율'}
               variant="outlined"
               required
-              style={{ width: '33%', marginRight: 10 }}
+              style={{ width: 'auto', marginRight: 10 }}
               onChange={e => {
                 if (discountType === 'currency') {
                   const re = /^[0-9\b]+$/;
