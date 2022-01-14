@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import Radio from '@material-ui/core/Radio';
+import Checkbox from '@mui/material/Checkbox';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
@@ -495,6 +496,12 @@ export default function MenuEdit(props: IProps) {
           menuPrice: details.menuPrice,
           menuDescription: details.menuDescription,
           it_type1: details.it_type1,
+          it_type3: details.it_type3,
+          it_type4: details.it_type4,
+          it_type5: details.it_type5,
+          it_type7: details.it_type7,
+          it_type8: details.it_type8,
+          it_soldout: details.it_soldout,
           it_use: details.it_use,
           menuOption: JSON.stringify(options),
           menuAddOption: JSON.stringify(addOptions),
@@ -597,32 +604,81 @@ export default function MenuEdit(props: IProps) {
               <FormControl component="fieldset">
                 <RadioGroup row aria-label="position" name="position" defaultValue="0">
                   <FormControlLabel
-                    value={'1'}
+                    value={'0'}
                     checked={details.it_type1 === '1' ? true : false}
-                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                    label="대표메뉴"
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="대표"
                     labelPlacement="start"
-                    style={{ width: 150, margin: 0, flexDirection: 'row' }}
+                    style={{ width: 80, margin: 0, flexDirection: 'row' }}
                     onChange={e => setDetails({
                       ...details,
-                      it_type1: '1'
+                      it_type1: details.it_type1 === '1' ? '0' : '1'
                     })}
                   />
                   <FormControlLabel
                     value={'0'}
-                    checked={details.it_type1 === '0' ? true : false}
-                    control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                    label="기본메뉴"
+                    checked={details.it_type3 === '1' ? true : false}
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="추천"
+                    labelPlacement="start"
+                    style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                    onChange={e => setDetails({
+                      ...details,
+                      it_type3: details.it_type3 === '1' ? '0' : '1'
+                    })}
+                  />
+                  <FormControlLabel
+                    value={'0'}
+                    checked={details.it_type4 === '1' ? true : false}
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="신메뉴"
+                    labelPlacement="start"
+                    style={{ width: 95, margin: 0, flexDirection: 'row' }}
+                    onChange={e => setDetails({
+                      ...details,
+                      it_type4: details.it_type4 === '1' ? '0' : '1'
+                    })}
+                  />
+                  <FormControlLabel
+                    value={'0'}
+                    checked={details.it_type5 === '1' ? true : false}
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="인기"
+                    labelPlacement="start"
+                    style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                    onChange={e => setDetails({
+                      ...details,
+                      it_type5: details.it_type5 === '1' ? '0' : '1'
+                    })}
+                  />
+                  <FormControlLabel
+                    value={'0'}
+                    checked={details.it_type7 === '1' ? true : false}
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="1인분 가능"
+                    labelPlacement="start"
+                    style={{ width: 120, margin: 0, flexDirection: 'row' }}
+                    onChange={e => setDetails({
+                      ...details,
+                      it_type7: details.it_type7 === '1' ? '0' : '1'
+                    })}
+                  />
+                  <FormControlLabel
+                    value={'0'}
+                    checked={details.it_type8 === '1' ? true : false}
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="계절별미"
                     labelPlacement="start"
                     style={{ width: 150, margin: 0, flexDirection: 'row' }}
                     onChange={e => setDetails({
                       ...details,
-                      it_type1: '0'
+                      it_type8: details.it_type8 === '1' ? '0' : '1'
                     })}
                   />
                 </RadioGroup>
               </FormControl>
-              {details.it_type1 === '1' ?
+              <div className={base.mb20}></div>
+              {/* {details.it_type1 === '1' ?
                 <div className={base.mb20}>
                   <Typography variant="body1" component="p" color="primary">
                     ※ 대표메뉴로 지정된 상태입니다.
@@ -634,7 +690,7 @@ export default function MenuEdit(props: IProps) {
                     ※ 기본메뉴인 상태입니다.
                   </Typography>
                 </div>
-              }
+              } */}
               <FormControl component="fieldset">
                 <RadioGroup row aria-label="position" name="position" defaultValue="0">
                   <FormControlLabel
@@ -676,6 +732,22 @@ export default function MenuEdit(props: IProps) {
                   </Typography>
                 </div>
               }
+              <FormControl component="fieldset">
+                <RadioGroup row aria-label="position" name="position" defaultValue="0">
+                  <FormControlLabel
+                    value={'0'}
+                    checked={details.it_soldout === '1' ? true : false}
+                    control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                    label="품절"
+                    labelPlacement="start"
+                    style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                    onChange={e => setDetails({
+                      ...details,
+                      it_soldout: details.it_soldout === '1' ? '0' : '1'
+                    })}
+                  />
+                </RadioGroup>
+              </FormControl>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth variant="outlined" className={base.formControl}>

@@ -79,7 +79,7 @@ export default function MenuList(props: any) {
     });
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     getMenusHandler();
   }, [mt_id, mt_jumju_code, startOfIndex])
 
@@ -128,6 +128,14 @@ export default function MenuList(props: any) {
                             <Typography component="p" mr={1} fontWeight="bold">{list.ca_name}</Typography>
                             {list.it_type1 === '1' ? <span className={menu.menuListLabel01}>대표메뉴</span> : null}
                             {list.it_use === '1' ? <span className={menu.menuListLabel02}>판매중</span> : <span className={menu.menuListLabel03}>판매중지</span>}
+                            {list.it_soldout === '1' ? <span className={menu.menuListLabel05}>품절</span> : null}
+                          </Box>
+                          <Box className={menu.menuListTitle} flexWrap='wrap'>
+                            {list.it_type3 === '1' ? <span className={menu.menuListLabel04}>추천</span> : null}
+                            {list.it_type4 === '1' ? <span className={menu.menuListLabel04}>신메뉴</span> : null}
+                            {list.it_type5 === '1' ? <span className={menu.menuListLabel04}>인기</span> : null}
+                            {list.it_type7 === '1' ? <span className={menu.menuListLabel04}>1인분</span> : null}
+                            {list.it_type8 === '1' ? <span className={menu.menuListLabel04}>계절별미</span> : null}
                           </Box>
                           <p className={menu.menuListName}>{list.it_name}</p>
                           <p className={menu.menuListPrice}>{Api.comma(list.it_price)}원</p>

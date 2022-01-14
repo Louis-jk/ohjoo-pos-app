@@ -185,8 +185,8 @@ export default function StoreInfo(props: IProps) {
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box mt={3} />
-          <p>{mt_id}</p>
-          <p>{mt_jumju_code}</p>
+          {/* <p>{mt_id}</p>
+          <p>{mt_jumju_code}</p> */}
           <Box className={clsx(base.mb10, base.mt20)}></Box>
           <Grid item xs={12} md={6} mb={2}>
             <Typography fontWeight='bold'>알림 설정</Typography>

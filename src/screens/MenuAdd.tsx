@@ -16,6 +16,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Radio from '@material-ui/core/Radio';
+import Checkbox from '@mui/material/Checkbox';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -100,6 +101,12 @@ export default function MenuAdd(props: any) {
   const [parentIndex, setParentIndex] = useState(0); // 옵션 index
   const [childIndex, setChildIndex] = useState(0); // 세부옵션 index
   const [checked01, setChecked01] = useState<CheckedType>('0'); // 대표메뉴('1' : 지정 | '0': 지정안함)
+  const [checked03, setChecked03] = useState<CheckedType>('0'); // 추천('1' : 지정 | '0': 지정안함)
+  const [checked04, setChecked04] = useState<CheckedType>('0'); // 신메뉴('1' : 지정 | '0': 지정안함)
+  const [checked05, setChecked05] = useState<CheckedType>('0'); // 인기('1' : 지정 | '0': 지정안함)
+  const [checked07, setChecked07] = useState<CheckedType>('0'); // 1인분 가능('1' : 지정 | '0': 지정안함)
+  const [checked08, setChecked08] = useState<CheckedType>('0'); // 계절별미('1' : 지정 | '0': 지정안함)
+
   const [checked02, setChecked02] = useState<CheckedType>('1'); // 판매가능('1' : 가능 | '0': 불가)
   const [image, setImage] = useState(''); // 메뉴 이미지 URL
 
@@ -451,6 +458,11 @@ export default function MenuAdd(props: any) {
           menuPrice: menuPrice,
           menuDescription: menuDescription,
           it_type1: checked01,
+          it_type3: checked03,
+          it_type4: checked04,
+          it_type5: checked05,
+          it_type7: checked07,
+          it_type8: checked08,
           it_use: checked02,
           menuOption: JSON.stringify(options),
           menuAddOption: JSON.stringify(addOptions),
@@ -543,38 +555,78 @@ export default function MenuAdd(props: any) {
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="0">
                 <FormControlLabel
-                  value={'1'}
+                  value={'0'}
                   checked={checked01 === '1' ? true : false}
-                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                  label="대표메뉴"
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="대표"
                   labelPlacement="start"
-                  style={{ width: 150, margin: 0, flexDirection: 'row' }}
-                  onChange={() => setChecked01('1')}
+                  style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                  onChange={() => checked01 === '1' ? setChecked01('0') : setChecked01('1')}
                 />
                 <FormControlLabel
                   value={'0'}
-                  checked={checked01 === '0' ? true : false}
-                  control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                  label="기본메뉴"
+                  checked={checked03 === '1' ? true : false}
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="추천"
+                  labelPlacement="start"
+                  style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                  onChange={() => checked03 === '1' ? setChecked03('0') : setChecked03('1')}
+                />
+                <FormControlLabel
+                  value={'0'}
+                  checked={checked04 === '1' ? true : false}
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="신메뉴"
+                  labelPlacement="start"
+                  style={{ width: 95, margin: 0, flexDirection: 'row' }}
+                  onChange={() => checked04 === '1' ? setChecked04('0') : setChecked04('1')}
+                />
+                <FormControlLabel
+                  value={'0'}
+                  checked={checked05 === '1' ? true : false}
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="인기"
+                  labelPlacement="start"
+                  style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                  onChange={() => checked05 === '1' ? setChecked05('0') : setChecked05('1')}
+                />
+                <FormControlLabel
+                  value={'0'}
+                  checked={checked07 === '1' ? true : false}
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="1인분 가능"
+                  labelPlacement="start"
+                  style={{ width: 120, margin: 0, flexDirection: 'row' }}
+                  onChange={() => checked07 === '1' ? setChecked07('0') : setChecked07('1')}
+                />
+                <FormControlLabel
+                  value={'0'}
+                  checked={checked08 === '1' ? true : false}
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="계절별미"
                   labelPlacement="start"
                   style={{ width: 150, margin: 0, flexDirection: 'row' }}
-                  onChange={() => setChecked01('0')}
+                  onChange={() => checked08 === '1' ? setChecked08('0') : setChecked08('1')}
                 />
               </RadioGroup>
             </FormControl>
-            {checked01 === '1' ?
+            <div className={base.mb40}></div>
+            {/* {checked01 === '1' ?
               <div className={base.mb20}>
                 <Typography variant="body1" component="p" color="primary">
                   ※ 대표메뉴로 지정하였습니다.
                 </Typography>
               </div>
               :
-              <div className={base.mb20}>
+              <div className={base.mb40}>
+              </div>
+            } */}
+            {/* <div className={base.mb20}>
                 <Typography variant="body1" component="p" color="textSecondary">
                   ※ 기본메뉴로 지정되었습니다.
                 </Typography>
               </div>
-            }
+            */}
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="0">
                 <FormControlLabel

@@ -166,16 +166,16 @@ export default function OrderCard(props: OrderProps) {
             </Box>
           } */}
 
-          <Box display='flex' flexDirection='column' justifyContent='flex-start' alignItems='flex-start'>
+          <Box display='flex' flexDirection='column' justifyContent='flex-start' alignItems='flex-start' minWidth={350}>
 
             <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
               <p><img src={order.image} alt={`${order.mb_company}의 로고`} title={`${order.mb_company}의 로고`} width={40} style={{ borderRadius: 70 }} /></p>
               <Typography ml={1} fontSize={18} fontWeight='bold' color='#f36d00'>{order.mb_company}</Typography>
             </Box>
 
-            <Box flex={type === 'new' || type === 'check' ? 3 : 1}>
-              <ButtonGroup variant="text" color="primary" style={{ float: 'right', color: theme.palette.info.contrastText }} aria-label="text primary button group">
-                <Button variant='contained' style={{ backgroundColor: '#edecf3', color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
+            <Box flex={type === 'new' || type === 'check' ? 3 : 1} width='100%'>
+              <ButtonGroup variant="text" color="primary" style={{ float: 'right', color: theme.palette.info.contrastText, width: '100%' }} aria-label="text primary button group">
+                <Button variant='contained' style={{ backgroundColor: '#edecf3', color: theme.palette.primary.contrastText, minWidth: 120, width: '100%', height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
                 {
                   type === 'new' ?
                     <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
