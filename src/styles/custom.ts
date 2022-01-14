@@ -218,6 +218,10 @@ export const OrderStyles = makeStyles({
     width: 180,
     textAlign: 'left',
   },
+  orderSubtitle03: {
+    width: 80,
+    textAlign: 'left',
+  },
   orderSubDescription: {
     textAlign: 'right',
     width: '90%',
