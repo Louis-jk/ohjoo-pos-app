@@ -487,16 +487,18 @@ export default function OrdersDetail(od_id: string) {
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper className={orderStyle.orderPaper}>
-                <Typography variant="h6" component="h6" mb={2} className={orderStyle.orderTitle}>배달정보</Typography>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" className={orderStyle.orderBox}>
-                  <Typography variant="body1" className={orderStyle.orderSubtitle}>배달주소 : </Typography>
-                  <Box style={{ textAlign: 'right' }}>
-                    <Typography variant="body1">{detailOrder.order_addr1}</Typography>
-                    <Typography variant="body1">{detailOrder.order_addr3}</Typography>
+                <Typography variant="h6" component="h6" mb={2} className={orderStyle.orderTitle}>{detailOrder.od_type === '배달' ? '배달' : '포장'}정보</Typography>
+                {detailOrder.od_type === '배달' &&
+                  <Box fontSize={14} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" className={orderStyle.orderBox}>
+                    <Typography variant="body1" className={orderStyle.orderSubtitle03}>배달주소 : </Typography>
+                    <Box style={{ textAlign: 'right' }}>
+                      <Typography variant="body1">{detailOrder.order_addr1}</Typography>
+                      <Typography variant="body1">{detailOrder.order_addr3}</Typography>
+                    </Box>
                   </Box>
-                </Box>
+                }
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
-                  <Typography variant="body1" className={orderStyle.orderSubtitle}>전화번호 : </Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubtitle03}>전화번호 : </Typography>
                   <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.phoneFomatter(detailOrder.order_hp)}</Typography>
                 </Box>
               </Paper>
@@ -549,10 +551,12 @@ export default function OrdersDetail(od_id: string) {
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>사장님께 : </Typography>
                   <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.order_seller !== '' ? detailOrder.order_seller : '요청사항이 없습니다.'}</Typography>
                 </Box>
-                <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
-                  <Typography variant="body1" className={orderStyle.orderSubtitle}>배달기사님께 : </Typography>
-                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.order_officer !== '' ? detailOrder.order_officer : '요청사항이 없습니다.'}</Typography>
-                </Box>
+                {detailOrder.od_type === '배달' &&
+                  <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
+                    <Typography variant="body1" className={orderStyle.orderSubtitle}>배달기사님께 : </Typography>
+                    <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.order_officer !== '' ? detailOrder.order_officer : '요청사항이 없습니다.'}</Typography>
+                  </Box>
+                }
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle02}>일회용 수저, 포크 : </Typography>
                   <Typography variant="body1" className={orderStyle.orderSubDescription}>{detailOrder.od_no_spoon == '1' ? '필요없음' : '필요함'}</Typography>
