@@ -109,8 +109,8 @@ const PrintModal = (props: any) => {
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='75%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
@@ -120,34 +120,37 @@ const PrintModal = (props: any) => {
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='75%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
-            ${product?.map((menu: any, index: number) => (
-            `<tr key=${menu.it_name + index}>
+            ${product && product.length > 0 ?
+            product.map((menu: any, index: number) => (
+              `<tr key=${menu.it_name + index}>
                 <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${menu.it_name} ${menu.ct_qty}개</td>
                 <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(menu.sum_price)}원</td>
               </tr>
               ${menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
-              `<tr key=${'defaultOption-name-' + key}>
+                `<tr key=${'defaultOption-name-' + key}>
                   <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 기본옵션 : ${defaultOption.ct_option}</td>
                 </tr>
                 <tr key=${'defaultOption-price-' + key}>
                   <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(defaultOption.io_price)}원</td>
                 </tr>
                 `
-            ))}
+              ))}
             ${menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
-              `<tr key=${'addOption-name-' + key}>
+                `<tr key=${'addOption-name-' + key}>
                   <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 추가옵션 : ${addOption.ct_option}</td>
                 </tr>
                 <tr key=${'addOption-price-' + key}>
                   <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(addOption.io_price)}원</td>
                 </tr>
                 `
-            ))}
+              ))}
             `
-          )).join('')}
+            )).join('')
+            : null
+          }
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -296,48 +299,48 @@ const PrintModal = (props: any) => {
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
-              <td style='text-align: center; font-size: 8pt; letter-spacing: -1;'>수량</td>
               <td style='text-align: right; font-size: 8pt; letter-spacing: -1;'>금액</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
-            ${product?.map((menu: any, index: number) => (
-            `<tr key=${menu.it_name + index}>
+            ${product && product.length > 0 ?
+            product.map((menu: any, index: number) => (
+              `<tr key=${menu.it_name + index}>
                   <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${menu.it_name} ${menu.ct_qty}개</td>
                   <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(menu.sum_price)}원</td>
                 </tr>
                 ${menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
-              `<tr key=${'defaultOption-name-' + key}>
+                `<tr key=${'defaultOption-name-' + key}>
                     <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 기본옵션 : ${defaultOption.ct_option}</td>
                   </tr>
                   <tr key=${'defaultOption-price-' + key}>
                     <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(defaultOption.io_price)}원</td>
                   </tr>
                   `
-            ))}
+              ))}
               ${menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
-              `<tr key=${'addOption-name-' + key}>
+                `<tr key=${'addOption-name-' + key}>
                     <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 추가옵션 : ${addOption.ct_option}</td>
                   </tr>
                   <tr key=${'addOption-price-' + key}>
                     <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(addOption.io_price)}원</td>
                   </tr>
                   `
-            ))}
+              ))}
               `
-          )).join('')}
+            )).join('')
+            : null
+          }
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
@@ -517,7 +520,7 @@ const PrintModal = (props: any) => {
                 </Box>
                 <Divider />
                 <Box my={1}>
-                  {product?.map((menu: any, index: number) => (
+                  {product.map((menu: any, index: number) => (
                     <>
                       <Box key={index} mb={1}>
                         <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mt={1} mb={0.5}>
