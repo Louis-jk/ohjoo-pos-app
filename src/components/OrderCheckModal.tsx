@@ -127,38 +127,51 @@ export default function OrderCheckModal(props: IProps) {
             <tr>
               <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>배달 : ${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
             </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>일회용 수저, 포크 : ${order.od_no_spoon == '1' ? '필요없음' : '필요함'}</td>
+            </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
-              <td style='text-align: center; font-size: 8pt; letter-spacing: -1;'>수량</td>
               <td style='text-align: right; font-size: 8pt; letter-spacing: -1;'>금액</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
-            ${product?.map((item: any, index: number) => (
-            `<tr key=${item.it_name + index}>
-                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
-                <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
-                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
+            ${product && product.length > 0 && product?.map((menu: any, index: number) => (
+            `<tr key=${menu.it_name + index}>
+                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${menu.it_name} ${menu.ct_qty}개</td>
+                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(menu.sum_price)}원</td>
               </tr>
-              <tr key=${item.io_id + index}>
-                <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션 : ${item.io_id}</td>
-                <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
-                <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
-              </tr>`
+              ${menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
+              `<tr key=${'defaultOption-name-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 기본옵션 : ${defaultOption.ct_option}</td>
+                </tr>
+                <tr key=${'defaultOption-price-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(defaultOption.io_price)}원</td>
+                </tr>
+                `
+            ))}
+            ${menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
+              `<tr key=${'addOption-name-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 추가옵션 : ${addOption.ct_option}</td>
+                </tr>
+                <tr key=${'addOption-price-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(addOption.io_price)}원</td>
+                </tr>
+                `
+            ))}
+            `
           )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -171,6 +184,10 @@ export default function OrderCheckModal(props: IProps) {
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>결제정보</td>
             </tr>
             <tr>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>총 주문금액</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.odder_cart_price)}원</td>
+            </tr>
+            <tr>
               <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>배달 팁</td>
               <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_cost)}원</td>
             </tr>
@@ -180,7 +197,11 @@ export default function OrderCheckModal(props: IProps) {
             </tr>
             <tr>
               <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 쿠폰</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon)}원</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_ohjoo)}원</td>
+            </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>상점 쿠폰</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_store)}원</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -293,38 +314,51 @@ export default function OrderCheckModal(props: IProps) {
             <tr>
               <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>배달 : ${order.order_officer ? order.order_officer : '요청사항이 없습니다.'}</td>
             </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; font-weight: bold; letter-spacing: -1;'>일회용 수저, 포크 : ${order.od_no_spoon == '1' ? '필요없음' : '필요함'}</td>
+            </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
             <tr>
               <td style='text-align: left; font-size: 8pt; letter-spacing: -1;'>메뉴명</td>
-              <td style='text-align: center; font-size: 8pt; letter-spacing: -1;'>수량</td>
               <td style='text-align: right; font-size: 8pt; letter-spacing: -1;'>금액</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
           <table style='width: 100%; border-collapse: collapse; border-spacing: 0;'>
             <colgroup>
-              <col width='65%' />
-              <col width='10%' />
-              <col width='25%' />
+              <col width='70%' />
+              <col width='30%' />
             </colgroup>
-            ${product?.map((item: any, index: number) => (
-            `<tr key=${item.it_name + index}>
-                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.it_name}</td>
-                <td style='text-align: center; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${item.ct_qty}</td>
-                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.ct_price)}</td>
+            ${product && product.length > 0 && product?.map((menu: any, index: number) => (
+            `<tr key=${menu.it_name + index}>
+                <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${menu.it_name} ${menu.ct_qty}개</td>
+                <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(menu.sum_price)}원</td>
               </tr>
-              <tr key=${item.io_id + index}>
-                <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션 : ${item.io_id}</td>
-                <td style='text-align: center; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>&nbsp;</td>
-                <td style='text-align: right; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(item.io_price)}</td>
-              </tr>`
+              ${menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
+              `<tr key=${'defaultOption-name-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 기본옵션 : ${defaultOption.ct_option}</td>
+                </tr>
+                <tr key=${'defaultOption-price-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(defaultOption.io_price)}원</td>
+                </tr>
+                `
+            ))}
+            ${menu.cart_add_option && menu.cart_add_option.length > 0 && menu.cart_add_option.map((addOption: any, key: number) => (
+              `<tr key=${'addOption-name-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 추가옵션 : ${addOption.ct_option}</td>
+                </tr>
+                <tr key=${'addOption-price-' + key}>
+                  <td style='text-align: left; font-size: 7pt; letter-spacing: -1; font-weight: bold;'>└ 옵션금액 : ${Api.comma(addOption.io_price)}원</td>
+                </tr>
+                `
+            ))}
+            `
           )).join('')}
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
@@ -346,7 +380,11 @@ export default function OrderCheckModal(props: IProps) {
             </tr>
             <tr>
               <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>오주 쿠폰</td>
-              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon)}원</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_ohjoo)}원</td>
+            </tr>
+            <tr>
+              <td style='text-align: left; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>상점 쿠폰</td>
+              <td style='text-align: right; font-size: 11pt; letter-spacing: -1; font-weight: bold;'>${Api.comma(order.order_coupon_store)}원</td>
             </tr>
           </table>
           <div style='display: width: 100%; border: 0.15pt solid black; margin: 5px 0;'></div>
