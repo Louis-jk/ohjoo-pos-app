@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import clsx from 'clsx';
 
 // Material UI Components
 import Paper from '@material-ui/core/Paper';
@@ -9,6 +10,9 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/core/Pagination';
 import Stack from '@material-ui/core/Stack';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/core/Alert';
 
 // Material icons
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -18,6 +22,7 @@ import Api from '../Api';
 import Header from '../components/Header';
 import { MainBox, theme, baseStyles } from '../styles/base';
 import { MenuStyles } from '../styles/custom';
+import MenuListModal from '../components/MenuListModal';
 
 
 interface Props {
@@ -59,6 +64,8 @@ export default function MenuList(props: any) {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
+      console.log('메뉴 arrItems', arrItems);
+
       let toTotalCount = Number(resultItem.total_cnt);
       setTotalCount(toTotalCount);
 
@@ -99,9 +106,49 @@ export default function MenuList(props: any) {
     setCurrentPage(value);
   }
 
+  // 메뉴 정렬 모달 핸들러
+  const [menuListModalOpen, setMenuListModalOpen] = useState<boolean>(false);
+  const onListModalHandler = () => {
+    setMenuListModalOpen(!menuListModalOpen);
+  }
+
+  // Toast(Alert) 관리
+  const [toastState, setToastState] = React.useState({
+    msg: '',
+    severity: ''
+  });
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  };
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
+  const propModalToastAction = (msg: string, severity: string) => {
+    setToastState({ msg, severity });
+    handleOpenAlert();
+  }
+
   return (
     <Box component="div" className={base.root}>
       <Header type="menu" />
+      <Box className={base.alertStyle}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+          open={openAlert}
+          autoHideDuration={5000}
+          onClose={handleCloseAlert}
+        >
+          <Alert onClose={handleCloseAlert} severity={toastState.severity === 'error' ? 'error' : 'success'}>
+            {toastState.msg}
+          </Alert>
+        </Snackbar>
+      </Box>
+
       {isLoading ?
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box className={base.loadingWrap}>
@@ -110,6 +157,11 @@ export default function MenuList(props: any) {
         </MainBox>
         :
         <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
+
+          {menuListModalOpen &&
+            <MenuListModal open={menuListModalOpen} onClose={onListModalHandler} reflesh={getMenusHandler} propModalToastAction={propModalToastAction} />
+          }
+
           <Box mt={3} />
           {lists && lists.length > 0 &&
             <Grid container spacing={3} style={{ minHeight: 520 }}>
@@ -147,11 +199,28 @@ export default function MenuList(props: any) {
               ))}
             </Grid>
           }
+
+          {/* 등록된 메뉴 없을 때 */}
           {lists.length === 0 || lists === null ?
             <Box style={{ display: 'flex', flex: 1, height: 'calc(100vh - 160px)', justifyContent: 'center', alignItems: 'center' }}>
               <Typography style={{ fontSize: 15 }}>등록된 메뉴가 없습니다.</Typography>
             </Box>
             : null}
+          {/* // 등록된 메뉴 없을 때 */}
+
+          <Box py={1} />
+
+          <Button
+            variant='outlined'
+            color='secondary'
+            className={clsx(base.confirmBtn, base.ml20)}
+            style={{ height: 30, minWidth: 100, fontSize: 14, boxShadow: 'none' }}
+            onClick={onListModalHandler}
+          >
+            메뉴 정렬
+          </Button>
+
+          {/* 페이지네이션 */}
           {totalCount ?
             <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
               <Stack spacing={2}>
@@ -171,6 +240,7 @@ export default function MenuList(props: any) {
               </Stack>
             </Box>
             : null}
+          {/* // 페이지네이션 */}
         </MainBox>
       }
     </Box>
