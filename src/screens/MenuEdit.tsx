@@ -31,6 +31,8 @@ import Fade from '@material-ui/core/Fade';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -117,6 +119,17 @@ export default function MenuEdit(props: IProps) {
   const [childIndex, setChildIndex] = useState(0); // 세부 옵션 인덱스
   const [image, setImage] = useState(''); // 메뉴 이미지 URL
 
+  const optionUsage = [{ value: 'Y', label: '사용함' }, { value: 'N', label: '사용안함' }];
+
+  // 기본옵션, 추가옵션 탭 
+  const [value, setValue] = React.useState('default');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
+  console.log('옵션 value', value);
+
 
   // 이미지 업로드
   const [source, setSource] = React.useState({});
@@ -183,13 +196,16 @@ export default function MenuEdit(props: IProps) {
       name: '',
       select: [
         {
-          value: '', price: '',
+          value: '',
+          price: '',
+          status: ''
         }
       ],
     });
   };
 
   console.log("options", options);
+  console.log("addOptions", addOptions);
 
   const optionAddHandler = (payload: OptionType) => {
     if (payload === 'default') {
@@ -839,284 +855,371 @@ export default function MenuEdit(props: IProps) {
             </Grid>
           </Grid>
           <div className={base.mb30}></div>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <div className={base.mb30}>
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Typography variant="h6" component="h6">
-                    기본옵션
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    style={{ boxShadow: 'none' }}
-                    onClick={() => optionAddHandler('default')}
-                    color="primary"
-                    startIcon={<QueueIcon />}
-                  >
-                    옵션추가
-                  </Button>
+
+          {/* 기본옵션/추가옵션 탭 */}
+
+          <Box sx={{ width: '100%', typography: 'body1' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+            >
+              <Tab value="default" label="기본옵션" style={{ flex: 1, maxWidth: 'inherit', color: value === 'default' ? '#000' : '#c4c4c4', borderWidth: value === 'default' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'default' ? 'none' : 1, borderBottomColor: value === 'default' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'default' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }} />
+              <Tab value="add" label="추가옵션" style={{ flex: 1, maxWidth: 'inherit', color: value === 'add' ? '#000' : '#c4c4c4', borderWidth: value === 'add' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'add' ? 'none' : 1, borderBottomColor: value === 'add' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'add' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }} />
+            </Tabs>
+
+            <Box py={1} />
+            {value === 'default' &&
+              <Grid item xs={12} md={12}>
+                <div className={base.mb30}>
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Typography variant="h6" component="h6">
+                      기본옵션
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      style={{ boxShadow: 'none' }}
+                      onClick={() => optionAddHandler('default')}
+                      color="primary"
+                      startIcon={<QueueIcon />}
+                    >
+                      옵션추가
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              {options && options.length > 0 && options.map((option, index) => (
-                <FormControl key={index} fullWidth>
-                  <Box className={base.fieldMargin} flexDirection="row" key={index} style={{ height: 50 }}>
-                    <TextField
-                      value={option.name === null || option.name === undefined ? '' : option.name}
-                      id="outlined-basic"
-                      label={`기본 옵션명 ${index < 9 ? '0' : ''}${index + 1}`}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      placeholder='옵션분류 예: 사이즈 or 맛 등'
-                      variant="outlined"
-                      className={base.fieldMargin}
-                      style={{ width: '54%', marginRight: '1%' }}
-                      onChange={e => {
-                        setOptions(options => {
-                          const result = [...options];
-                          result[index].name = e.target.value as string;
-                          return result;
-                        })
-                      }}
-                    />
-                    <Button
-                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<HighlightOffIcon />}
-                      // onClick={() =>
-                      //   setOptions(options => {
-                      //     const result = [...options];
-                      //     result.splice(index, 1);
-                      //     return result;
-                      //   })
-                      // }
-                      onClick={() => handleClickOpen02('default', index)}
-                    >
-                      삭제
-                    </Button>
-                    <Button
-                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4' }}
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<PostAddIcon />}
-                      onClick={() =>
-                        setOptions(options => {
-                          const result = [...options];
-                          result[index].select.push({
-                            value: '', price: '',
-                          });
-                          return result;
-                        })
-                      }
-                    >
-                      추가
-                    </Button>
-                  </Box>
-                  {option.select && option.select.map((item, selectIndex) => (
-                    <Box className={base.fieldMargin} display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" key={selectIndex} style={{ height: 50 }}>
-                      <Typography fontSize={18} color="#ffc739" mr={1}>┗</Typography>
-                      <TextField
-                        style={{ width: '47%', marginRight: '1%' }}
-                        value={item.value === null || item.value === undefined ? '' : item.value}
-                        id="outlined-basic"
-                        // label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
-                        label='세부명'
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        placeholder='세부명을 입력해주세요.'
-                        variant="outlined"
-                        onChange={e => {
-                          setOptions(options => {
-                            const result = [...options];
-                            result[index].select[selectIndex].value = e.target.value as string;
-                            return result;
-                          })
-                        }}
-                      />
-                      <TextField
-                        style={{ width: '28%', marginRight: '1%' }}
-                        value={item.price === null || item.price === undefined ? '' : item.price}
-                        id="outlined-basic"
-                        // label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
-                        label='추가금액'
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        placeholder='0'
-                        variant="outlined"
-                        InputProps={{
-                          endAdornment: <InputAdornment position="end">원</InputAdornment>,
-                        }}
-                        onChange={e => {
-                          const re = /^[0-9\b]+$/;
-                          if (e.target.value === '' || re.test(e.target.value)) {
-                            let changed = e.target.value.replace(/(^0+)/, '');
+                {options && options.length > 0 && options.map((option, index) => (
+                  <FormControl key={index} fullWidth>
+                    <Box display='flex' flexDirection="row" justifyContent='space-between' alignItems='center' key={index} style={{ marginBottom: 20 }}>
+                      <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' style={{ width: '70%' }}>
+                        <TextField
+                          value={option.name === null || option.name === undefined ? '' : option.name}
+                          id="outlined-basic"
+                          label={`기본 옵션명 ${index < 9 ? '0' : ''}${index + 1}`}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          placeholder='옵션분류 예: 사이즈 or 맛 등'
+                          variant="outlined"
+                          style={{ width: '100%', marginRight: '1%' }}
+                          onChange={e => {
                             setOptions(options => {
                               const result = [...options];
-                              result[index].select[selectIndex].price = changed;
+                              result[index].name = e.target.value as string;
+                              return result;
+                            })
+                          }}
+                        />
+                      </Box>
+                      <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' style={{ width: '30%' }}>
+                        <Button
+                          className={base.formControl02}
+                          variant="outlined"
+                          color="secondary"
+                          startIcon={<PostAddIcon />}
+                          onClick={() =>
+                            setOptions(options => {
+                              const result = [...options];
+                              result[index].select.push({
+                                value: '',
+                                price: '',
+                                status: ''
+                              });
                               return result;
                             })
                           }
-                        }}
-                      />
-                      <Button
-                        style={{ height: 55, color: '#666', borderColor: '#e5e5e5' }}
-                        variant="outlined"
-                        // startIcon={<HighlightOffIcon />}
-                        onClick={() => handleClickOpen('default', index, selectIndex)}
-                      >
-                        삭제
-                      </Button>
+                        >
+                          추가
+                        </Button>
+                        <Button
+                          // style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
+                          className={base.optionDeleteBtn}
+                          variant="outlined"
+                          color="secondary"
+                          startIcon={<HighlightOffIcon />}
+                          // onClick={() =>
+                          //   setOptions(options => {
+                          //     const result = [...options];
+                          //     result.splice(index, 1);
+                          //     return result;
+                          //   })
+                          // }
+                          onClick={() => handleClickOpen02('default', index)}
+                        >
+                          삭제
+                        </Button>
+                      </Box>
                     </Box>
-                  )
-                  )}
-                  <div style={{ marginTop: 10, marginBottom: 23, height: 1, backgroundColor: '#e5e5e5' }}></div>
-                </FormControl>
-              )
-              )}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <div className={base.mb30}>
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Typography variant="h6" component="h6">
-                    추가옵션
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    style={{ boxShadow: 'none' }}
-                    onClick={() => optionAddHandler('add')}
-                    color="primary"
-                    startIcon={<QueueIcon />}
-                  >
-                    옵션추가
-                  </Button>
+                    {
+                      option.select && option.select.map((item, selectIndex) => (
+                        <Box className={base.fieldMargin} display='flex' flexDirection="row" justifyContent="space-between" alignItems="center" key={selectIndex}>
+                          <Box display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" style={{ width: '70%' }}>
+                            <Typography fontSize={18} color="#ffc739" mr={1}>┗</Typography>
+                            <TextField
+                              style={{ width: '69%', marginRight: '1%' }}
+                              value={item.value === null || item.value === undefined ? '' : item.value}
+                              id="outlined-basic"
+                              // label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                              label='세부명'
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              placeholder='세부명을 입력해주세요.'
+                              variant="outlined"
+                              onChange={e => {
+                                setOptions(options => {
+                                  const result = [...options];
+                                  result[index].select[selectIndex].value = e.target.value as string;
+                                  return result;
+                                })
+                              }}
+                            />
+                            <TextField
+                              style={{ width: '29%', marginRight: '1%' }}
+                              value={item.price === null || item.price === undefined ? '' : item.price}
+                              id="outlined-basic"
+                              // label={`기본 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                              label='추가금액'
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              placeholder='0'
+                              variant="outlined"
+                              InputProps={{
+                                endAdornment: <InputAdornment position="end">원</InputAdornment>,
+                              }}
+                              onChange={e => {
+                                const re = /^[0-9\b]+$/;
+                                if (e.target.value === '' || re.test(e.target.value)) {
+                                  let changed = e.target.value.replace(/(^0+)/, '');
+                                  setOptions(options => {
+                                    const result = [...options];
+                                    result[index].select[selectIndex].price = changed;
+                                    return result;
+                                  })
+                                }
+                              }}
+                            />
+                          </Box>
+                          <Box display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" style={{ width: '30%' }}>
+                            <FormControl variant="outlined" className={base.formControl02}>
+                              <InputLabel>사용여부</InputLabel>
+                              <Select
+                                value={item.status}
+                                style={{ width: '100%' }}
+                                onChange={e => {
+                                  setOptions(options => {
+                                    const result = [...options];
+                                    result[index].select[selectIndex].status = e.target.value as string;
+                                    return result;
+                                  })
+                                }}
+                                label="사용여부"
+                                required
+                              >
+                                {optionUsage.map((usage, index) => (
+                                  <MenuItem key={index} value={usage.value}>{usage.label}</MenuItem>
+                                ))
+                                }
+                              </Select>
+                            </FormControl>
+                            <Button
+                              className={base.optionDeleteBtn}
+                              startIcon={<HighlightOffIcon />}
+                              variant="outlined"
+                              // startIcon={<HighlightOffIcon />}
+                              onClick={() => handleClickOpen('default', index, selectIndex)}
+                            >
+                              삭제
+                            </Button>
+                          </Box>
+                        </Box>
+                      )
+                      )
+                    }
+                    < div style={{ marginTop: 10, marginBottom: 23, height: 1, backgroundColor: '#e5e5e5' }}></div>
+                  </FormControl>
+                )
+                )}
+              </Grid>
+            }
+            {value === 'add' &&
+              <Grid item xs={12} md={12}>
+                <div className={base.mb30}>
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Typography variant="h6" component="h6">
+                      추가옵션
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      style={{ boxShadow: 'none' }}
+                      onClick={() => optionAddHandler('add')}
+                      color="primary"
+                      startIcon={<QueueIcon />}
+                    >
+                      옵션추가
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              {addOptions && addOptions.length > 0 && addOptions.map((option, index) => (
-                <FormControl key={index} fullWidth>
-                  <Box className={base.fieldMargin} flexDirection="row" key={index} style={{ height: 50 }}>
-                    <TextField
-                      value={option.name === null || option.name === undefined ? '' : option.name}
-                      id="outlined-basic"
-                      label={`추가 옵션명 ${index < 9 ? '0' : ''}${index + 1}`}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      placeholder='추가옵션명을 입력해주세요.'
-                      variant="outlined"
-                      className={base.fieldMargin}
-                      style={{ width: '54%', marginRight: '1%' }}
-                      onChange={e => {
-                        setAddOptions(options => {
-                          const result = [...options];
-                          result[index].name = e.target.value as string;
-                          return result;
-                        })
-                      }}
-                    />
-                    <Button
-                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4', marginRight: '1%' }}
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<HighlightOffIcon />}
-                      // onClick={() =>
-                      //   setAddOptions(options => {
-                      //     const result = [...options];
-                      //     result.splice(index, 1);
-                      //     return result;
-                      //   })
-                      // }
-                      onClick={() => handleClickOpen02('add', index)}
-                    >
-                      삭제
-                    </Button>
-                    <Button
-                      style={{ width: '22%', height: 56, color: '#666', borderColor: '#C4C4C4' }}
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<PostAddIcon />}
-                      onClick={() =>
-                        setAddOptions(options => {
-                          const result = [...options];
-                          result[index].select.push({
-                            value: '', price: '',
-                          });
-                          return result;
-                        })
-                      }
-                    >
-                      추가
-                    </Button>
-                  </Box>
-                  {option.select && option.select.map((item, selectIndex) => (
-                    <Box className={base.fieldMargin} display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" key={selectIndex} style={{ height: 50 }}>
-                      <Typography fontSize={18} color="#ffc739" mr={1}>┗</Typography>
-                      <TextField
-                        style={{ width: '47%', marginRight: '1%' }}
-                        value={item.value === null || item.value === undefined ? '' : item.value}
-                        id="outlined-basic"
-                        // label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
-                        label='세부명'
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        placeholder='세부명을 입력해주세요.'
-                        variant="outlined"
-                        onChange={e => {
-                          setAddOptions(options => {
-                            const result = [...options];
-                            result[index].select[selectIndex].value = e.target.value as string;
-                            return result;
-                          })
-                        }}
-                      />
-                      <TextField
-                        style={{ width: '28%', marginRight: '1%' }}
-                        value={item.price === null || item.price === undefined ? '' : item.price}
-                        id="outlined-basic"
-                        // label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
-                        label='추가금액'
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        placeholder='0'
-                        variant="outlined"
-                        InputProps={{
-                          endAdornment: <InputAdornment position="end">원</InputAdornment>,
-                        }}
-                        onChange={e => {
-                          const re = /^[0-9\b]+$/;
-                          if (e.target.value === '' || re.test(e.target.value)) {
-                            let changed = e.target.value.replace(/(^0+)/, '');
+                {addOptions && addOptions.length > 0 && addOptions.map((option, index) => (
+                  <FormControl key={index} fullWidth>
+                    <Box display='flex' flexDirection="row" justifyContent='space-between' alignItems='center' key={index} style={{ marginBottom: 20 }}>
+                      <Box display='flex' flexDirection="row" key={index} style={{ width: '70%' }}>
+                        <TextField
+                          value={option.name === null || option.name === undefined ? '' : option.name}
+                          id="outlined-basic"
+                          label={`추가 옵션명 ${index < 9 ? '0' : ''}${index + 1}`}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          placeholder='추가옵션명을 입력해주세요.'
+                          variant="outlined"
+                          className={base.fieldMargin}
+                          style={{ width: '100%', marginRight: '1%' }}
+                          onChange={e => {
                             setAddOptions(options => {
                               const result = [...options];
-                              result[index].select[selectIndex].price = changed;
+                              result[index].name = e.target.value as string;
+                              return result;
+                            })
+                          }}
+                        />
+                      </Box>
+                      <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' style={{ width: '30%' }}>
+                        <Button
+                          className={base.formControl02}
+                          variant="outlined"
+                          color="secondary"
+                          startIcon={<PostAddIcon />}
+                          onClick={() =>
+                            setAddOptions(options => {
+                              const result = [...options];
+                              result[index].select.push({
+                                value: '',
+                                price: '',
+                                status: ''
+                              });
                               return result;
                             })
                           }
-                        }}
-                      />
-                      <Button
-                        style={{ height: 55, color: '#666', borderColor: '#e5e5e5' }}
-                        variant="outlined"
-                        color="secondary"
-                        // startIcon={<HighlightOffIcon />}
-                        onClick={() => handleClickOpen('add', index, selectIndex)}
-                      >
-                        삭제
-                      </Button>
+                        >
+                          추가
+                        </Button>
+                        <Button
+                          className={base.optionDeleteBtn}
+                          variant="outlined"
+                          color="secondary"
+                          startIcon={<HighlightOffIcon />}
+                          // onClick={() =>
+                          //   setAddOptions(options => {
+                          //     const result = [...options];
+                          //     result.splice(index, 1);
+                          //     return result;
+                          //   })
+                          // }
+                          onClick={() => handleClickOpen02('add', index)}
+                        >
+                          삭제
+                        </Button>
+                      </Box>
                     </Box>
-                  )
-                  )
-                  }
-                  <div style={{ marginTop: 10, marginBottom: 23, height: 1, backgroundColor: '#e5e5e5' }}></div>
-                </FormControl>
-              )
-              )}
-            </Grid>
-          </Grid>
+
+
+                    {option.select && option.select.map((item, selectIndex) => (
+                      <Box className={base.fieldMargin} display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" key={selectIndex} style={{ height: 50 }}>
+                        <Box display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" style={{ width: '70%' }}>
+                          <Typography fontSize={18} color="#ffc739" mr={1}>┗</Typography>
+                          <TextField
+                            style={{ width: '69%', marginRight: '1%' }}
+                            value={item.value === null || item.value === undefined ? '' : item.value}
+                            id="outlined-basic"
+                            // label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 세부명`}
+                            label='세부명'
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            placeholder='세부명을 입력해주세요.'
+                            variant="outlined"
+                            onChange={e => {
+                              setAddOptions(options => {
+                                const result = [...options];
+                                result[index].select[selectIndex].value = e.target.value as string;
+                                return result;
+                              })
+                            }}
+                          />
+                          <TextField
+                            style={{ width: '29%', marginRight: '1%' }}
+                            value={item.price === null || item.price === undefined ? '' : item.price}
+                            id="outlined-basic"
+                            // label={`추가 ${index < 9 ? '0' : ''}${index + 1} - 추가금액`}
+                            label='추가금액'
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            placeholder='0'
+                            variant="outlined"
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">원</InputAdornment>,
+                            }}
+                            onChange={e => {
+                              const re = /^[0-9\b]+$/;
+                              if (e.target.value === '' || re.test(e.target.value)) {
+                                let changed = e.target.value.replace(/(^0+)/, '');
+                                setAddOptions(options => {
+                                  const result = [...options];
+                                  result[index].select[selectIndex].price = changed;
+                                  return result;
+                                })
+                              }
+                            }}
+                          />
+                        </Box>
+                        <Box display='flex' flexDirection="row" justifyContent="flex-start" alignItems="center" style={{ width: '30%' }}>
+                          <FormControl variant="outlined" className={base.formControl02}>
+                            <InputLabel>사용여부</InputLabel>
+                            <Select
+                              value={item.status}
+                              style={{ width: '100%' }}
+                              onChange={e => {
+                                setAddOptions(options => {
+                                  const result = [...options];
+                                  result[index].select[selectIndex].status = e.target.value as string;
+                                  return result;
+                                })
+                              }}
+                              label="사용여부"
+                              required
+                            >
+                              {optionUsage.map((usage, index) => (
+                                <MenuItem key={index} value={usage.value}>{usage.label}</MenuItem>
+                              ))
+                              }
+                            </Select>
+                          </FormControl>
+                          <Button
+                            className={base.optionDeleteBtn}
+                            startIcon={<HighlightOffIcon />}
+                            variant="outlined"
+                            color="secondary"
+                            // startIcon={<HighlightOffIcon />}
+                            onClick={() => handleClickOpen('add', index, selectIndex)}
+                          >
+                            삭제
+                          </Button>
+                        </Box>
+                      </Box>
+                    )
+                    )
+                    }
+                    <div style={{ marginTop: 10, marginBottom: 23, height: 1, backgroundColor: '#e5e5e5' }}></div>
+                  </FormControl>
+                )
+                )}
+              </Grid>
+            }
+          </Box>
+
+          {/* //기본옵션/추가옵션 탭 */}
+
 
           {/* 메뉴 이미지 삭제전 모달 */}
           <Dialog
@@ -1195,8 +1298,8 @@ export default function MenuEdit(props: IProps) {
             </DialogActions>
           </Dialog>
           {/* // 세부옵션 삭제전 모달 */}
-        </MainBox>
+        </MainBox >
       }
-    </Box>
+    </Box >
   );
 }
