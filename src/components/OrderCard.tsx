@@ -17,6 +17,7 @@ import { theme } from '../styles/base';
 import Api from '../Api';
 import moment from 'moment';
 import orderDetailAction from '../redux/actions';
+import OrderDeliveryCompleteModal from './OrderDeliveryCompleteModal';
 
 interface orderData {
   [key: string]: string;
@@ -94,6 +95,22 @@ export default function OrderCard(props: OrderProps) {
     setOdType(type);
     handleDeliveryOpen();
   }
+
+  // 배달 주문일 경우 -> 배달중 -> 배달완료 모달 핸들러
+  const [deliveryCompleteOpen, setDeliveryCompleteOpen] = React.useState(false);
+  const handleDeliveryCompleteOpen = () => {
+    setDeliveryCompleteOpen(true);
+  };
+
+  const handleDeliveryCompleteClose = () => {
+    setDeliveryCompleteOpen(false);
+  };
+  const deliveryOrderCompleteHandler = (id: string, type: string) => {
+    setOdId(id);
+    setOdType(type);
+    handleDeliveryCompleteOpen();
+  }
+
 
   // 신규주문 -> 주문 거부 모달 핸들러
   const [rejectOopen, setRejectOpen] = React.useState(false);
@@ -183,7 +200,9 @@ export default function OrderCard(props: OrderProps) {
                       <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.od_type)}>배달처리</Button>
                       : type === 'check' && order.od_type === '포장' ?
                         <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.od_type)}>포장완료</Button>
-                        : null
+                        : type === 'delivery' && order.od_type === '배달' ?
+                          <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, width: '100%', height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderCompleteHandler(order.od_id, order.od_type)}>배달완료</Button>
+                          : null
                 }
                 {
                   type === 'new' ?
@@ -206,6 +225,7 @@ export default function OrderCard(props: OrderProps) {
         <OrderCheckModal isOpen={open} od_id={odId} od_type={odType} handleClose={handleClose} />
         <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} />
         <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} od_type={odType} handleClose={handleDeliveryClose} />
+        <OrderDeliveryCompleteModal isOpen={deliveryCompleteOpen} od_id={odId} od_type={odType} handleClose={handleDeliveryCompleteClose} />
         <OrderCancelModal isOpen={cancelModalOpen} od_id={odId} handleClose={cancelModalCloseHandler} />
         <Box>
           {renderList()}
