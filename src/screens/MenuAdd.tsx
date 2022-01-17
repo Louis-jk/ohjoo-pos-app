@@ -29,8 +29,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -110,16 +108,13 @@ export default function MenuAdd(props: any) {
   const [checked08, setChecked08] = useState<CheckedType>('0'); // 계절별미('1' : 지정 | '0': 지정안함)
 
   const [checked02, setChecked02] = useState<CheckedType>('1'); // 판매가능('1' : 가능 | '0': 불가)
+  const [soldOut, setSoldOut] = useState<CheckedType>('0'); // 품절여부('1' : 품절 | '0': 품절아님)
   const [image, setImage] = useState(''); // 메뉴 이미지 URL
 
   const optionUsage = [{ value: 'Y', label: '사용함' }, { value: 'N', label: '사용안함' }];
 
   // 기본옵션, 추가옵션 탭 
   const [value, setValue] = React.useState('default');
-
-  const handleChangeOption = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
 
   // 이미지 업로드
   const [source, setSource] = React.useState({});
@@ -475,11 +470,14 @@ export default function MenuAdd(props: any) {
           it_type5: checked05,
           it_type7: checked07,
           it_type8: checked08,
+          it_soldout: soldOut,
           it_use: checked02,
           menuOption: JSON.stringify(options),
           menuAddOption: JSON.stringify(addOptions),
           it_img1: source
         };
+
+        console.log('메뉴 등록 param', param);
 
         Api.send2('store_item_input', param, (args: any) => {
 
@@ -622,7 +620,7 @@ export default function MenuAdd(props: any) {
                 />
               </RadioGroup>
             </FormControl>
-            <div className={base.mb40}></div>
+            <div className={base.mb20}></div>
             {/* {checked01 === '1' ?
               <div className={base.mb20}>
                 <Typography variant="body1" component="p" color="primary">
@@ -674,6 +672,19 @@ export default function MenuAdd(props: any) {
                 </Typography>
               </div>
             }
+            <FormControl component="fieldset">
+              <RadioGroup row aria-label="position" name="position" defaultValue="0">
+                <FormControlLabel
+                  value={'0'}
+                  checked={soldOut === '1' ? true : false}
+                  control={<Checkbox color="primary" style={{ paddingLeft: 0 }} />}
+                  label="품절"
+                  labelPlacement="start"
+                  style={{ width: 80, margin: 0, flexDirection: 'row' }}
+                  onChange={e => soldOut === '1' ? setSoldOut('0') : setSoldOut('1')}
+                />
+              </RadioGroup>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined" className={base.formControl}>
@@ -757,13 +768,15 @@ export default function MenuAdd(props: any) {
         <div className={base.mb30}></div>
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
-          <Tabs
-            value={value}
-            onChange={handleChangeOption}
-          >
-            <Tab value="default" label="기본옵션" style={{ flex: 1, maxWidth: 'inherit', color: value === 'default' ? '#000' : '#c4c4c4', borderWidth: value === 'default' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'default' ? 'none' : 1, borderBottomColor: value === 'default' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'default' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }} />
-            <Tab value="add" label="추가옵션" style={{ flex: 1, maxWidth: 'inherit', color: value === 'add' ? '#000' : '#c4c4c4', borderWidth: value === 'add' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'add' ? 'none' : 1, borderBottomColor: value === 'add' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'add' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }} />
-          </Tabs>
+
+          <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>
+            <Box onClick={() => setValue('default')} display='flex' justifyContent='center' alignItems='center' style={{ flex: 1, maxWidth: 'inherit', color: value === 'default' ? '#000' : '#c4c4c4', borderWidth: value === 'default' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'default' ? 'none' : 1, borderBottomColor: value === 'default' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'default' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }}>
+              <p>기본옵션</p>
+            </Box>
+            <Box onClick={() => setValue('add')} display='flex' justifyContent='center' alignItems='center' style={{ flex: 1, maxWidth: 'inherit', color: value === 'add' ? '#000' : '#c4c4c4', borderWidth: value === 'add' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'add' ? 'none' : 1, borderBottomColor: value === 'add' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'add' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }}>
+              <p>추가옵션</p>
+            </Box>
+          </Box>
 
           <Box py={1} />
           {value === 'default' &&
@@ -820,7 +833,7 @@ export default function MenuAdd(props: any) {
                             result[index].select.push({
                               value: '',
                               price: '',
-                              status: ''
+                              status: 'Y'
                             });
                             return result;
                           })
@@ -986,7 +999,7 @@ export default function MenuAdd(props: any) {
                             result[index].select.push({
                               value: '',
                               price: '',
-                              status: ''
+                              status: 'Y'
                             });
                             return result;
                           })

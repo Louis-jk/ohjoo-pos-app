@@ -31,8 +31,6 @@ import Fade from '@material-ui/core/Fade';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 
 // Material icons
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -123,12 +121,6 @@ export default function MenuEdit(props: IProps) {
 
   // 기본옵션, 추가옵션 탭 
   const [value, setValue] = React.useState('default');
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
-  console.log('옵션 value', value);
 
 
   // 이미지 업로드
@@ -859,13 +851,15 @@ export default function MenuEdit(props: IProps) {
           {/* 기본옵션/추가옵션 탭 */}
 
           <Box sx={{ width: '100%', typography: 'body1' }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-            >
-              <Tab value="default" label="기본옵션" style={{ flex: 1, maxWidth: 'inherit', color: value === 'default' ? '#000' : '#c4c4c4', borderWidth: value === 'default' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'default' ? 'none' : 1, borderBottomColor: value === 'default' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'default' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }} />
-              <Tab value="add" label="추가옵션" style={{ flex: 1, maxWidth: 'inherit', color: value === 'add' ? '#000' : '#c4c4c4', borderWidth: value === 'add' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'add' ? 'none' : 1, borderBottomColor: value === 'add' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'add' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }} />
-            </Tabs>
+
+            <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>
+              <Box onClick={() => setValue('default')} display='flex' justifyContent='center' alignItems='center' style={{ flex: 1, maxWidth: 'inherit', color: value === 'default' ? '#000' : '#c4c4c4', borderWidth: value === 'default' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'default' ? 'none' : 1, borderBottomColor: value === 'default' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'default' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }}>
+                <p>기본옵션</p>
+              </Box>
+              <Box onClick={() => setValue('add')} display='flex' justifyContent='center' alignItems='center' style={{ flex: 1, maxWidth: 'inherit', color: value === 'add' ? '#000' : '#c4c4c4', borderWidth: value === 'add' ? 1 : 0, borderStyle: 'solid', borderColor: '#c4c4c4', borderBottom: value === 'add' ? 'none' : 1, borderBottomColor: value === 'add' ? 'transparent' : '#c4c4c4', borderBottomStyle: value === 'add' ? 'none' : 'solid', borderTopLeftRadius: 3, borderTopRightRadius: 3 }}>
+                <p>추가옵션</p>
+              </Box>
+            </Box>
 
             <Box py={1} />
             {value === 'default' &&
