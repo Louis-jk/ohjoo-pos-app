@@ -506,12 +506,13 @@ export default function OrdersDetail(od_id: string) {
             <Grid item xs={12} md={6}>
               <Paper className={orderStyle.orderPaper}>
                 <Typography variant="h6" component="h6" className={orderStyle.orderTitle}>메뉴정보</Typography>
+                <Box py={1} />
                 <Box fontSize={14} className={orderStyle.orderBox}>
                   {detailProduct && detailProduct.length > 0 && detailProduct.map((menu, index) => (
-                    <Box className={orderStyle.orderMenuBox} key={index}>
+                    <Box key={index}>
                       <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb={0.5}>
-                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{menu.it_name} {menu.ct_qty}개</Typography>
-                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16 }}>{Api.comma(menu.sum_price)}원</Typography>
+                        <Typography variant="body1" style={{ marginRight: 20, fontSize: 16, textAlign: 'left', flex: 2 }}>{menu.it_name} {menu.ct_qty}개</Typography>
+                        <Typography variant="body1" style={{ marginRight: 10, fontSize: 16, textAlign: 'right', flex: 0.5 }}>{Api.comma(menu.sum_price)}원</Typography>
                       </Box>
                       <Box mb={menu.cart_add_option && menu.cart_add_option.length > 0 ? 1 : 0}>
                         {menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption, key) => (
