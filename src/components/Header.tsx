@@ -389,9 +389,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
   const menuControlHandler = (payload: string) => {
     dispatch(menuControlAction.updateMenuSelect(payload));
     if (payload === 'order') {
-      history.push('order_new');
+      history.push('/order_new');
     } else {
-      history.push('set_storetime');
+      history.push('/set_storetime');
     }
   }
 
