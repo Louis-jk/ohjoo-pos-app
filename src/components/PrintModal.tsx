@@ -524,8 +524,8 @@ const PrintModal = (props: any) => {
                     <>
                       <Box key={index} mb={1}>
                         <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mt={1} mb={0.5}>
-                          <Typography variant="body1" style={{ marginRight: 10, fontSize: 15, fontWeight: 'bold' }}>{menu.it_name} {menu.ct_qty}개</Typography>
-                          <Typography variant="body1" style={{ fontSize: 15, fontWeight: 'bold' }}>{Api.comma(menu.sum_price)}원</Typography>
+                          <Typography variant="body1" style={{ marginRight: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'left', flex: 3 }}>{menu.it_name} {menu.ct_qty}개</Typography>
+                          <Typography variant="body1" style={{ fontSize: 15, fontWeight: 'bold', textAlign: 'right', flex: 1 }}>{Api.comma(menu.sum_price)}원</Typography>
                         </Box>
                         <Box mb={menu.cart_add_option && menu.cart_add_option.length > 0 ? 1 : 0}>
                           {menu.cart_option && menu.cart_option.length > 0 && menu.cart_option.map((defaultOption: any, key: number) => (
