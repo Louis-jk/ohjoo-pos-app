@@ -42,7 +42,7 @@ export default function OrderCheckModal(props: IProps) {
   const base = baseStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false); // 신규 주문 -> 접수(배달/포장 시간 입력 모달)
-  const [deliveryTime, setDeliveryTime] = React.useState(''); // 신규 주문 -> 배달시간 입력
+  const [deliveryTime, setDeliveryTime] = React.useState(''); // 신규 주문 -> 배달시간 입력  
 
   const { order, product, store } = useSelector((state: any) => state.orderDetail);
 
@@ -572,7 +572,7 @@ export default function OrderCheckModal(props: IProps) {
             <Typography id="transition-modal-description">{`${props.od_type === '포장' ? '포장' : '배달'} 예상시간을 입력해주세요.`}</Typography>
             <TextField
               value={deliveryTime}
-              style={{ width: 200, margin: 20 }}
+              style={{ width: '100%', margin: 20, textAlign: 'right' }}
               id="outlined-basic"
               label={`예상 ${props.od_type === '포장' ? '포장' : '배달'}시간`}
               variant="outlined"
@@ -588,7 +588,17 @@ export default function OrderCheckModal(props: IProps) {
                 }
               }}
             />
-            <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+
+            <Box display='flex' flexDirection='row' mb={5}>
+              <Button variant={deliveryTime === '10' ? 'contained' : 'outlined'} color='info' style={{ marginRight: 5, boxShadow: 'none' }} onClick={() => setDeliveryTime('10')}>10분</Button>
+              <Button variant={deliveryTime === '20' ? 'contained' : 'outlined'} color='info' style={{ marginRight: 5, boxShadow: 'none' }} onClick={() => setDeliveryTime('20')}>20분</Button>
+              <Button variant={deliveryTime === '30' ? 'contained' : 'outlined'} color='info' style={{ marginRight: 5, boxShadow: 'none' }} onClick={() => setDeliveryTime('30')}>30분</Button>
+              <Button variant={deliveryTime === '40' ? 'contained' : 'outlined'} color='info' style={{ marginRight: 5, boxShadow: 'none' }} onClick={() => setDeliveryTime('40')}>40분</Button>
+              <Button variant={deliveryTime === '50' ? 'contained' : 'outlined'} color='info' style={{ marginRight: 5, boxShadow: 'none' }} onClick={() => setDeliveryTime('50')}>50분</Button>
+              <Button variant={deliveryTime === '60' ? 'contained' : 'outlined'} color='info' onClick={() => setDeliveryTime('60')}>60분</Button>
+            </Box>
+
+            <ButtonGroup variant="text" color="primary" aria-label="text primary button group" fullWidth>
               <ModalConfirmButton variant="contained" color="primary" style={{ boxShadow: 'none' }} onClick={checkOrderHandler}>보내기</ModalConfirmButton>
               <ModalCancelButton variant="outlined" onClick={props.handleClose}>취소</ModalCancelButton>
             </ButtonGroup>
