@@ -302,6 +302,10 @@ export const baseStyles = makeStyles({
   formControl: {
     minWidth: 120,
   },
+  filterForm: {
+    minWidth: 80,
+    width: 'auto',
+  },
   formControl02: {
     minWidth: 64,
     width: '100%',
