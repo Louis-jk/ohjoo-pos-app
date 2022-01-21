@@ -245,23 +245,25 @@ export default function Tips(props: any) {
           {lists && lists.length > 0 &&
             <Grid container spacing={3} style={{ minHeight: 520 }}>
               {lists.map((list, index) => (
-                <Grid key={list.cz_no} item xs={12} sm={6} md={4} style={{ position: 'relative' }} alignContent='baseline'>
-                  <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left', borderWidth: 1, borderStyle: 'dotted', borderColor: theme.palette.primary.main }}>
-                    <Typography variant="subtitle1" component="p" style={{ marginBottom: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
+                <Grid key={list.cz_no} item xs={12} sm={6} md={6} style={{ position: 'relative' }} alignContent='baseline'>
+                  <Paper className={clsx(base.paper, coupon.gradient)} style={{ textAlign: 'left', borderWidth: 1, borderStyle: 'dotted', borderColor: '#c4c4c4', padding: '5px 16px 12px' }}>
+                    <Typography variant="subtitle1" component="p" style={{ marginBottom: 5, textAlign: 'center', fontSize: 18, fontWeight: 500, color: theme.palette.primary.contrastText }}>{list.cz_subject}</Typography>
                     <Box component="article" className={coupon.couponBox}>
-                      <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -14, color: theme.palette.primary.contrastText }}>✂</Typography>
+                      <Typography variant="subtitle1" component="p" style={{ position: 'absolute', top: -16, color: theme.palette.info.main }}>✂</Typography>
                       {list.cz_price_type === '1' ?
-                        <Typography variant="h6" component="em" className={coupon.couponPrice}>{list.cz_price}%</Typography>
+                        <Typography variant="h6" component='p' fontWeight='bold' className={coupon.couponPrice}>{list.cz_price}%</Typography>
                         :
-                        <Typography variant="h6" component="em" className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
+                        <Typography variant="h6" component='p' fontWeight='bold' className={coupon.couponPrice}>{Api.comma(list.cz_price)}원</Typography>
                       }
                     </Box>
-                    <Box mb={2}>
-                      <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최소주문금액 ${Api.comma(list.cz_minimum)}원`}</Typography>
+                    <Box mb={0.5}>
+                      <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최소주문금액 : ${Api.comma(list.cz_minimum)}원`}</Typography>
                       {/* <Typography variant="body1" component="p" style={{ fontSize: 13, marginBottom: 5 }}>{`최대주문금액 ${Api.comma(list.cz_maximum)}원`}</Typography> */}
                     </Box>
-                    <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간</Typography>
-                    <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
+                    <Box display='flex' flexDirection='row'>
+                      <Typography variant="body1" component="p" style={{ fontSize: 13 }}>쿠폰사용기간&nbsp;:&nbsp;</Typography>
+                      <Typography variant="body1" component="p" style={{ fontSize: 13 }}>{`${list.cz_start} - ${list.cz_end}`}</Typography>
+                    </Box>
 
                     <ButtonGroup variant="text" color="primary" aria-label="text primary button group" style={{ marginTop: 10, width: '100%' }}>
                       <Button color='primary' variant='contained' style={{ flex: 1, boxShadow: 'none' }} onClick={() => history.push({
@@ -275,6 +277,7 @@ export default function Tips(props: any) {
                 </Grid>
               )
               )}
+
             </Grid>
           }
           {lists.length === 0 || lists === null ?
