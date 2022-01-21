@@ -38,7 +38,7 @@ export default function Routes() {
         <Route path='/orderdetail/:id' component={OrderDetail} />
         <Route path='/set_storetime' component={SetStoreTime} />
         <Route path='/caculate' component={Caculate} />
-        <Route path='/menu' component={MenuList} />
+        <Route path='/menu/:categoryId' component={MenuList} />
         <Route path='/menu_edit/:id' component={MenuEdit} />
         <Route path='/menu_add' component={MenuAdd} />
         <Route path='/category' component={Category} />
