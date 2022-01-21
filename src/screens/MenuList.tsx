@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
@@ -13,6 +14,12 @@ import Stack from '@material-ui/core/Stack';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@mui/material/NativeSelect';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import InputBase from '@mui/material/InputBase';
 
 // Material icons
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -29,23 +36,161 @@ interface Props {
   [key: string]: string;
 }
 
+interface IMenu {
+  ca_name: string;
+  ca_code: string;
+}
+
+interface ICategory {
+  label: string;
+  value: string;
+}
+
 export default function MenuList(props: any) {
 
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
   const base = baseStyles();
   const menu = MenuStyles();
+  const params: any = useParams();
+  const history = useHistory();
+
   const [isLoading, setLoading] = useState(false);
   const [lists, setLists] = useState<Props[]>([]);
-
   const [currentPage, setCurrentPage] = useState(1); // 페이지 현재 페이지
   const [startOfIndex, setStartOfIndex] = useState(0); // 페이지 API 호출 start 인덱스
   const [postPerPage, setPostPerPage] = useState(6); // 페이지 API 호출 Limit
+  const [menuTotalCount, setMenuTotalCount] = useState(0); // 테스트중
   const [totalCount, setTotalCount] = useState(0); // 아이템 전체 갯수
+  const [category, setCategory] = useState(''); // 카테고리 지정값
 
   // 현재 메뉴 
   const indexOfLastList = currentPage * postPerPage;
   const indexOfFirstList = indexOfLastList - postPerPage;
   const currentLists = lists.slice(indexOfFirstList, indexOfLastList);
+
+
+  // (등록된)카테고리 불러오기
+  const [menuCategory, setMenuCategory] = React.useState<ICategory[]>([]);
+
+  const getCategoryHandler = () => {
+    setLoading(true);
+    const param = {
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      mode: 'select'
+    }
+
+    Api.send('store_item_category', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+
+        let newArr: any[] = [
+          {
+            label: '전체',
+            value: 'all'
+          }
+        ];
+
+        arrItems.map((menu: IMenu) => {
+          newArr.push(
+            {
+              label: menu.ca_name,
+              value: menu.ca_code
+            })
+        });
+
+        setMenuCategory(newArr);
+
+        setLoading(false);
+      } else {
+        setLoading(false);
+        console.log('메뉴를 가져오지 못했습니다.');
+      }
+    });
+  }
+
+  const BootstrapInput = styled(InputBase)(({ theme }) => ({
+    'label + &': {
+      fontSize: 14,
+      marginTop: theme.spacing(1),
+    },
+    '& .MuiInputBase-input': {
+      borderRadius: 4,
+      position: 'relative',
+      backgroundColor: theme.palette.background.paper,
+      border: `1px solid ${theme.palette.secondary.main}`,
+      fontSize: 14,
+      // padding: '10px 26px 10px 12px',
+      padding: '2px 26px 5px 12px',
+      transition: theme.transitions.create(['border-color', 'box-shadow']),
+      // Use the system font instead of the default Roboto font.
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      '&:focus': {
+        borderRadius: 4,
+        // borderColor: '#80bdff',
+        // boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        borderColor: 'none',
+        boxShadow: 'none',
+      },
+    },
+  }));
+
+  console.log("category ?", category);
+  console.log("menuCategory ?", menuCategory);
+
+  const handleClick = (value: string) => {
+    setCurrentPage(1);
+    setStartOfIndex(0);
+    history.push(`/menu/${value}`);
+  }
+
+  // 전체 메뉴 가져오기 핸들러
+  const getAllMenusHandler = () => {
+    setLoading(true);
+
+    const param = {
+      item_count: startOfIndex,
+      limit_count: postPerPage,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      ca_code: 'all'
+    };
+
+    console.log("all get param ?", param);
+
+    Api.send('store_item_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      console.log('all메뉴 resultItem', resultItem);
+      console.log('all메뉴 arrItems', arrItems);
+
+      let toTotalCount = Number(resultItem.total_cnt);
+      setMenuTotalCount(toTotalCount);
+
+      if (resultItem.result === 'Y') {
+        // setLists(arrItems);
+        setLoading(false);
+      } else {
+        // setLists([]);
+        setLoading(false);
+      }
+    });
+  }
+
 
   // 메뉴 가져오기 핸들러
   const getMenusHandler = () => {
@@ -55,7 +200,8 @@ export default function MenuList(props: any) {
       item_count: startOfIndex,
       limit_count: postPerPage,
       jumju_id: mt_id,
-      jumju_code: mt_jumju_code
+      jumju_code: mt_jumju_code,
+      ca_code: params.categoryId
     };
 
     console.log("param ?", param);
@@ -87,8 +233,24 @@ export default function MenuList(props: any) {
   }
 
   useEffect(() => {
-    getMenusHandler();
-  }, [mt_id, mt_jumju_code, startOfIndex])
+    if (typeof params.categoryId === undefined) {
+      console.log('출력?');
+      setCategory('all');
+    } else {
+      setCategory(params.categoryId);
+    }
+  }, [params.categoryId])
+
+  useEffect(() => {
+    getCategoryHandler();
+  }, [mt_id, mt_jumju_code])
+
+  useEffect(() => {
+    if (params.categoryId && typeof params.categoryId === 'string') {
+      getAllMenusHandler();
+      getMenusHandler();
+    }
+  }, [mt_id, mt_jumju_code, startOfIndex, params.categoryId])
 
   console.log("currentPage", currentPage);
   console.log("postPerPage", postPerPage);
@@ -150,13 +312,13 @@ export default function MenuList(props: any) {
       </Box>
 
       {isLoading ?
-        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ position: 'relative', borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
           <Box className={base.loadingWrap}>
             <CircularProgress disableShrink color="primary" style={{ width: 50, height: 50 }} />
           </Box>
         </MainBox>
         :
-        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
+        <MainBox component='main' sx={{ flexGrow: 1, p: 3 }} style={{ position: 'relative', borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
 
           {menuListModalOpen &&
             <MenuListModal open={menuListModalOpen} onClose={onListModalHandler} reflesh={getMenusHandler} propModalToastAction={propModalToastAction} />
@@ -164,7 +326,7 @@ export default function MenuList(props: any) {
 
           <Box mt={3} />
           {lists && lists.length > 0 &&
-            <Grid container spacing={3} style={{ minHeight: 520 }}>
+            <Grid container spacing={3}>
               {lists.map((list, index) => (
                 <Grid key={list.it_id} item xs={12} md={6} alignContent='baseline'>
                   <Link to={`/menu_edit/${list.it_id}`}>
@@ -210,19 +372,59 @@ export default function MenuList(props: any) {
 
           <Box py={1} />
 
-          <Button
-            variant='outlined'
-            color='secondary'
-            className={clsx(base.confirmBtn, base.ml20)}
-            style={{ height: 30, minWidth: 100, fontSize: 14, boxShadow: 'none' }}
-            onClick={onListModalHandler}
+          <Box
+            display='flex'
+            flexDirection='row'
+            justifyContent='space-between'
+            alignItems='center'
+            style={{
+              position: 'absolute',
+              left: 20,
+              right: 10,
+              bottom: 83
+            }}
           >
-            메뉴 정렬
-          </Button>
+            {menuTotalCount && menuTotalCount > 0 ?
+              <Button
+                variant='outlined'
+                color='secondary'
+                className={clsx(base.confirmBtn, base.ml20)}
+                style={{ height: 30, minWidth: 100, fontSize: 14, boxShadow: 'none' }}
+                onClick={onListModalHandler}
+              >
+                메뉴 정렬
+              </Button>
+              :
+              <Box>&nbsp;</Box>
+            }
+            {menuCategory && menuCategory.length > 0 &&
+              <FormControl sx={{ m: 1, minWidth: 80 }}>
+                {/* <InputLabel id="demo-simple-select-autowidth-label">전체</InputLabel> */}
+                <NativeSelect
+                  value={category}
+                  onChange={e => handleClick(e.target.value as string)}
+                  input={<BootstrapInput />}
+                  required
+                  defaultValue={'all'}
+                >
+                  {menuCategory.map((category, index) => (
+                    <option key={index} value={category.value}>{category.label}</option>
+                  ))}
+                </NativeSelect>
+              </FormControl>
+            }
+          </Box>
 
           {/* 페이지네이션 */}
           {totalCount ?
-            <Box mt={7} display='flex' justifyContent='center' alignSelf="center">
+            <Box mt={7} display='flex' justifyContent='center' alignSelf="center"
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: 40
+              }}
+            >
               <Stack spacing={2}>
                 <Pagination
                   color="primary"
@@ -243,6 +445,6 @@ export default function MenuList(props: any) {
           {/* // 페이지네이션 */}
         </MainBox>
       }
-    </Box>
+    </Box >
   );
 }
