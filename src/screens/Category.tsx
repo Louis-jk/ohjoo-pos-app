@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import { Link, Router, useHistory, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
 // Material UI Components
@@ -380,13 +381,23 @@ export default function SetCategory(props: any) {
                       endAdornment: <Android12Switch defaultChecked checked={list.ca_use === '1' ? true : false} />
                     }}
                   />
-                  <Button
-                    variant='outlined'
-                    color='secondary'
-                    style={{ fontWeight: 'bold', boxShadow: 'none', height: 56, marginLeft: 10 }}
+
+                  <Link to={`/menu/${list.ca_code}`}
+                    style={{
+                      color: '#fff',
+                      backgroundColor: theme.palette.info.main,
+                      borderWidth: 1,
+                      borderColor: theme.palette.info.main,
+                      borderStyle: 'solid',
+                      borderRadius: 5,
+                      padding: '1.05rem 0.5rem',
+                      boxShadow: 'none',
+                      marginLeft: 10
+                    }}
                   >
                     메뉴 보기
-                  </Button>
+                  </Link>
+
                 </Box>
               </Grid>
             )}
