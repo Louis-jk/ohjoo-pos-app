@@ -415,6 +415,7 @@ export const baseStyles = makeStyles({
     marginBottom: 20,
   },
   textField: {
+    flex: 3,
     backgroundColor: '#fff',
     marginBottom: 10,
   },
