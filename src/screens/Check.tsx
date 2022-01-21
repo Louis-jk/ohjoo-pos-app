@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Local Component
 import Api from '../Api';
-import loginAction from '../redux/actions';
+import * as loginAction from '../redux/actions/loginAction';
 import { baseStyles, theme } from '../styles/base';
 
 

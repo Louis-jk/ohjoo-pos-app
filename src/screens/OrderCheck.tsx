@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import { MainBox, baseStyles } from '../styles/base';
 import OrderCard from '../components/OrderCard';
 import Api from '../Api';
-import orderAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
 
 export default function OrderCheck() {
 
@@ -35,12 +35,12 @@ export default function OrderCheck() {
       if (resultItem.result === 'Y') {
         console.log("success?", arrItems)
         setList(arrItems);
-        // dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        // dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
         setLoading(false);
       } else {
         console.log("faild?", arrItems)
         setList([]);
-        // dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        // dispatch(orderAction.updateCheckOrder(null));
         setLoading(false);
       }
     });

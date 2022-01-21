@@ -25,13 +25,13 @@ import Alert from '@material-ui/lab/Alert';
 // Local Component
 import Api from '../Api';
 import Header from '../components/Header';
-import orderDetailAction from '../redux/actions';
 import { theme, MainBox, baseStyles, ModalConfirmButton, ModalCancelButton } from '../styles/base';
 import { OrderStyles } from '../styles/custom';
 import OrderCheckModal from '../components/OrderCheckModal'; // 신규주문 주문 접수 모달
 import OrderRejectModal from '../components/OrderRejectModal'; // 신규주문 주문 거부 모달
 import { rejectInitState, cancelInitState } from '../assets/datas/orders'; // 주문 거부/취소 리스트
-import orderAction from '../redux/actions';
+import * as orderDetailAction from '../redux/actions/orderDetailAction';
+import * as orderAction from '../redux/actions/orderAction';
 import PrintModal from '../components/PrintModal';
 
 interface OrderId {
@@ -234,12 +234,12 @@ export default function OrdersDetail(od_id: string) {
 
       if (resultItem.result === 'Y') {
         console.log("접수완료 success?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
         getDeliveryOrderHandler();
 
       } else {
         console.log("접수완료 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        dispatch(orderAction.updateCheckOrder(null));
         getDeliveryOrderHandler();
       }
     });
@@ -261,10 +261,10 @@ export default function OrdersDetail(od_id: string) {
 
       if (resultItem.result === 'Y') {
         console.log("배달중 success?", arrItems);
-        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems)));
       } else {
         console.log("배달중 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+        dispatch(orderAction.updateDeliveryOrder(null));
       }
     });
   }

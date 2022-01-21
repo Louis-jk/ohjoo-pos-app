@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import OrderCard from '../components/OrderCard';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
-import orderAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
 
 // const { ipcRenderer } = window.require('electron');
 // const electron = window.require('electron');
@@ -44,12 +44,12 @@ export default function OrderNew() {
       if (resultItem.result === 'Y') {
         console.log("success?", arrItems)
         setList(arrItems);
-        // dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        // dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
         setLoading(false);
       } else {
         console.log("faild?", arrItems)
         setList([]);
-        // dispatch(dispatch(orderAction.updateNewOrder(null)));
+        // dispatch(orderAction.updateNewOrder(null));
         setLoading(false);
       }
     });

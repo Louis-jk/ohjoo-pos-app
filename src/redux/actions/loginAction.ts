@@ -29,41 +29,46 @@ export function updateLogin(data: string) {
     mt_lat: args.mt_lat ? args.mt_lat : null, // add
     mt_lng: args.mt_lng ? args.mt_lng : null, // add
     do_jumju_origin_use: args.do_jumju_origin_use, // add
+    mt_alarm_vol: args.mt_alarm_vol, // add
   };
 }
 
 // 토큰 업데이트(firebase)
 export function updateToken(data: string) {
-  
   return {
     type: types.UPDATE_FCM_TOKEN,
-    payload: data
+    payload: data,
   };
 }
 
 // 알림 설정(1회, 2회, 3회)
 export function updateNotify(data: string) {
-  
   return {
     type: types.UPDATE_NOTIFY_COUNT,
-    payload: data
+    payload: data,
+  };
+}
+
+// 알림 설정(1회, 2회, 3회)
+export function updateAlarmVol(data: number) {
+  return {
+    type: types.UPDATE_ALARM_VOL,
+    payload: data,
   };
 }
 
 // 주문 접수시 자동 프린트 여부
 export function updateAutoPrint(data: string) {
-  
   return {
     type: types.UPDATE_AUTO_PRINT,
-    payload: data
+    payload: data,
   };
 }
 
 // 원산지 출력 여부
 export function updateOriginPrint(data: string) {
-  
   return {
     type: types.UPDATE_ORIGIN_PRINT,
-    payload: data
+    payload: data,
   };
 }

@@ -21,8 +21,9 @@ import Alert from '@material-ui/lab/Alert';
 // Local Component
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
-import orderAction from '../redux/actions';
-import orderDetailAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
+import * as orderDetailAction from '../redux/actions/orderDetailAction';
+import * as checkOrderAction from '../redux/actions/checkOrderAction';
 import appRuntime from '../appRuntime';
 
 interface IProps {
@@ -38,6 +39,7 @@ interface IDetails {
 export default function OrderCheckModal(props: IProps) {
 
   const { mt_id, mt_jumju_code, mt_print, do_jumju_origin_use } = useSelector((state: any) => state.login);
+  const { isChecked } = useSelector((state: any) => state.checkOrder);
   const history = useHistory();
   const base = baseStyles();
   const dispatch = useDispatch();
@@ -454,10 +456,10 @@ export default function OrderCheckModal(props: IProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
         getCheckOrderHandler();
       } else {
-        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        dispatch(orderAction.updateNewOrder(null));
         getCheckOrderHandler();
       }
     });
@@ -479,10 +481,10 @@ export default function OrderCheckModal(props: IProps) {
 
       if (resultItem.result === 'Y') {
         console.log("접수완료 success?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
       } else {
         console.log("접수완료 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        dispatch(orderAction.updateCheckOrder(null));
       }
     });
   }
@@ -498,7 +500,7 @@ export default function OrderCheckModal(props: IProps) {
       }
       handleOpenAlert();
     } else {
-      let param = {
+      const param = {
         od_id: props.od_id,
         jumju_id: mt_id,
         jumju_code: mt_jumju_code,
@@ -507,12 +509,20 @@ export default function OrderCheckModal(props: IProps) {
         visit_time: deliveryTime
       };
 
+      console.log('주문 접수 param', param);
+      // return false;
+
       Api.send('store_order_status_update', param, (args: any) => {
-        let resultItem = args.resultItem;
-        let arrItems = args.arrItems;
+        const resultItem = args.resultItem;
+        const arrItems = args.arrItems;
+
+        console.log('주문 접수 result resultItem', resultItem);
+        console.log('주문 접수 result arrItems', arrItems);
+
         if (resultItem.result === 'Y') {
           setToastState({ msg: '주문을 접수하였습니다.', severity: 'success' });
           handleOpenAlert();
+          dispatch(checkOrderAction.updateChecked(!isChecked));
           props.handleClose();
           getNewOrderHandler();
           setDeliveryTime('');

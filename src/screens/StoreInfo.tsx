@@ -25,7 +25,7 @@ import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import appRuntime from '../appRuntime';
 import clsx from 'clsx';
-import loginAction from '../redux/actions';
+import * as loginAction from '../redux/actions/loginAction';
 
 interface IProps {
   props: object;

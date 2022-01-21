@@ -21,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import { cancelInitState } from '../assets/datas/orders';
-import orderAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
 interface IProps {
   isOpen: boolean;
   od_id: string;
@@ -83,10 +83,10 @@ export default function OrderCancelModal(props: IProps) {
 
       if (resultItem.result === 'Y') {
         console.log("접수완료 success?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
       } else {
         console.log("접수완료 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        dispatch(orderAction.updateCheckOrder(null));
       }
     });
   }

@@ -6,8 +6,8 @@ export function updateOrderDetail(data: string) {
 
   return {
     type: types.UPDATE_ORDER_DETAIL,
-    order: args.order,
-    product: args.orderDetail,
-    store: args.store,
+    order: args !== '' ? args.order : null,
+    product: args !== '' ? args.orderDetail : [],
+    store: args !== '' ? args.store : null,
   };
 }

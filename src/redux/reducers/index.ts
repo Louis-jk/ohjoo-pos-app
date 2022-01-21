@@ -6,6 +6,7 @@ import loginReducer from './loginReducer';
 import OrderDetailReducer from './OrderDetailReducer';
 import allStoreReducer from './allStoreReducer';
 import orderReducer from './orderReducer';
+import checkOrderReducer from './checkOrderReducer';
 import menuControl from './menuControl';
 // import indexReducer from './indexReducer';
 // import gpsReducer from './gpsReducer';
@@ -19,19 +20,20 @@ import menuControl from './menuControl';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['login', 'orderDetail', 'store']
+  whitelist: ['login', 'orderDetail', 'store'],
   // blacklist: ['']
-}
+};
 
 const rootReducer = combineReducers({
   login: loginReducer,
   orderDetail: OrderDetailReducer,
   store: allStoreReducer,
   order: orderReducer,
-  menuContr: menuControl
+  checkOrder: checkOrderReducer,
+  menuContr: menuControl,
   // index: indexReducer,
   // gps: gpsReducer,
-  
+
   // sconf: sconfReducer,
   // slctStore: selectStoreReducer,
   // coupon: couponReducer,

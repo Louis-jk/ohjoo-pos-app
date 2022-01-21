@@ -19,7 +19,7 @@ import Alert from '@material-ui/lab/Alert';
 // Local Component
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
-import orderAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
 
 interface IProps {
   isOpen: boolean;
@@ -64,12 +64,12 @@ export default function OrderDeliveryCompleteModal(props: IProps) {
 
       if (resultItem.result === 'Y') {
         console.log("배달중 success?", arrItems);
-        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems)));
         getDoneOrderHandler();
 
       } else {
         console.log("배달중 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+        dispatch(orderAction.updateDeliveryOrder(null));
         getDoneOrderHandler();
       }
     });
@@ -91,10 +91,10 @@ export default function OrderDeliveryCompleteModal(props: IProps) {
 
       if (resultItem.result === 'Y') {
         console.log("배달완료 success?", arrItems);
-        dispatch(dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems)));
       } else {
         console.log("배달완료 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateDoneOrder(null)));
+        dispatch(orderAction.updateDoneOrder(null));
       }
     });
   }

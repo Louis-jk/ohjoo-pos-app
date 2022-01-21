@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -12,15 +12,27 @@ import { theme } from './styles/base';
 import './App.css';
 import Routes from './routes';
 import Api from './Api';
-import orderAction from './redux/actions';
+import * as orderAction from './redux/actions/orderAction';
+import appRuntime from './appRuntime';
 
 function App() {
 
   const dispatch = useDispatch();
-  const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const { mt_id, mt_jumju_code, mt_alarm_vol } = useSelector((state: any) => state.login);
+  const { isChecked } = useSelector((state: any) => state.checkOrder);
   const [audio] = React.useState(new Audio('https://dmonster1452.cafe24.com/api/sound.mp3'));
   const [notification, setNotification] = React.useState({ title: "", body: "" });
   const [isTokenFound, setTokenFound] = React.useState(false);
+
+  // 알림 스톱 핸들러
+  const alarmStopHandler = () => {
+    appRuntime.send('sound_stop', 'stop alarm');
+  }
+  // 접수처리시 알림 스톱
+  useEffect(() => {
+    alarmStopHandler();
+  }, [isChecked]);
+
 
   // 현재 신규주문 건수 가져오기
   const getNewOrderHandler = () => {
@@ -38,10 +50,10 @@ function App() {
 
       if (resultItem.result === 'Y') {
         console.log("push 신규주문 success?", arrItems);
-        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
       } else {
         console.log("push 신규주문 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        dispatch(orderAction.updateNewOrder(null));
       }
     });
   }
@@ -72,6 +84,7 @@ function App() {
         },
       });
 
+    audio.volume = mt_alarm_vol;
     audio.play();
   };
 

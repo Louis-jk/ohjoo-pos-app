@@ -45,7 +45,7 @@ function createWindow() {
   mainWindow.setMenuBarVisibility(false);
 
   // 개발자 툴 오픈
-  // mainWindow.webContents.openDevTools(); // 빌드시 해제 필요
+  mainWindow.webContents.openDevTools(); // 빌드시 해제 필요
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -116,6 +116,11 @@ ipcMain.on('callToken', (event, data) => {
 // 사운드 카운트 받기
 ipcMain.on('sound_count', (event, data) => {
   event.sender.send('get_sound_count', data);
+});
+
+// 접수 처리 시 사운드 STOP
+ipcMain.on('sound_stop', (event, data) => {
+  event.sender.send('get_stop_sound', data);
 });
 
 // 프린트 정보 열기

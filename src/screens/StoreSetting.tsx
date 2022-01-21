@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Material UI Components
+import { styled } from '@mui/material/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -14,6 +15,12 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/core/Alert';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Stack from '@mui/material/Stack';
+import Slider from '@mui/material/Slider';
+import VolumeDown from '@mui/icons-material/VolumeDown';
+import VolumeUp from '@mui/icons-material/VolumeUp';
+import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 // Local Component
 import Header from '../components/Header';
@@ -21,7 +28,8 @@ import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
 import appRuntime from '../appRuntime';
 import clsx from 'clsx';
-import loginAction from '../redux/actions';
+import * as loginAction from '../redux/actions/loginAction';
+import * as checkOrderAction from '../redux/actions/checkOrderAction';
 import { ButtonGroup, Divider } from '@material-ui/core';
 
 interface IProps {
@@ -40,10 +48,32 @@ type RangeType = 'all' | 'curr';
 export default function StoreInfo(props: IProps) {
 
   const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const { isChecked } = useSelector((state: any) => state.checkOrder);
   const base = baseStyles();
   const [isLoading, setLoading] = React.useState(true);
   const dispatch = useDispatch();
   const [range, setRange] = useState<RangeType>('curr');
+  const [audio] = useState(new Audio('https://dmonster1452.cafe24.com/api/sound.mp3')); // 오디오
+  const [volume, setVolume] = React.useState<number>(30);
+
+
+  const volumeHandleChange = (event: Event, newValue: number | number[]) => {
+    setVolume(newValue as number);
+  };
+
+
+  // 테스트 :: 접수처리시 알림 스톱
+  // useEffect(() => {
+  //   audio.pause();
+  //   audio.currentTime = 0;
+  // }, [isChecked])
+
+  // 알림 소리 플레이
+  const playAudioHandler = () => {
+    const alarmVol = volume / 100;
+    audio.volume = alarmVol;
+    audio.play();
+  }
 
   // Toast(Alert) 관리
   const [toastState, setToastState] = React.useState({
@@ -90,6 +120,7 @@ export default function StoreInfo(props: IProps) {
           mt_sound: arrItems.mt_sound,
           mt_print: arrItems.mt_print
         });
+        setVolume(arrItems.mt_alarm_vol * 100);
         setLoading(false);
       } else {
         setStoreInit(false);
@@ -99,6 +130,7 @@ export default function StoreInfo(props: IProps) {
           mt_sound: '',
           mt_print: ''
         });
+        setVolume(0);
         setLoading(false);
       }
     });
@@ -125,7 +157,8 @@ export default function StoreInfo(props: IProps) {
       do_coupon_use: setting.do_coupon_use,
       mt_sound: setting.mt_sound,
       mt_print: setting.mt_print,
-      RangeType: range
+      RangeType: range,
+      mt_alarm_vol: volume / 100
     };
 
     console.log('매장설정 업데이트 param', param);
@@ -135,9 +168,16 @@ export default function StoreInfo(props: IProps) {
       let resultItem = args.resultItem;
       let arrItems = args.arrItems;
 
+      console.log('매장설정 업데이트 resultItem', resultItem);
+
       if (resultItem.result === 'Y') {
+
+        console.log('매장설정 업데이트 arrItems', arrItems);
+
         dispatch(loginAction.updateNotify(setting.mt_sound));
         dispatch(loginAction.updateAutoPrint(setting.mt_print));
+        dispatch(loginAction.updateAlarmVol(volume / 100));
+
         if (storeInit) {
           setToastState({ msg: '매장설정이 수정 되었습니다.', severity: 'success' });
           handleOpenAlert();
@@ -240,6 +280,72 @@ export default function StoreInfo(props: IProps) {
               </RadioGroup>
             </FormControl>
           </Grid>
+
+          <Grid item xs={12} md={12} mb={2}>
+
+            <Typography fontWeight='bold' mb={1}>알림 소리 크기 설정</Typography>
+            <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' sx={{ mb: 3 }} >
+              <Stack spacing={2} sx={{ mr: 3 }} direction="row" alignItems="center" width={250} color='ButtonShadow'>
+                {volume !== 0 ?
+                  <VolumeDown style={{ cursor: 'pointer' }} onClick={() => setVolume(0)} /> :
+                  <VolumeOffIcon color='disabled' />
+                }
+                <Slider
+                  aria-label="Volume"
+                  value={volume}
+                  onChange={volumeHandleChange}
+                  color='primary'
+                  valueLabelDisplay="auto"
+                  aria-labelledby="non-linear-slider"
+                  sx={{
+                    color: theme.palette.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
+                    '& .MuiSlider-track': {
+                      border: 'none',
+                    },
+                    '& .MuiSlider-thumb': {
+                      width: 24,
+                      height: 24,
+                      backgroundColor: '#fff',
+                      '&:before': {
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.4)',
+                      },
+                      '&:hover, &.Mui-focusVisible, &.Mui-active': {
+                        boxShadow: 'none',
+                      },
+                    },
+                    '& .MuiSlider-valueLabel': {
+                      lineHeight: 1.2,
+                      fontSize: 12,
+                      background: 'unset',
+                      padding: 0,
+                      width: 32,
+                      height: 32,
+                      borderRadius: '50% 50% 50% 0',
+                      backgroundColor: '#52af77',
+                      transformOrigin: 'bottom left',
+                      transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
+                      '&:before': { display: 'none' },
+                      '&.MuiSlider-valueLabelOpen': {
+                        transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
+                      },
+                      '& > *': {
+                        transform: 'rotate(45deg)',
+                      },
+                    },
+                  }}
+                />
+                {volume !== 100 ?
+                  <VolumeUp style={{ cursor: 'pointer' }} onClick={() => setVolume(100)} /> :
+                  <VolumeUp color='primary' />
+                }
+              </Stack>
+              <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' style={{ cursor: 'pointer' }} onClick={playAudioHandler}>
+                <PlayCircleOutlineRoundedIcon />
+                <Typography fontSize={14} ml={0.5}>미리듣기</Typography>
+              </Box>
+            </Box>
+          </Grid>
+
           <Grid item xs={12} md={6} mb={2}>
             <Typography fontWeight='bold'>주문 접수시 자동 프린트 출력 여부</Typography>
             <FormControl component="fieldset">
@@ -337,6 +443,12 @@ export default function StoreInfo(props: IProps) {
               </RadioGroup>
             </FormControl>
           </Grid>
+
+          <Box onClick={() => {
+            dispatch(checkOrderAction.updateChecked(!isChecked));
+          }}>
+            <p>테스트</p>
+          </Box>
 
           <Grid item xs={12} md={6} mb={2} mt={7}>
             <ButtonGroup variant='outlined'>

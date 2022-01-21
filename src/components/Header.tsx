@@ -58,10 +58,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 // Local Component
 import PrintModal from './PrintModal';
 // import OrderPrint from '../components/ComponentToPrint';
-import storeAction from '../redux/actions';
-import loginAction from '../redux/actions';
-import orderAction from '../redux/actions';
-import menuControlAction from '../redux/actions';
+import * as storeAction from '../redux/actions/storeAction';
+import * as loginAction from '../redux/actions/loginAction';
+import * as orderAction from '../redux/actions/orderAction';
+import * as menuControlAction from '../redux/actions/menuControlAction';
 import { theme, baseStyles, ModalConfirmButton, ModalCancelButton } from '../styles/base';
 import Logo from '../assets/images/logo.png';
 import CloseStoreModal from './CloseStoreModal'; // 영업중지 모달
@@ -218,10 +218,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
         getCheckOrderHandler();
       } else {
-        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        dispatch(orderAction.updateNewOrder(null));
         getCheckOrderHandler();
       }
     });
@@ -242,10 +242,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
         getDeliveryOrderHandler();
       } else {
-        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        dispatch(orderAction.updateCheckOrder(null));
         getDeliveryOrderHandler();
       }
     });
@@ -266,10 +266,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems)));
         getDoneOrderHandler();
       } else {
-        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+        dispatch(orderAction.updateDeliveryOrder(null));
         getDoneOrderHandler();
       }
     });
@@ -290,9 +290,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems)));
       } else {
-        dispatch(dispatch(orderAction.updateDoneOrder(null)));
+        dispatch(orderAction.updateDoneOrder(null));
       }
     });
   }

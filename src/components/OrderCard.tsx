@@ -16,7 +16,7 @@ import OrderCancelModal from './OrderCancelModal'; // 접수완료 주문 취소
 import { theme } from '../styles/base';
 import Api from '../Api';
 import moment from 'moment';
-import orderDetailAction from '../redux/actions';
+import * as orderDetailAction from '../redux/actions/orderDetailAction';
 import OrderDeliveryCompleteModal from './OrderDeliveryCompleteModal';
 
 interface orderData {
@@ -69,7 +69,7 @@ export default function OrderCard(props: OrderProps) {
       } else {
         console.log("faild?", arrItems)
         alert('주문 정보를 받아올 수 없습니다.')
-        dispatch(orderDetailAction.updateOrderDetail([]));
+        dispatch(orderDetailAction.updateOrderDetail(''));
       }
     });
   }

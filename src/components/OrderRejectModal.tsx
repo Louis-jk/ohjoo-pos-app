@@ -20,7 +20,7 @@ import Grid from '@material-ui/core/Grid';
 // Local Component
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
-import orderAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
 
 interface IProps {
   isOpen: boolean;
@@ -96,10 +96,10 @@ export default function OrderRejectModal(props: IProps) {
 
       if (resultItem.result === 'Y') {
         console.log("신규주문 success?", arrItems);
-        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
       } else {
         console.log("신규주문 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        dispatch(orderAction.updateNewOrder(null));
       }
     });
   }

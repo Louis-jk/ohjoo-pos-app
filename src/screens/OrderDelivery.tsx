@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import OrderCard from '../components/OrderCard';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
-import orderAction from '../redux/actions';
+import * as orderAction from '../redux/actions/orderAction';
 
 export default function OrderDelivery() {
 

@@ -14,7 +14,7 @@ import Switch, { SwitchProps } from '@material-ui/core/Switch';
 
 // Local Component
 import { theme, baseStyles, ModalCancelButton } from '../styles/base';
-import storeAction from '../redux/actions';
+import * as storeAction from '../redux/actions/storeAction';
 import Api from '../Api';
 
 interface IProps {
@@ -50,10 +50,10 @@ export default function CloseStoreModal(props: IProps) {
       console.log("store list", arrItems);
       if (resultItem.result === 'Y') {
         console.log('등록된 스토어 가져오기 success', arrItems);
-        dispatch(dispatch(storeAction.updateStore(arrItems)));
+        dispatch(storeAction.updateStore(arrItems));
       } else {
         console.log('등록된 스토어 가져오기 failed', arrItems);
-        dispatch(dispatch(storeAction.updateStore([])));
+        dispatch(storeAction.updateStore([]));
       }
 
     });

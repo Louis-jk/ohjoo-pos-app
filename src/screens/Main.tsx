@@ -10,8 +10,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Local Component
 import Api from '../Api';
-import storeAction from '../redux/actions';
-import orderAction from '../redux/actions';
+import * as storeAction from '../redux/actions/storeAction';
+import * as orderAction from '../redux/actions/orderAction';
 import { baseStyles, theme } from '../styles/base';
 
 
@@ -37,12 +37,12 @@ export default function Main(props: any) {
       console.log("store list", arrItems);
       if (resultItem.result === 'Y') {
         // let initialSelectStore = arrItems.filter(store => store.mt_id === mt_id);
-        dispatch(dispatch(storeAction.updateStore(arrItems)));
+        dispatch(storeAction.updateStore(arrItems));
         getNewOrderHandler();
-        // dispatch(dispatch(storeAction.selectStore(initialSelectStore[0].id, initialSelectStore[0].mt_jumju_id, initialSelectStore[0].mt_jumju_code, initialSelectStore[0].mt_store, initialSelectStore[0].mt_addr)));
+        // dispatch(storeAction.selectStore(initialSelectStore[0].id, initialSelectStore[0].mt_jumju_id, initialSelectStore[0].mt_jumju_code, initialSelectStore[0].mt_store, initialSelectStore[0].mt_addr));
       } else {
         console.log('arrItems', arrItems);
-        dispatch(dispatch(storeAction.updateStore([])));
+        dispatch(storeAction.updateStore([]));
         getNewOrderHandler();
       }
 
@@ -65,11 +65,11 @@ export default function Main(props: any) {
 
       if (resultItem.result === 'Y') {
         console.log("신규주문 success?", arrItems);
-        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
         getCheckOrderHandler();
       } else {
         console.log("신규주문 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateNewOrder(null)));
+        dispatch(orderAction.updateNewOrder(null));
         getCheckOrderHandler();
       }
     });
@@ -91,11 +91,11 @@ export default function Main(props: any) {
 
       if (resultItem.result === 'Y') {
         console.log("접수완료 success?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
         getDeliveryOrderHandler();
       } else {
         console.log("접수완료 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateCheckOrder(null)));
+        dispatch(orderAction.updateCheckOrder(null));
         getDeliveryOrderHandler();
       }
     });
@@ -117,11 +117,11 @@ export default function Main(props: any) {
 
       if (resultItem.result === 'Y') {
         console.log("배달중 success?", arrItems);
-        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems)));
         getDoneOrderHandler();
       } else {
         console.log("배달중 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
+        dispatch(orderAction.updateDeliveryOrder(null));
         getDoneOrderHandler();
       }
     });
@@ -143,11 +143,11 @@ export default function Main(props: any) {
 
       if (resultItem.result === 'Y') {
         console.log("배달완료 success?", arrItems);
-        dispatch(dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems))));
+        dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems)));
         history.push('/order_new');
       } else {
         console.log("배달완료 faild?", arrItems);
-        dispatch(dispatch(orderAction.updateDoneOrder(null)));
+        dispatch(orderAction.updateDoneOrder(null));
         history.push('/order_new');
       }
     });
