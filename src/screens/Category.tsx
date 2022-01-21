@@ -21,6 +21,7 @@ import Fade from '@material-ui/core/Fade';
 import Header from '../components/Header';
 import Api from '../Api';
 import { theme, MainBox, baseStyles, ModalCancelButton, ModalConfirmButton } from '../styles/base';
+import { Button } from '@material-ui/core';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -355,12 +356,11 @@ export default function SetCategory(props: any) {
           {/* // 카테고리 수정 모달 */}
           <Grid container spacing={3}>
             {lists && lists.length > 0 && lists.map((list, index) =>
-              <Grid item xs={6} sm={6} md={4} key={list.ca_id} style={{ position: 'relative' }}>
-                <div className={base.txtRoot}>
+              <Grid item xs={6} sm={6} md={6} key={list.ca_id} style={{ position: 'relative' }}>
+                <Box display='flex' flexDirection='row' className={base.txtRoot}>
                   <TextField
                     value={list.ca_name}
                     className={base.textField}
-                    fullWidth
                     id="outlined-basic"
                     label="카테고리명"
                     variant="outlined"
@@ -380,7 +380,14 @@ export default function SetCategory(props: any) {
                       endAdornment: <Android12Switch defaultChecked checked={list.ca_use === '1' ? true : false} />
                     }}
                   />
-                </div>
+                  <Button
+                    variant='outlined'
+                    color='secondary'
+                    style={{ fontWeight: 'bold', boxShadow: 'none', height: 56, marginLeft: 10 }}
+                  >
+                    메뉴 보기
+                  </Button>
+                </Box>
               </Grid>
             )}
           </Grid>
