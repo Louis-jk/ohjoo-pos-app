@@ -60,12 +60,13 @@ export const CouponStyles = makeStyles({
   },
   couponBox: {
     position: 'relative',
-    padding: 10,
+    padding: '5px 10px',
     borderWidth: 2,
     borderStyle: 'dotted',
     borderColor: theme.palette.primary.main,
     borderRadius: 5,
     backgroundColor: theme.palette.primary.light,
+    // backgroundColor: '#fff',
     textAlign: 'center',
     color: '#fff',
     fontWeight: 'bold',
@@ -75,7 +76,8 @@ export const CouponStyles = makeStyles({
     color: theme.palette.primary.contrastText,
   },
   gradient: {
-    background: 'linear-gradient(45deg, #f9f9f9, #fff9ea)',
+    // background: 'linear-gradient(45deg, #eee, #e1e1e1)',
+    background: '#e1e1e1',
   },
 });
 
