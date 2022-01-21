@@ -473,7 +473,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                 <Typography component='label' variant='body1' ml={1}>카테고리</Typography>
               </Box>
             </ListItem>
-            <ListItem className={base.orderMenu02} component={Link} to='/menu' style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? '#fff' : 'transparent' }}>
+            <ListItem className={base.orderMenu02} component={Link} to='/menu/all' style={{ color: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'menu' || props.type === 'menuEdit' || props.type === 'menuAdd' ? '#fff' : 'transparent' }}>
               <Box display='flex' flexDirection='row'>
                 <RestaurantMenuOutlinedIcon />
                 <Typography component='label' variant='body1' ml={1}>메뉴관리</Typography>
