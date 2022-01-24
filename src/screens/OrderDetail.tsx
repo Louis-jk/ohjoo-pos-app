@@ -33,6 +33,7 @@ import { rejectInitState, cancelInitState } from '../assets/datas/orders'; // �
 import * as orderDetailAction from '../redux/actions/orderDetailAction';
 import * as orderAction from '../redux/actions/orderAction';
 import PrintModal from '../components/PrintModal';
+import OrderDeliveryCompleteModal from '../components/OrderDeliveryCompleteModal';
 
 interface OrderId {
   id: string;
@@ -56,7 +57,8 @@ export default function OrdersDetail(od_id: string) {
   const orderStyle = OrderStyles();
   const { id }: OrderId = useParams();
   const [open, setOpen] = React.useState(false); // 신규 주문 -> 접수(배달/포장 시간 입력 모달)
-  const [openDelivery, setOpenDelivery] = React.useState(false); // 접수 완료 -> 배달 처리 모달
+  const [openDelivery, setOpenDelivery] = React.useState(false); // 접수 완료 -> 배달 | 포장 처리 모달
+  const [openDone, setOpenDone] = React.useState(false); // 배달중 -> 배달완료 처리 모달
   const [openReject, setOpenReject] = React.useState(false); // 신규 주문 -> 주문 거부
   const [openCancel, setOpenCancel] = React.useState(false); // 접수 완료 -> 주문 취소
 
@@ -195,7 +197,7 @@ export default function OrdersDetail(od_id: string) {
     setCancelValue(payload);
   }
 
-  // 접수완료 상태 -> 배달처리 핸들러
+  // 접수완료 상태 -> 배달처리 | 포장처리 핸들러
   const handleOpenDelivery = () => {
     setOpenDelivery(true);
   };
@@ -204,8 +206,9 @@ export default function OrdersDetail(od_id: string) {
     setOpenDelivery(false);
   };
 
-  const checkFn = () => {
-    handleOpenDelivery();
+  // 배달중 -> 배달완료 처리 핸들러
+  const handleOpenDone = () => {
+    setOpenDone(!openDone);
   }
 
   // 신규주문 -> 주문 거부 모달 핸들러
@@ -234,12 +237,12 @@ export default function OrdersDetail(od_id: string) {
 
       if (resultItem.result === 'Y') {
         console.log("접수완료 success?", arrItems);
-        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
         getDeliveryOrderHandler();
 
       } else {
         console.log("접수완료 faild?", arrItems);
-        dispatch(orderAction.updateCheckOrder(null));
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
         getDeliveryOrderHandler();
       }
     });
@@ -261,10 +264,10 @@ export default function OrdersDetail(od_id: string) {
 
       if (resultItem.result === 'Y') {
         console.log("배달중 success?", arrItems);
-        dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems)));
+        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
       } else {
         console.log("배달중 faild?", arrItems);
-        dispatch(orderAction.updateDeliveryOrder(null));
+        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
       }
     });
   }
@@ -276,7 +279,7 @@ export default function OrdersDetail(od_id: string) {
       od_id: id,
       jumju_id: mt_id,
       jumju_code: mt_jumju_code,
-      od_process_status: '배달중',
+      od_process_status: detailOrder.od_type === '배달' ? '배달중' : '포장완료',
     };
 
     Api.send('store_order_status_update', param, (args: any) => {
@@ -354,14 +357,16 @@ export default function OrdersDetail(od_id: string) {
         <Header
           detail={
             detailOrder.od_process_status === '신규주문' ? 'order_new'
-              : detailOrder.od_process_status === '접수완료' ? 'order_check'
-                : detailOrder.od_process_status === '배달중' ? 'order_delivery'
-                  : detailOrder.od_process_status === '배달완료' || '포장완료' ? 'order_done'
-                    : null}
+              : detailOrder.od_process_status === '접수완료' && detailOrder.od_type === '배달' ? 'order_check_delivery'
+                : detailOrder.od_process_status === '접수완료' && detailOrder.od_type === '포장' ? 'order_check_takeout'
+                  : detailOrder.od_process_status === '배달중' ? 'order_delivery'
+                    : detailOrder.od_process_status === '배달완료' || '포장완료' ? 'order_done'
+                      : null}
           action={
             detailOrder.od_process_status === '신규주문' ? () => newFn()
-              : detailOrder.od_process_status === '접수완료' ? () => checkFn()
-                : () => { return false }
+              : detailOrder.od_process_status === '접수완료' ? () => handleOpenDelivery()
+                : detailOrder.od_process_status === '배달중' ? () => handleOpenDone()
+                  : () => { return false }
           }
           action02={
             detailOrder.od_process_status === '신규주문' ? () => handleRejectOpen()
@@ -395,30 +400,38 @@ export default function OrdersDetail(od_id: string) {
       </Box>
 
       {/* 접수하기 모달(예상 배달시간 입력 폼) */}
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={base.modal}
-        open={openDelivery}
-        // onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={openDelivery}>
-          <Box className={clsx(base.modalInner, base.colCenter)}>
-            <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>배달처리</Typography>
-            <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>배달처리를 하시겠습니까?</Typography>
-            <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-              <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendDeliveryHandler}>배달처리</ModalConfirmButton>
-              <ModalConfirmButton variant="outlined" onClick={handleCloseDelivery}>취소</ModalConfirmButton>
-            </ButtonGroup>
-          </Box>
-        </Fade>
-      </Modal>
+      {detailOrder &&
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          className={base.modal}
+          open={openDelivery}
+          // onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={openDelivery}>
+            <Box className={clsx(base.modalInner, base.colCenter)}>
+              <Typography id="transition-modal-title" component="h5" variant="h5" style={{ fontWeight: 'bold', marginBottom: 10, color: theme.palette.primary.main }}>{detailOrder.od_type === '배달' ? '배달처리' : '포장완료'}</Typography>
+              <Typography id="transition-modal-description" style={{ marginBottom: 20 }}>{detailOrder.od_type === '배달' ? '배달처리' : '포장완료 처리'}를 하시겠습니까?</Typography>
+              <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+                <ModalConfirmButton variant="contained" style={{ boxShadow: 'none' }} onClick={sendDeliveryHandler}>{detailOrder.od_type === '배달' ? '배달처리' : '포장완료'}</ModalConfirmButton>
+                <ModalConfirmButton variant="outlined" onClick={handleCloseDelivery}>취소</ModalConfirmButton>
+              </ButtonGroup>
+            </Box>
+          </Fade>
+        </Modal>
+      }
       {/* // 접수하기 모달(예상 배달시간 입력 폼) */}
+
+      {/* 배달중 -> 배달완료 모달 */}
+      {detailOrder &&
+        <OrderDeliveryCompleteModal isOpen={openDone} od_id={id} od_type={detailOrder.od_type} handleClose={handleOpenDone} />
+      }
+      {/* // 배달중 -> 배달완료 모달 */}
 
       {/* 주문 취소 모달 */}
       <Modal
@@ -577,15 +590,15 @@ export default function OrdersDetail(od_id: string) {
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>오주 포인트 : </Typography>
-                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_point)} P</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>-{Api.comma(detailOrder.order_point)} P</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>오주 쿠폰 할인 : </Typography>
-                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_coupon_ohjoo)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>-{Api.comma(detailOrder.order_coupon_ohjoo)} 원</Typography>
                 </Box>
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
                   <Typography variant="body1" className={orderStyle.orderSubtitle}>상점 쿠폰 할인 : </Typography>
-                  <Typography variant="body1" className={orderStyle.orderSubDescription}>{Api.comma(detailOrder.order_coupon_store)} 원</Typography>
+                  <Typography variant="body1" className={orderStyle.orderSubDescription}>-{Api.comma(detailOrder.order_coupon_store)} 원</Typography>
                 </Box>
                 <Divider style={{ marginTop: 20, marginBottom: 20 }} />
                 <Box fontSize={14} display="flex" flexDirection="row" justifyContent="flex-start" alignItems="flex-start" className={orderStyle.orderBox}>
