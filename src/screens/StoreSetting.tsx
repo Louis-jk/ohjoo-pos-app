@@ -228,7 +228,7 @@ export default function StoreInfo(props: IProps) {
           {/* <p>{mt_id}</p>
           <p>{mt_jumju_code}</p> */}
           <Box className={clsx(base.mb10, base.mt20)}></Box>
-          <Grid item xs={12} md={6} mb={2}>
+          <Grid item xs={12} md={12} mb={2}>
             <Typography fontWeight='bold'>알림 설정</Typography>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="N">
@@ -236,7 +236,7 @@ export default function StoreInfo(props: IProps) {
                   value={'1'}
                   checked={setting.mt_sound === '1' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                  label="1회 알림"
+                  label="10회 알림"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
@@ -244,14 +244,14 @@ export default function StoreInfo(props: IProps) {
                       ...setting,
                       mt_sound: '1'
                     });
-                    appRuntime.send('sound_count', '1');
+                    // appRuntime.send('sound_count', '1');
                   }}
                 />
                 <FormControlLabel
                   value={'2'}
                   checked={setting.mt_sound === '2' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                  label="2회 알림"
+                  label="20회 알림"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
@@ -259,14 +259,14 @@ export default function StoreInfo(props: IProps) {
                       ...setting,
                       mt_sound: '2'
                     });
-                    appRuntime.send('sound_count', '2');
+                    // appRuntime.send('sound_count', '2');
                   }}
                 />
                 <FormControlLabel
                   value={'3'}
                   checked={setting.mt_sound === '3' ? true : false}
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
-                  label="3회 알림"
+                  label="30회 알림"
                   labelPlacement="start"
                   style={{ width: 110, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
@@ -274,7 +274,7 @@ export default function StoreInfo(props: IProps) {
                       ...setting,
                       mt_sound: '3'
                     });
-                    appRuntime.send('sound_count', '3');
+                    // appRuntime.send('sound_count', '3');
                   }}
                 />
               </RadioGroup>
@@ -285,7 +285,7 @@ export default function StoreInfo(props: IProps) {
 
             <Typography fontWeight='bold' mb={1}>알림 소리 크기 설정</Typography>
             <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center' sx={{ mb: 3 }} >
-              <Stack spacing={2} sx={{ mr: 3 }} direction="row" alignItems="center" width={250} color='ButtonShadow'>
+              <Stack spacing={2} sx={{ mr: 3 }} direction="row" alignItems="center" width={215} color='ButtonShadow'>
                 {volume !== 0 ?
                   <VolumeDown style={{ cursor: 'pointer' }} onClick={() => setVolume(0)} /> :
                   <VolumeOffIcon color='disabled' />
@@ -356,7 +356,7 @@ export default function StoreInfo(props: IProps) {
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="자동출력"
                   labelPlacement="start"
-                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  style={{ width: 150, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
                     setSetting({
                       ...setting,
@@ -370,7 +370,7 @@ export default function StoreInfo(props: IProps) {
                   control={<Radio color="primary" style={{ paddingLeft: 0 }} />}
                   label="출력안함"
                   labelPlacement="start"
-                  style={{ width: 110, margin: 0, flexDirection: 'row' }}
+                  style={{ width: 150, margin: 0, flexDirection: 'row' }}
                   onChange={e => {
                     setSetting({
                       ...setting,
@@ -444,11 +444,11 @@ export default function StoreInfo(props: IProps) {
             </FormControl>
           </Grid>
 
-          <Box onClick={() => {
+          {/* <Box onClick={() => {
             dispatch(checkOrderAction.updateChecked(!isChecked));
           }}>
             <p>테스트</p>
-          </Box>
+          </Box> */}
 
           <Grid item xs={12} md={6} mb={2} mt={7}>
             <ButtonGroup variant='outlined'>
