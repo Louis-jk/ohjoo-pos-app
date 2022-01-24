@@ -28,11 +28,11 @@ function App() {
   const alarmStopHandler = () => {
     appRuntime.send('sound_stop', 'stop alarm');
   }
+
   // 접수처리시 알림 스톱
   useEffect(() => {
     alarmStopHandler();
   }, [isChecked]);
-
 
   // 현재 신규주문 건수 가져오기
   const getNewOrderHandler = () => {
