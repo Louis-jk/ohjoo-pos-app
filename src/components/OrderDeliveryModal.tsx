@@ -66,11 +66,12 @@ export default function OrderCheckModal(props: IProps) {
         console.log("접수완료 success?", arrItems);
         dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
         getDeliveryOrderHandler();
-
+        getDoneOrderHandler();
       } else {
         console.log("접수완료 faild?", arrItems);
         dispatch(orderAction.updateCheckOrder(null));
         getDeliveryOrderHandler();
+        getDoneOrderHandler();
       }
     });
   }
@@ -98,6 +99,31 @@ export default function OrderCheckModal(props: IProps) {
       }
     });
   }
+
+  // 현재 배달완료 주문 가져오기
+  const getDoneOrderHandler = () => {
+
+    const param = {
+      item_count: 0,
+      limit_count: 10,
+      jumju_id: mt_id,
+      jumju_code: mt_jumju_code,
+      od_process_status: '배달완료',
+    };
+    Api.send('store_order_list', param, (args: any) => {
+      let resultItem = args.resultItem;
+      let arrItems = args.arrItems;
+
+      if (resultItem.result === 'Y') {
+        console.log("배달완료 success?", arrItems);
+        dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems)));
+      } else {
+        console.log("배달완료 faild?", arrItems);
+        dispatch(orderAction.updateDoneOrder(null));
+      }
+    });
+  }
+
 
   // 접수완료 => 배달중 처리 핸들러
   const sendDeliveryHandler = () => {
