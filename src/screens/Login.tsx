@@ -123,6 +123,7 @@ export default function Login() {
         dispatch(loginAction.updateLogin(JSON.stringify(arrItems)));
         dispatch(loginAction.updateToken(token));
         appRuntime.send('sound_count', arrItems.mt_sound); // 알림 사운드 횟수 보내기 : web 테스트시 끄기
+        appRuntime.send('sound_volume', arrItems.mt_alarm_vol); // 알림 사운드 VOLUME 보내기 : web 테스트시 끄기
         history.replace('/main');
         setValues({
           ...values,
