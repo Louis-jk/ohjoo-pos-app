@@ -258,16 +258,20 @@ export default function Tips(props: any) {
     if (minPrice === null || minPrice === '') {
       setToastState({ msg: '최소주문금액을 입력해주세요.', severity: 'error' });
       handleOpenAlert();
-    } else if (maxPrice === null || maxPrice === '') {
-      setToastState({ msg: '최대주문금액을 입력해주세요.', severity: 'error' });
-      handleOpenAlert();
-    } else if (tipPrice === null || tipPrice === '') {
-      setToastState({ msg: '배달비를 입력해주세요.', severity: 'error' });
-      handleOpenAlert();
-    } else if (Number(minPrice) > Number(maxPrice)) {
-      setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
-      handleOpenAlert();
-    } else {
+    }
+    // else if (maxPrice === null || maxPrice === '') {
+    //   setToastState({ msg: '최대주문금액을 입력해주세요.', severity: 'error' });
+    //   handleOpenAlert();
+    // } 
+    // else if (tipPrice === null || tipPrice === '') {
+    //   setToastState({ msg: '배달비를 입력해주세요.', severity: 'error' });
+    //   handleOpenAlert();
+    // } 
+    // else if (Number(minPrice) > Number(maxPrice)) {
+    //   setToastState({ msg: '최소주문금액이 최대주문금액보다 높을 수 없습니다.', severity: 'error' });
+    //   handleOpenAlert();
+    // } 
+    else {
       onSubmitTips(type);
     }
   }
