@@ -123,6 +123,11 @@ ipcMain.on('sound_stop', (event, data) => {
   event.sender.send('get_stop_sound', data);
 });
 
+// 사운드 VOLUMNE 설정
+ipcMain.on('sound_volume', (event, data) => {
+  event.sender.send('get_sound_vol', data);
+});
+
 // 프린트 정보 열기
 ipcMain.on('openPrint', (event, data) => {
   const printerInfo = mainWindow.webContents.getPrinters();
