@@ -47,14 +47,14 @@ type RangeType = 'all' | 'curr';
 
 export default function StoreInfo(props: IProps) {
 
-  const { mt_id, mt_jumju_code } = useSelector((state: any) => state.login);
+  const { mt_id, mt_jumju_code, mt_alarm_vol } = useSelector((state: any) => state.login);
   const { isChecked } = useSelector((state: any) => state.checkOrder);
   const base = baseStyles();
   const [isLoading, setLoading] = React.useState(true);
   const dispatch = useDispatch();
   const [range, setRange] = useState<RangeType>('curr');
   const [audio] = useState(new Audio('https://dmonster1452.cafe24.com/api/sound.mp3')); // 오디오
-  const [volume, setVolume] = React.useState<number>(30);
+  const [volume, setVolume] = React.useState<number>(50);
 
 
   const volumeHandleChange = (event: Event, newValue: number | number[]) => {
@@ -67,6 +67,12 @@ export default function StoreInfo(props: IProps) {
   //   audio.pause();
   //   audio.currentTime = 0;
   // }, [isChecked])
+
+  // useEffect(() => {
+  //   if (mt_alarm_vol && typeof mt_alarm_vol === 'number') {
+  //     setVolume(mt_alarm_vol * 100);
+  //   }
+  // }, [mt_alarm_vol])
 
   // 알림 소리 플레이
   const playAudioHandler = () => {
@@ -177,6 +183,8 @@ export default function StoreInfo(props: IProps) {
         dispatch(loginAction.updateNotify(setting.mt_sound));
         dispatch(loginAction.updateAutoPrint(setting.mt_print));
         dispatch(loginAction.updateAlarmVol(volume / 100));
+        appRuntime.send('sound_volume', volume / 100);
+        appRuntime.send('sound_count', setting.mt_sound);
 
         if (storeInit) {
           setToastState({ msg: '매장설정이 수정 되었습니다.', severity: 'success' });
