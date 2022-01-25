@@ -373,7 +373,6 @@ export default function Tips(props: any) {
                   id="outlined-basic"
                   label="최대주문금액"
                   variant="outlined"
-                  required
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
                     if (e.target.value === '' || re.test(e.target.value)) {
@@ -395,7 +394,6 @@ export default function Tips(props: any) {
                   id="outlined-basic"
                   label="배달비"
                   variant="outlined"
-                  required
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
                     if (e.target.value === '' || re.test(e.target.value)) {
@@ -466,7 +464,6 @@ export default function Tips(props: any) {
                   id="outlined-basic"
                   label="최대주문금액"
                   variant="outlined"
-                  required
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
                     if (e.target.value === '' || re.test(e.target.value)) {
@@ -488,7 +485,6 @@ export default function Tips(props: any) {
                   id="outlined-basic"
                   label="배달비"
                   variant="outlined"
-                  required
                   onChange={e => {
                     const re = /^[0-9\b]+$/;
                     if (e.target.value === '' || re.test(e.target.value)) {
@@ -563,6 +559,7 @@ export default function Tips(props: any) {
                         style={{ backgroundColor: '#fff' }}
                         focused={false}
                         contentEditable={false}
+                        disabled
                         InputLabelProps={{
                           shrink: true
                         }}
@@ -578,6 +575,7 @@ export default function Tips(props: any) {
                         label="최대금액"
                         style={{ backgroundColor: '#fff' }}
                         focused={false}
+                        disabled
                         InputLabelProps={{
                           shrink: true
                         }}
@@ -593,6 +591,7 @@ export default function Tips(props: any) {
                         value={Api.comma(list.dd_charge_price)}
                         variant="outlined"
                         label="배달비"
+                        disabled
                         style={{ backgroundColor: '#fff' }}
                         focused={false}
                         InputLabelProps={{
