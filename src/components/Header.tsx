@@ -131,6 +131,8 @@ export default function ResponsiveDrawer(props: OptionalProps) {
 
   const [closeStoreModalOpen, setCloseStoreModalOpen] = React.useState(false); // 영업정지 모달 상태
 
+  console.log("헤더 props ??", props);
+
   const openCloseStoreModal = () => {
     setCloseStoreModalOpen(true);
   }
@@ -218,10 +220,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems)));
+        dispatch(dispatch(orderAction.updateNewOrder(JSON.stringify(arrItems))));
         getCheckOrderHandler();
       } else {
-        dispatch(orderAction.updateNewOrder(null));
+        dispatch(dispatch(orderAction.updateNewOrder(null)));
         getCheckOrderHandler();
       }
     });
@@ -242,10 +244,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems)));
+        dispatch(dispatch(orderAction.updateCheckOrder(JSON.stringify(arrItems))));
         getDeliveryOrderHandler();
       } else {
-        dispatch(orderAction.updateCheckOrder(null));
+        dispatch(dispatch(orderAction.updateCheckOrder(null)));
         getDeliveryOrderHandler();
       }
     });
@@ -266,10 +268,10 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems)));
+        dispatch(dispatch(orderAction.updateDeliveryOrder(JSON.stringify(arrItems))));
         getDoneOrderHandler();
       } else {
-        dispatch(orderAction.updateDeliveryOrder(null));
+        dispatch(dispatch(orderAction.updateDeliveryOrder(null)));
         getDoneOrderHandler();
       }
     });
@@ -290,9 +292,9 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       let arrItems = args.arrItems;
 
       if (resultItem.result === 'Y') {
-        dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems)));
+        dispatch(dispatch(orderAction.updateDoneOrder(JSON.stringify(arrItems))));
       } else {
-        dispatch(orderAction.updateDoneOrder(null));
+        dispatch(dispatch(orderAction.updateDoneOrder(null)));
       }
     });
   }
@@ -419,6 +421,7 @@ export default function ResponsiveDrawer(props: OptionalProps) {
     appRuntime.send('notification', 'test');
   }
 
+
   // 메뉴 드로어
   const drawer = (
     <div style={{ backgroundColor: theme.palette.secondary.main, height: '100%' }}>
@@ -435,22 +438,79 @@ export default function ResponsiveDrawer(props: OptionalProps) {
       </Toolbar>
       {selectType === 'order' ?
         <List className={clsx(base.orderMenuWrap, base.noDrag)} sx={{ padding: 0 }}>
-          <ListItem className={base.orderMenu} component={Link} to='/order_new' style={{ color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? '#fff' : 'transparent' }}>
-            <Typography component='label' variant='body1' style={{ color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' : (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : '#fff' }}>신규주문</Typography>
+          {/* 신규주문 메뉴 */}
+          <ListItem
+            className={base.orderMenu}
+            component={Link}
+            to='/order_new'
+            style={{
+              color: curPathName === 'order_new' || props.detail === 'order_new' ? theme.palette.secondary.main :
+                theme.palette.secondary.contrastText,
+              backgroundColor: curPathName === 'order_new' || props.detail === 'order_new' ? '#fff' :
+                'transparent'
+            }}>
+            <Typography
+              component='label'
+              variant='body1'
+              style={{
+                color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' :
+                  (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' :
+                    (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' :
+                      '#fff'
+              }}>
+              신규주문
+            </Typography>
             <Typography className='count' component='h3' variant='h4' style={{ color: (newOrder.length > 0 && curPathName !== 'order_new' && props.detail !== 'order_new') ? '#ffc739' : (newOrder.length > 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : (newOrder.length == 0 && (curPathName === 'order_new' || props.detail === 'order_new')) ? '#1c1b30' : '#fff' }}>{newOrder.length > 99 ? '99+' : newOrder.length}</Typography>
           </ListItem>
-          <ListItem className={base.orderMenu} component={Link} to='/order_check' style={{ color: curPathName === 'order_check' || props.detail === 'order_check' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_check' || props.detail === 'order_check' ? '#fff' : 'transparent' }}>
-            <Typography component='label' variant='body1' style={{ color: (checkOrder.length > 0 && curPathName !== 'order_check' && props.detail !== 'order_check') ? '#ffc739' : (checkOrder.length > 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : (checkOrder.length == 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : '#fff' }}>접수완료</Typography>
-            <Typography className='count' component='h3' variant='h4' style={{ color: (checkOrder.length > 0 && curPathName !== 'order_check' && props.detail !== 'order_check') ? '#ffc739' : (checkOrder.length > 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : (checkOrder.length == 0 && (curPathName === 'order_check' || props.detail === 'order_check')) ? '#1c1b30' : '#fff' }}>{checkOrder.length > 99 ? '99+' : checkOrder.length}</Typography>
+          {/* // 신규주문 메뉴 */}
+
+          {/* 접수완료 메뉴 */}
+          <ListItem className={base.orderMenu} component={Link} to='/order_check'
+            style={{
+              color: curPathName === 'order_check' || props.detail === 'order_check_delivery' || props.detail === 'order_check_takeout' ? theme.palette.secondary.main :
+                theme.palette.secondary.contrastText,
+              backgroundColor: curPathName === 'order_check' || props.detail === 'order_check_delivery' || props.detail === 'order_check_takeout' ? '#fff' :
+                'transparent'
+            }}>
+            <Typography
+              component='label'
+              variant='body1'
+              style={{
+                color: (checkOrder.length > 0 && curPathName !== 'order_check' && props.detail !== 'order_check_delivery' && props.detail !== 'order_check_takeout') ? '#ffc739' :
+                  (checkOrder.length > 0 && (curPathName === 'order_check' || props.detail === 'order_check_delivery' || props.detail === 'order_check_takeout')) ? '#1c1b30' :
+                    (checkOrder.length == 0 && (curPathName === 'order_check' || props.detail === 'order_check_delivery' || props.detail === 'order_check_takeout')) ? '#1c1b30' :
+                      '#fff'
+              }}>
+              접수완료
+            </Typography>
+            <Typography
+              className='count'
+              component='h3'
+              variant='h4'
+              style={{
+                color: (checkOrder.length > 0 && curPathName !== 'order_check' && props.detail !== 'order_check_delivery' && props.detail !== 'order_check_takeout') ? '#ffc739' :
+                  (checkOrder.length > 0 && (curPathName === 'order_check' || props.detail === 'order_check_delivery' || props.detail === 'order_check_takeout')) ? '#1c1b30' :
+                    (checkOrder.length == 0 && (curPathName === 'order_check' || props.detail === 'order_check_delivery' || props.detail === 'order_check_takeout')) ? '#1c1b30' :
+                      '#fff'
+              }}>
+              {checkOrder.length > 99 ? '99+' : checkOrder.length}
+            </Typography>
           </ListItem>
+          {/* // 접수완료 메뉴 */}
+
+          {/* 배달중 메뉴 */}
           <ListItem className={base.orderMenu} component={Link} to='/order_delivery' style={{ color: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_delivery' || props.detail === 'order_delivery' ? '#fff' : 'transparent' }}>
             <Typography component='label' variant='body1' style={{ color: (deliveryOrder.length > 0 && curPathName !== 'order_delivery' && props.detail !== 'order_delivery') ? '#ffc739' : (deliveryOrder.length > 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : (deliveryOrder.length == 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : '#fff' }}>배달중</Typography>
             <Typography className='count' component='h3' variant='h4' style={{ color: (deliveryOrder.length > 0 && curPathName !== 'order_delivery' && props.detail !== 'order_delivery') ? '#ffc739' : (deliveryOrder.length > 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : (deliveryOrder.length == 0 && (curPathName === 'order_delivery' || props.detail === 'order_delivery')) ? '#1c1b30' : '#fff' }}>{deliveryOrder.length > 99 ? '99+' : deliveryOrder.length}</Typography>
           </ListItem>
+          {/* // 배달중 메뉴 */}
+
+          {/* 배달/포장완료 메뉴 */}
           <ListItem className={base.orderMenu} component={Link} to='/order_done' style={{ color: curPathName === 'order_done' || props.detail === 'order_done' ? theme.palette.secondary.main : theme.palette.secondary.contrastText, backgroundColor: curPathName === 'order_done' || props.detail === 'order_done' ? '#fff' : 'transparent' }}>
             <Typography component='label' variant='body1' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>배달/포장완료</Typography>
             <Typography className='count' component='h3' variant='h4' style={{ color: (doneOrder.length > 0 && curPathName !== 'order_done' && props.detail !== 'order_done') ? '#ffc739' : (doneOrder.length > 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : (doneOrder.length == 0 && (curPathName === 'order_done' || props.detail === 'order_done')) ? '#1c1b30' : '#fff' }}>{doneOrder.length > 99 ? '99+' : doneOrder.length}</Typography>
           </ListItem>
+          {/* // 배달/포장완료 메뉴 */}
         </List>
         :
         selectType === 'store' ?
@@ -685,12 +745,12 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                   <OrderPrint ref={componentRef} />
                 </Box> */}
               </Box>
-              : props.detail === 'order_check' ?
+              : props.detail === 'order_check_delivery' ?
                 <Box>
                   <Button variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
                     <Typography color='secondary'>배달처리</Typography>
                   </Button>
-                  <Button variant='outlined' style={{ paddingLeft: 10, paddingRight: 10, borderWidth: 2, marginRight: 20 }} onClick={props.action02}>
+                  <Button variant='outlined' style={{ paddingLeft: 10, paddingRight: 10, borderWidth: 2, marginRight: 10 }} onClick={props.action02}>
                     <Typography color='primary'>취소처리</Typography>
                   </Button>
                   <IconButton
@@ -705,8 +765,14 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                     <OrderPrint ref={componentRef} />
                   </Box> */}
                 </Box>
-                : props.detail === 'order_delivery' || props.detail === 'order_done' ?
-                  <Box style={{ marginRight: 20 }}>
+                : props.detail === 'order_check_takeout' ?
+                  <Box>
+                    <Button variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                      <Typography color='secondary'>포장완료</Typography>
+                    </Button>
+                    <Button variant='outlined' style={{ paddingLeft: 10, paddingRight: 10, borderWidth: 2, marginRight: 10 }} onClick={props.action02}>
+                      <Typography color='primary'>취소처리</Typography>
+                    </Button>
                     <IconButton
                       color="primary"
                       aria-label="list"
@@ -716,50 +782,81 @@ export default function ResponsiveDrawer(props: OptionalProps) {
                       <PrintIcon />
                     </IconButton>
                     {/* <Box style={{ display: 'none' }}>
+                     <OrderPrint ref={componentRef} />
+                   </Box> */}
+                  </Box>
+                  : props.detail === 'order_delivery' ?
+                    <Box>
+                      <Button variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                        <Typography color='secondary'>배달완료</Typography>
+                      </Button>
+                      <IconButton
+                        color="primary"
+                        aria-label="list"
+                        component="button"
+                        onClick={handlePrint02}
+                      >
+                        <PrintIcon />
+                      </IconButton>
+                      {/* <Box style={{ display: 'none' }}>
                       <OrderPrint ref={componentRef} />
                     </Box> */}
-                  </Box>
-                  : props.type === 'menu' ?
-                    <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={() => history.push('/menu_add')}>
-                      <Typography variant='body1' fontSize={16} fontWeight='bold'>추가하기</Typography>
-                    </Button>
-                    : props.type === 'menuAdd' ?
-                      <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                        <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
-                      </Button>
-                      : props.type === 'menuEdit' ?
-                        <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                          <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
+                    </Box>
+                    : props.detail === 'order_done' ?
+                      <Box style={{ marginRight: 20 }}>
+                        <IconButton
+                          color="primary"
+                          aria-label="list"
+                          component="button"
+                          onClick={handlePrint02}
+                        >
+                          <PrintIcon />
+                        </IconButton>
+                        {/* <Box style={{ display: 'none' }}>
+                      <OrderPrint ref={componentRef} />
+                    </Box> */}
+                      </Box>
+                      : props.type === 'menu' ?
+                        <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={() => history.push('/menu_add')}>
+                          <Typography variant='body1' fontSize={16} fontWeight='bold'>추가하기</Typography>
                         </Button>
-                        : props.type === 'category' ?
+                        : props.type === 'menuAdd' ?
                           <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                            <Typography variant='body1' fontSize={16} fontWeight='bold'>카테고리 추가하기</Typography>
+                            <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                           </Button>
-                          : props.type === 'coupon' ?
-                            <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={() => history.push('/coupon_add')}>
-                              <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
+                          : props.type === 'menuEdit' ?
+                            <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                              <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                             </Button>
-                            : props.type === 'couponAdd' ?
+                            : props.type === 'category' ?
                               <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                <Typography variant='body1' fontSize={16} fontWeight='bold'>카테고리 추가하기</Typography>
                               </Button>
-                              : props.type === 'couponEdit' ?
-                                <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                  <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
+                              : props.type === 'coupon' ?
+                                <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={() => history.push('/coupon_add')}>
+                                  <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                                 </Button>
-                                : props.type === 'tips' ?
+                                : props.type === 'couponAdd' ?
                                   <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                    <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
+                                    <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
                                   </Button>
-                                  : props.type === 'storeInfo' ?
+                                  : props.type === 'couponEdit' ?
                                     <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                      <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                      <Typography variant='body1' fontSize={16} fontWeight='bold'>수정하기</Typography>
                                     </Button>
-                                    : props.type === 'storeSetting' ?
+                                    : props.type === 'tips' ?
                                       <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
-                                        <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                        <Typography variant='body1' fontSize={16} fontWeight='bold'>등록하기</Typography>
                                       </Button>
-                                      : null}
+                                      : props.type === 'storeInfo' ?
+                                        <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                                          <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                        </Button>
+                                        : props.type === 'storeSetting' ?
+                                          <Button color='primary' variant='contained' style={{ paddingLeft: 10, paddingRight: 10, marginRight: 10 }} onClick={props.action}>
+                                            <Typography variant='body1' fontSize={16} fontWeight='bold'>저장하기</Typography>
+                                          </Button>
+                                          : null}
             {/* <IconButton
               color="info"
               aria-label="list"
