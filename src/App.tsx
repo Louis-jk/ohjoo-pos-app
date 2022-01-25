@@ -29,7 +29,7 @@ function App() {
     appRuntime.send('sound_stop', 'stop alarm');
   }
 
-  // 접수처리시 알림 스톱
+  // 접수처리시 알림 스톱 : web 테스트시 끄기
   useEffect(() => {
     alarmStopHandler();
   }, [isChecked]);
