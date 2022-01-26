@@ -39,6 +39,8 @@ export default function OrderCard(props: OrderProps) {
   const params = useParams();
 
   const [odId, setOdId] = React.useState(''); // 주문 id
+  const [currJumjuId, setCurrJumjuId] = React.useState(''); // 주문 해당 jumju_id
+  const [currJumjuCode, setCurrJumjuCode] = React.useState(''); // 주문 해당 jumju_code
   const [odType, setOdType] = React.useState(''); // 주문 타입 (배달 | 포장)  
 
   // 신규주문 상태 -> 접수(배달/포장 시간 입력) 모달 핸들러
@@ -52,12 +54,12 @@ export default function OrderCard(props: OrderProps) {
   };
 
   // 주문 디테일 정보 가져오기
-  const getOrderDetailHandler = (od_id: string) => {
+  const getOrderDetailHandler = (od_id: string, jumju_id: string, jumju_code: string) => {
     const param = {
       item_count: 0,
       limit_count: 10,
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
+      jumju_id,
+      jumju_code,
       od_id
     };
     Api.send('store_order_detail', param, (args: any) => {
@@ -74,10 +76,12 @@ export default function OrderCard(props: OrderProps) {
     });
   }
 
-  const checkOrderHandler = (id: string, type: string) => {
+  const checkOrderHandler = (id: string, jumjuId: string, jumjuCode: string, type: string) => {
     setOdId(id);
+    setCurrJumjuId(jumjuId);
+    setCurrJumjuCode(jumjuCode);
     setOdType(type);
-    getOrderDetailHandler(id);
+    getOrderDetailHandler(id, jumjuId, jumjuCode);
     handleOpen();
   }
 
@@ -90,8 +94,10 @@ export default function OrderCard(props: OrderProps) {
   const handleDeliveryClose = () => {
     setDeliveryOpen(false);
   };
-  const deliveryOrderHandler = (id: string, type: string) => {
+  const deliveryOrderHandler = (id: string, jumjuId: string, jumjuCode: string, type: string) => {
     setOdId(id);
+    setCurrJumjuId(jumjuId);
+    setCurrJumjuCode(jumjuCode);
     setOdType(type);
     handleDeliveryOpen();
   }
@@ -105,8 +111,10 @@ export default function OrderCard(props: OrderProps) {
   const handleDeliveryCompleteClose = () => {
     setDeliveryCompleteOpen(false);
   };
-  const deliveryOrderCompleteHandler = (id: string, type: string) => {
+  const deliveryOrderCompleteHandler = (id: string, jumjuId: string, jumjuCode: string, type: string) => {
     setOdId(id);
+    setCurrJumjuId(jumjuId);
+    setCurrJumjuCode(jumjuCode);
     setOdType(type);
     handleDeliveryCompleteOpen();
   }
@@ -121,8 +129,10 @@ export default function OrderCard(props: OrderProps) {
   const handleRejectClose = () => {
     setRejectOpen(false);
   };
-  const rejectOrderHandler = (id: string) => {
+  const rejectOrderHandler = (id: string, jumjuId: string, jumjuCode: string) => {
     setOdId(id);
+    setCurrJumjuId(jumjuId);
+    setCurrJumjuCode(jumjuCode);
     handleRejectOpen();
   }
 
@@ -136,8 +146,10 @@ export default function OrderCard(props: OrderProps) {
     setCancelModalOpen(false);
   };
 
-  const checkCancelModalHandler = (id: string) => {
+  const checkCancelModalHandler = (id: string, jumjuId: string, jumjuCode: string) => {
     setOdId(id);
+    setCurrJumjuId(jumjuId);
+    setCurrJumjuCode(jumjuCode);
     cancelModalOpenHandler();
   }
 
@@ -192,23 +204,41 @@ export default function OrderCard(props: OrderProps) {
 
             <Box flex={type === 'new' || type === 'check' ? 3 : 1} width='100%'>
               <ButtonGroup variant="text" color="primary" style={{ float: 'right', color: theme.palette.info.contrastText, width: '100%' }} aria-label="text primary button group">
-                <Button variant='contained' style={{ backgroundColor: '#edecf3', color: theme.palette.primary.contrastText, minWidth: 120, width: '100%', height: 75, boxShadow: 'none' }} onClick={() => history.push(`/orderdetail/${order.od_id}`)}>상세보기</Button>
+                <Button
+                  variant='contained'
+                  style={{
+                    backgroundColor: '#edecf3',
+                    color: theme.palette.primary.contrastText,
+                    minWidth: 120,
+                    width: '100%',
+                    height: 75,
+                    boxShadow: 'none'
+                  }}
+                  onClick={() => {
+                    history.push({
+                      pathname: `orderdetail/${order.od_id}`,
+                      state: {
+                        jumju_id: order.jumju_id,
+                        jumju_code: order.jumju_code
+                      }
+                    })
+                  }}>상세보기</Button>
                 {
                   type === 'new' ?
-                    <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkOrderHandler(order.od_id, order.od_type)}>접수처리</Button>
+                    <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkOrderHandler(order.od_id, order.jumju_id, order.jumju_code, order.od_type)}>접수처리</Button>
                     : type === 'check' && order.od_type === '배달' ?
-                      <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.od_type)}>배달처리</Button>
+                      <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.jumju_id, order.jumju_code, order.od_type)}>배달처리</Button>
                       : type === 'check' && order.od_type === '포장' ?
-                        <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.od_type)}>포장완료</Button>
+                        <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderHandler(order.od_id, order.jumju_id, order.jumju_code, order.od_type)}>포장완료</Button>
                         : type === 'delivery' && order.od_type === '배달' ?
-                          <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, width: '100%', height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderCompleteHandler(order.od_id, order.od_type)}>배달완료</Button>
+                          <Button variant='contained' color="primary" style={{ color: theme.palette.primary.contrastText, minWidth: 120, width: '100%', height: 75, boxShadow: 'none' }} onClick={() => deliveryOrderCompleteHandler(order.od_id, order.jumju_id, order.jumju_code, order.od_type)}>배달완료</Button>
                           : null
                 }
                 {
                   type === 'new' ?
-                    <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => rejectOrderHandler(order.od_id)}>거부처리</Button>
+                    <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => rejectOrderHandler(order.od_id, order.jumju_id, order.jumju_code)}>거부처리</Button>
                     : type === 'check' ?
-                      <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkCancelModalHandler(order.od_id)}>취소처리</Button>
+                      <Button variant='contained' color="secondary" style={{ color: theme.palette.secondary.contrastText, minWidth: 120, height: 75, boxShadow: 'none' }} onClick={() => checkCancelModalHandler(order.od_id, order.jumju_id, order.jumju_code)}>취소처리</Button>
                       : null}
               </ButtonGroup>
             </Box>
@@ -222,11 +252,11 @@ export default function OrderCard(props: OrderProps) {
   return (
     orders.length > 0 ?
       <>
-        <OrderCheckModal isOpen={open} od_id={odId} od_type={odType} handleClose={handleClose} />
-        <OrderRejectModal isOpen={rejectOopen} od_id={odId} handleClose={handleRejectClose} />
-        <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} od_type={odType} handleClose={handleDeliveryClose} />
-        <OrderDeliveryCompleteModal isOpen={deliveryCompleteOpen} od_id={odId} od_type={odType} handleClose={handleDeliveryCompleteClose} />
-        <OrderCancelModal isOpen={cancelModalOpen} od_id={odId} handleClose={cancelModalCloseHandler} />
+        <OrderCheckModal isOpen={open} od_id={odId} currJumjuId={currJumjuId} currJumjuCode={currJumjuCode} od_type={odType} handleClose={handleClose} />
+        <OrderRejectModal isOpen={rejectOopen} od_id={odId} currJumjuId={currJumjuId} currJumjuCode={currJumjuCode} handleClose={handleRejectClose} />
+        <OrderDeliveryModal isOpen={deliveryOpen} od_id={odId} currJumjuId={currJumjuId} currJumjuCode={currJumjuCode} od_type={odType} handleClose={handleDeliveryClose} />
+        <OrderDeliveryCompleteModal isOpen={deliveryCompleteOpen} od_id={odId} currJumjuId={currJumjuId} currJumjuCode={currJumjuCode} od_type={odType} handleClose={handleDeliveryCompleteClose} />
+        <OrderCancelModal isOpen={cancelModalOpen} od_id={odId} currJumjuId={currJumjuId} currJumjuCode={currJumjuCode} handleClose={cancelModalCloseHandler} />
         <Box>
           {renderList()}
         </Box>

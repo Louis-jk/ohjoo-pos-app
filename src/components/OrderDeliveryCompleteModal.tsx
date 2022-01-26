@@ -24,6 +24,8 @@ import * as orderAction from '../redux/actions/orderAction';
 interface IProps {
   isOpen: boolean;
   od_id: string;
+  currJumjuId: string;
+  currJumjuCode: string;
   od_type: string;
   handleClose: () => void;
 }
@@ -75,7 +77,7 @@ export default function OrderDeliveryCompleteModal(props: IProps) {
     });
   }
 
-  // 현재 배달중 주문 가져오기
+  // 현재 배달완료 주문 가져오기
   const getDoneOrderHandler = () => {
 
     const param = {
@@ -99,13 +101,13 @@ export default function OrderDeliveryCompleteModal(props: IProps) {
     });
   }
 
-  // 접수완료 => 배달중 처리 핸들러
+  // 배달중 => 배달완료 처리 핸들러
   const sendDeliveryCompleteHandler = () => {
 
     let param = {
       od_id: props.od_id,
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
+      jumju_id: props.currJumjuId,
+      jumju_code: props.currJumjuCode,
       od_process_status: '배달완료',
     };
 

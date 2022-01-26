@@ -45,7 +45,7 @@ function createWindow() {
   mainWindow.setMenuBarVisibility(false);
 
   // 개발자 툴 오픈
-  mainWindow.webContents.openDevTools(); // 빌드시 해제 필요
+  // mainWindow.webContents.openDevTools(); // 빌드시 해제 필요
 
   mainWindow.on('closed', () => {
     mainWindow = null;

@@ -46,6 +46,7 @@ interface IStoreInfo {
   do_coupon_use: string;
   do_delivery_guide: string;
   do_delivery_time: string;
+  do_cooking_time: string;
   do_end_state: string;
   mt_sound: string;
   mt_print: string;
@@ -89,6 +90,7 @@ export default function StoreInfo(props: IProps) {
     do_coupon_use: '', // 쿠폰 사용 유무
     do_delivery_guide: '', // 배달 안내
     do_delivery_time: '', // 평균 배달 시간
+    do_cooking_time: '', // 평균 조리시간
     do_end_state: '', // 주문마감
     mt_sound: '', // 알림 횟수
     mt_print: '', // 주문 접수시 자동프린트 유무 (1: true / 0: false)
@@ -126,6 +128,7 @@ export default function StoreInfo(props: IProps) {
           do_coupon_use: arrItems.do_coupon_use,
           do_delivery_guide: arrItems.do_delivery_guide,
           do_delivery_time: arrItems.do_delivery_time,
+          do_cooking_time: arrItems.do_cooking_time,
           do_end_state: arrItems.do_end_state,
           mt_sound: arrItems.mt_sound,
           mt_print: arrItems.mt_print,
@@ -154,6 +157,7 @@ export default function StoreInfo(props: IProps) {
           do_coupon_use: '',
           do_delivery_guide: '',
           do_delivery_time: '',
+          do_cooking_time: '',
           do_end_state: '',
           mt_sound: '',
           mt_print: '',
@@ -187,6 +191,7 @@ export default function StoreInfo(props: IProps) {
       do_coupon_use: info.do_coupon_use,
       do_delivery_guide: info.do_delivery_guide,
       do_delivery_time: info.do_delivery_time,
+      do_cooking_time: info.do_cooking_time,
       do_end_state: info.do_end_state,
       mt_sound: info.mt_sound,
       mt_print: info.mt_print,
@@ -317,131 +322,12 @@ export default function StoreInfo(props: IProps) {
 
   };
 
-  console.log('detailImgs01', detailImgs01);
-  console.log('detailImgs02', detailImgs02);
-  console.log('detailImgs03', detailImgs03);
-  console.log('detailImgs04', detailImgs04);
-  console.log('detailImgs05', detailImgs05);
+  // console.log('detailImgs01', detailImgs01);
+  // console.log('detailImgs02', detailImgs02);
+  // console.log('detailImgs03', detailImgs03);
+  // console.log('detailImgs04', detailImgs04);
+  // console.log('detailImgs05', detailImgs05);
 
-  // const handleImageUpload = (e: any) => {
-  //   const fileArr = e.target.files;
-
-  //   let fileURLs: any[] = [];
-
-  //   let file;
-  //   let filesLength = fileArr.length > 5 ? 5 : fileArr.length;
-
-  //   if (filesLength + detailImgs.length > 5) {
-  //     setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
-  //     handleOpenAlert();
-  //     return false;
-  //   } else {
-  //     for (let i = 0; i < filesLength; i++) {
-
-  //       file = fileArr[i];
-
-  //       let reader = new FileReader();
-
-  //       reader.onload = () => {
-  //         console.log(reader.result);
-  //         fileURLs[i] = reader.result;
-
-  //         let testArr: any = [];
-
-  //         console.log("fileURLs", fileURLs);
-  //         console.log("fileURLs[0]", fileURLs[0]);
-
-  //         // handlingDataForm(fileURLs[0]);
-
-
-
-  //         fileURLs.map((pic: string, index: number) => {
-  //           let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-  //           let name = pic.slice(pic.lastIndexOf('/'));
-
-  //           testArr.push(pic)
-
-  //         })
-
-  //         // setDetailImgs(prev => [...prev, testArr]);
-
-  //         console.log('testArr', testArr);
-
-  //         const compareArray = (a: any, b: any) => {
-  //           for (let i = 0; i < a.length; i++) {
-  //             for (let j = 0; j < b.length; j++) {
-  //               if (a[i].name === b[j].name) {
-  //                 console.log('중복 값', a[i])
-  //                 console.log('중복값이 있습니다.');
-  //                 setToastState({ msg: '이미 동일한 이미지가 있습니다.', severity: 'error' });
-  //                 handleOpenAlert();
-  //                 return true;
-  //               } else {
-  //                 console.log('중복 값 없음')
-  //                 return false;
-  //               }
-  //             }
-  //           }
-  //         };
-
-  //         let checkArr = compareArray(detailImgs, testArr);
-
-  //         if (!checkArr) {
-  //           // setDetailImgs(prev => [...prev, testArr]);
-  //           let addArr = detailImgs.concat(testArr);
-  //           setDetailImgs(addArr);
-  //         }
-
-  //       };
-
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }
-  // };
-
-  // const handlingDataForm = async (dataURI: any) => {
-  //   // dataURL 값이 data:image/jpeg:base64,~~~~~~~ 이므로 ','를 기점으로 잘라서 ~~~~~인 부분만 다시 인코딩
-  //   // const byteString = atob(dataURI.split(",")[1]);
-  //   // const byteString = dataURI.split(",")[1];
-  //   const byteString = dataURI;
-
-  //   console.log('byteString', byteString);
-  //   // return false;
-
-  //   // Blob를 구성하기 위한 준비, 이 내용은 저도 잘 이해가 안가서 기술하지 않았습니다.
-  //   const ab = new ArrayBuffer(byteString.length);
-  //   const ia = new Uint8Array(ab);
-
-  //   console.log('ia ???', ia);
-
-  //   for (let i = 0; i < byteString.length; i++) {
-  //     ia[i] = byteString.charCodeAt(i);
-  //   }
-  //   const blob = new Blob([ia], {
-  //     type: "image/jpeg"
-  //   });
-  //   const file = new File([blob], "image.jpg");
-
-  //   console.log('file ???', file);
-
-  //   // 위 과정을 통해 만든 image폼을 FormData에 넣어줍니다.
-  //   // 서버에서는 이미지를 받을 때, FormData가 아니면 받지 않도록 세팅해야합니다.
-  //   const formData = new FormData();
-  //   formData.append("representative_avatar", file);
-
-  //   console.log('formData ???', formData);
-
-  //   // // 필요시 더 추가합니다.
-  //   // formData.append("name", "nkh");
-  //   // formData.append("email", "noh5524@gmail.com");
-
-  //   // try {
-  //   //   const changeAvatar = await apis.auth.changeUserAccount(formData);
-  //   //   alert(changeAvatar.status);
-  //   // } catch (error: any) {
-  //   //   alert(error.response.data.errors);
-  //   // }
-  // };
 
   // 이미지 추가 업로드
   const handleImageAddUpload = (evt: any) => {
@@ -474,58 +360,9 @@ export default function StoreInfo(props: IProps) {
     }
   }
 
-  console.log('이미지 소스 ::: ', sources);
-  console.log('이미지 재구성 ::: ', detailImgs);
+  // console.log('이미지 소스 ::: ', sources);
+  // console.log('이미지 재구성 ::: ', detailImgs);
 
-  // const handleImageAddUpload = (e: any) => {
-  //   const fileArr = e.target.files;
-
-  //   let fileURLs: any[] = [];
-
-  //   let file;
-  //   let enableArr = (5 - detailImgs.length);
-
-  //   let filesLength = fileArr.length > enableArr ? enableArr : fileArr.length;
-
-  //   if (fileArr.length > enableArr) {
-  //     setToastState({ msg: '대표 이미지는 5장까지 등록이 가능합니다.', severity: 'error' });
-  //     handleOpenAlert();
-  //   }
-
-  //   for (let i = 0; i < filesLength; i++) {
-  //     file = fileArr[i];
-
-  //     let reader = new FileReader();
-  //     reader.onload = () => {
-
-  //       fileURLs[i] = reader.result;
-
-  //       let newArr = detailImgs.filter(img => img === fileURLs[0]);
-  //       if (newArr && newArr.length > 0) {
-  //         setToastState({ msg: '동일한 이미지를 선택하셨습니다.', severity: 'error' });
-  //         handleOpenAlert();
-  //       } else {
-  //         console.log("fileURLs", fileURLs);
-  //         fileURLs.map((pic: string, index: number) => {
-  //           let type = pic.slice(pic.lastIndexOf('.')).replace('.', '');
-  //           let name = pic.slice(pic.lastIndexOf('/')).replace('/', '').split('.')[0];
-
-  //           // setDetailImgs(prev => [...prev, {
-  //           //   uri: pic,
-  //           //   type,
-  //           //   name,
-  //           // }]);
-
-  //           setDetailImgs(prev => [...prev, pic]);
-  //         })
-
-  //         // setDetailImgs(prev => [...prev, ...fileURLs]);
-  //       }
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-
-  // }
 
   // 이미지 삭제
   const deleteItemImg = (index: number) => {
@@ -794,6 +631,26 @@ export default function StoreInfo(props: IProps) {
                 onChange={e => setInfo({
                   ...info,
                   do_delivery_time: e.target.value as string
+                })}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                value={info.do_cooking_time === null || info.do_cooking_time === undefined ? '' : info.do_cooking_time}
+                fullWidth
+                id="outlined-basic"
+                label="평균 조리시간"
+                variant="outlined"
+                placeholder="평균 조리시간을 입력해주세요."
+                InputLabelProps={{
+                  shrink: true
+                }}
+                // InputProps={{
+                //   endAdornment: <InputAdornment position="end">분</InputAdornment>,
+                // }}
+                onChange={e => setInfo({
+                  ...info,
+                  do_cooking_time: e.target.value as string
                 })}
               />
             </Grid>

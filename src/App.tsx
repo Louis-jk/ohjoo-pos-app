@@ -30,9 +30,9 @@ function App() {
   }
 
   // 접수처리시 알림 스톱 : web 테스트시 끄기
-  useEffect(() => {
-    alarmStopHandler();
-  }, [isChecked]);
+  // useEffect(() => {
+  //   alarmStopHandler();
+  // }, [isChecked]);
 
   // 현재 신규주문 건수 가져오기
   const getNewOrderHandler = () => {

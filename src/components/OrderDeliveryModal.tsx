@@ -24,6 +24,8 @@ import * as orderAction from '../redux/actions/orderAction';
 interface IProps {
   isOpen: boolean;
   od_id: string;
+  currJumjuId: string;
+  currJumjuCode: string;
   od_type: string;
   handleClose: () => void;
 }
@@ -130,8 +132,8 @@ export default function OrderCheckModal(props: IProps) {
 
     let param = {
       od_id: props.od_id,
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
+      jumju_id: props.currJumjuId,
+      jumju_code: props.currJumjuCode,
       od_process_status: props.od_type === '배달' ? '배달중' : '포장완료',
     };
 

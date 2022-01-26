@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import moment from 'moment';
 import 'moment/locale/ko';
-import { withRouter, RouteComponentProps, useParams, useHistory } from 'react-router-dom'
+import { withRouter, useLocation, RouteComponentProps, useParams, useHistory } from 'react-router-dom';
 
 // Material UI Components
 import Button from '@material-ui/core/Button';
@@ -55,7 +55,10 @@ export default function OrdersDetail(od_id: string) {
   const dispatch = useDispatch();
   const base = baseStyles();
   const orderStyle = OrderStyles();
+  const params = useParams();
   const { id }: OrderId = useParams();
+  // const location = useLocation();
+  const { state }: any = useLocation();
   const [open, setOpen] = React.useState(false); // 신규 주문 -> 접수(배달/포장 시간 입력 모달)
   const [openDelivery, setOpenDelivery] = React.useState(false); // 접수 완료 -> 배달 | 포장 처리 모달
   const [openDone, setOpenDone] = React.useState(false); // 배달중 -> 배달완료 처리 모달
@@ -75,6 +78,12 @@ export default function OrdersDetail(od_id: string) {
 
   const [odId, setOdId] = React.useState('');
   const [odType, setOdType] = React.useState('');
+
+  console.log('detail params >>>>>>', params);
+  console.log('detail location.state >>>>>>', state);
+  console.log('detail state jumju_id >>>>>>', state.jumju_id);
+  console.log('detail state jumju_code >>>>>>', state.jumju_code);
+
 
   // 프린트 모달
   const [printOpen, setPrintOpen] = React.useState(false);
@@ -104,12 +113,16 @@ export default function OrdersDetail(od_id: string) {
   };
 
   // 주문 디테일 정보 가져오기
-  const getOrderDetailHandler = () => {
+  const getOrderDetailHandler = (jumjuId: string, jumjuCode: string) => {
+
+    console.log('jumjuId', jumjuId);
+    console.log('jumjuCode', jumjuCode);
+
     const param = {
       item_count: 0,
       limit_count: 10,
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
+      jumju_id: jumjuId,
+      jumju_code: jumjuCode,
       od_id: id
     };
     Api.send('store_order_detail', param, (args: any) => {
@@ -133,7 +146,12 @@ export default function OrdersDetail(od_id: string) {
   }
 
   React.useEffect(() => {
-    getOrderDetailHandler();
+
+    console.log('state.jumju_id >>', state.jumju_id);
+    console.log('state.jumju_code >>', state.jumju_code);
+
+    getOrderDetailHandler(state.jumju_id, state.jumju_code);
+
   }, [])
 
   // 신규주문 상태 -> 접수(배달/포장 시간 입력) 모달 핸들러
@@ -277,8 +295,8 @@ export default function OrdersDetail(od_id: string) {
 
     let param = {
       od_id: id,
-      jumju_id: mt_id,
-      jumju_code: mt_jumju_code,
+      jumju_id: state.jumju_id,
+      jumju_code: state.jumju_code,
       od_process_status: detailOrder.od_type === '배달' ? '배달중' : '포장완료',
     };
 
@@ -321,8 +339,8 @@ export default function OrdersDetail(od_id: string) {
 
       let param = {
         od_id: id,
-        jumju_id: mt_id,
-        jumju_code: mt_jumju_code,
+        jumju_id: state.jumju_id,
+        jumju_code: state.jumju_code,
         mode: 'cancle',
         od_cancle_memo: result
       };
@@ -377,10 +395,10 @@ export default function OrdersDetail(od_id: string) {
         : null}
       {/* <Header detail='order' /> */}
 
-      {detailOrder ?
+      {detailOrder && state.jumju_id && state.jumju_code ?
         <>
-          <OrderCheckModal isOpen={open} od_id={id} od_type={detailOrder.od_type} handleClose={handleClose} />
-          <OrderRejectModal isOpen={rejectOopen} od_id={id} handleClose={handleRejectClose} />
+          <OrderCheckModal isOpen={open} od_id={id} currJumjuId={state.jumju_id} currJumjuCode={state.jumju_code} od_type={detailOrder.od_type} handleClose={handleClose} />
+          <OrderRejectModal isOpen={rejectOopen} od_id={id} currJumjuId={state.jumju_id} currJumjuCode={state.jumju_code} handleClose={handleRejectClose} />
         </>
         : null}
       <Box className={base.alertStyle}>
@@ -429,7 +447,7 @@ export default function OrdersDetail(od_id: string) {
 
       {/* 배달중 -> 배달완료 모달 */}
       {detailOrder &&
-        <OrderDeliveryCompleteModal isOpen={openDone} od_id={id} od_type={detailOrder.od_type} handleClose={handleOpenDone} />
+        <OrderDeliveryCompleteModal isOpen={openDone} od_id={id} currJumjuId={state.jumju_id} currJumjuCode={state.jumju_code} od_type={detailOrder.od_type} handleClose={handleOpenDone} />
       }
       {/* // 배달중 -> 배달완료 모달 */}
 
