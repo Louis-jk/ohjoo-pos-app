@@ -10,3 +10,5 @@
 !['오늘의주문 - 포스앱 디자인목업-05'](https://user-images.githubusercontent.com/25785760/131469115-81912ac4-2f5d-4e9a-bcab-6b9a395d94fb.png)
 !['오늘의주문 - 포스앱 디자인목업-06'](https://user-images.githubusercontent.com/25785760/131469131-e6bede66-1c8a-410e-b9ca-00cc3f0ef7c1.png)
 
+
+<video src='https://user-images.githubusercontent.com/25785760/195239812-b2748e1c-0ca1-4510-9c6b-e560b751465f.MP4'>
